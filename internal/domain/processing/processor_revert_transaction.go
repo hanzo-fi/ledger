@@ -93,8 +93,10 @@ func processRevertTransaction(ledger string, order *raftcmdpb.RevertTransactionO
 	// Get new transaction ID for the revert transaction
 	revertTxID := boundaries.GetNextTransactionId()
 	boundaries.NextTransactionId = revertTxID + 1
-	boundaries.PostingCount += uint64(len(revertPostings))
-	boundaries.RevertCount++
+
+	// posting_count and revert_count are no longer maintained on
+	// LedgerBoundaries — the usagebuilder derives them from the audit
+	// chain. See EN-1420.
 
 	// Record the reversion on the original transaction's state.
 	origState.RevertedByTransaction = revertTxID
