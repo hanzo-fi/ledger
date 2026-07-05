@@ -14,11 +14,11 @@ require (
 	github.com/antlr/antlr4/runtime/Go/antlr v1.4.10
 	github.com/bluele/gcache v0.0.2
 	github.com/dop251/goja v0.0.0-20250630131328-58d95d85e994
-	github.com/hanzo-fi/ledger/pkg/client v0.0.0-00010101000000-000000000000
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/go-chi/cors v1.2.2
 	github.com/google/go-cmp v0.7.0
 	github.com/google/uuid v1.6.0
+	github.com/hanzo-fi/ledger/pkg/client v0.0.0-00010101000000-000000000000
 	github.com/invopop/jsonschema v0.13.0
 	github.com/jackc/pgx/v5 v5.9.2
 	github.com/jamiealquiza/tachymeter v2.0.0+incompatible
@@ -58,9 +58,11 @@ require (
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/viper v1.20.1
+	github.com/uptrace/bun/dialect/sqlitedialect v1.2.18
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.62.0
 	go.vallahaye.net/batcher v0.6.0
 	gopkg.in/yaml.v3 v3.0.1
+	modernc.org/sqlite v1.51.0
 )
 
 require (
@@ -82,6 +84,7 @@ require (
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
+	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/ebitengine/purego v0.10.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/getkin/kin-openapi v0.134.0 // indirect
@@ -100,12 +103,14 @@ require (
 	github.com/moby/moby/client v0.3.0 // indirect
 	github.com/moby/sys/user v0.4.0 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
+	github.com/ncruces/go-strftime v1.0.0 // indirect
 	github.com/oasdiff/yaml v0.0.0-20260313112342-a3ea61cb4d4c // indirect
 	github.com/oasdiff/yaml3 v0.0.0-20260224194419-61cd415a242b // indirect
 	github.com/paulmach/orb v0.12.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
+	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/sagikazarmark/locafero v0.9.0 // indirect
 	github.com/segmentio/asm v1.2.1 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.2 // indirect
@@ -126,6 +131,9 @@ require (
 	go.opentelemetry.io/contrib/propagators/b3 v1.41.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/mod v0.35.0 // indirect
+	modernc.org/libc v1.72.3 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
+	modernc.org/memory v1.11.0 // indirect
 )
 
 require (
@@ -224,7 +232,7 @@ require (
 	github.com/shomali11/util v0.0.0-20220717175126-f0771b70947f // indirect
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
-	github.com/uptrace/bun/extra/bunotel v1.2.18 // indirect
+	github.com/uptrace/bun/extra/bunotel v1.2.18
 	github.com/uptrace/opentelemetry-go-extra/otellogrus v0.3.2 // indirect
 	github.com/uptrace/opentelemetry-go-extra/otelsql v0.3.2 // indirect
 	github.com/uptrace/opentelemetry-go-extra/otelutil v0.3.2 // indirect
