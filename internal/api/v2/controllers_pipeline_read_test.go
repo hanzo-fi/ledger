@@ -13,7 +13,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/authn/jwt"
 	sharedapi "github.com/formancehq/go-libs/v5/pkg/testing/api"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 func TestReadPipeline(t *testing.T) {

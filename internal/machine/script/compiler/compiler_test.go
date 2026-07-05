@@ -9,8 +9,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/formancehq/ledger/internal/machine"
-	"github.com/formancehq/ledger/internal/machine/vm/program"
+	"github.com/hanzo-fi/ledger/internal/machine"
+	"github.com/hanzo-fi/ledger/internal/machine/vm/program"
 )
 
 type TestCase struct {

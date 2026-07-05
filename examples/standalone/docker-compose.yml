@@ -25,7 +25,7 @@ services:
       - ${POSTGRES_DATA:-postgres}:/data/postgres
 
   worker:
-    image: ghcr.io/formancehq/ledger:v2.4.0
+    image: registry.hanzo.ai/hanzo-fi/ledger:latest
     # entrypoint:
     depends_on:
       postgres:
@@ -38,7 +38,7 @@ services:
       POSTGRES_CONN_MAX_IDLE_TIME: '5m'
 
   ledger:
-    image: ghcr.io/formancehq/ledger:v2.4.0
+    image: registry.hanzo.ai/hanzo-fi/ledger:latest
     ports:
       - 3068:3068
     depends_on:

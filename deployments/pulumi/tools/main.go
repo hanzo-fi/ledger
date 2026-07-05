@@ -8,7 +8,7 @@ import (
 	"github.com/invopop/jsonschema"
 	"github.com/spf13/cobra"
 
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/config"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/config"
 )
 
 func main() {
@@ -32,7 +32,7 @@ func printSchema(_ *cobra.Command, _ []string) error {
 		//DoNotReference:             true,
 		RequiredFromJSONSchemaTags: true,
 	}
-	if err := reflector.AddGoComments("github.com/formancehq/ledger/deployments/pulumi", "./pkg"); err != nil {
+	if err := reflector.AddGoComments("github.com/hanzo-fi/ledger/deployments/pulumi", "./pkg"); err != nil {
 		return err
 	}
 	schema := reflector.Reflect(config.Config{})

@@ -9,8 +9,8 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	"github.com/formancehq/ledger/internal/api/common"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 func deleteTransactionMetadata(w http.ResponseWriter, r *http.Request) {

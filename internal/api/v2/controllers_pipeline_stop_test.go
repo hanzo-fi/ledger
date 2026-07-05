@@ -14,8 +14,8 @@ import (
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	sharedapi "github.com/formancehq/go-libs/v5/pkg/testing/api"
 
-	ledger "github.com/formancehq/ledger/internal"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 func TestStopPipeline(t *testing.T) {

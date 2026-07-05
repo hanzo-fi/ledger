@@ -16,7 +16,7 @@ COPY pkg /src/tools/provisioner/pkg
 RUN --mount=type=cache,target=$GOPATH go build -o provisioner
 
 FROM alpine:3.21
-LABEL org.opencontainers.image.source=https://github.com/formancehq/ledger
+LABEL org.opencontainers.image.source=https://github.com/hanzo-fi/ledger
 COPY --from=compiler /src/tools/provisioner/provisioner /bin/provisioner
 ENTRYPOINT ["/bin/provisioner"]
 CMD ["--help"]

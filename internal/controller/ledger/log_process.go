@@ -13,8 +13,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	ledger "github.com/formancehq/ledger/internal"
-	ledgerstore "github.com/formancehq/ledger/internal/storage/ledger"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
 )
 
 type logProcessor[INPUT any, OUTPUT ledger.LogPayload] struct {

@@ -3,7 +3,7 @@
 package components
 
 import (
-	"github.com/formancehq/ledger/pkg/client/internal/utils"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/utils"
 )
 
 // V2LogDataNewTransaction - Payload for NEW_TRANSACTION log entries. Contains the created transaction and any account metadata set during creation.

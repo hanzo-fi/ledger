@@ -4,7 +4,7 @@ package config
 
 import (
 	"context"
-	"github.com/formancehq/ledger/pkg/client/retry"
+	"github.com/hanzo-fi/ledger/pkg/client/retry"
 	"net/http"
 	"time"
 )

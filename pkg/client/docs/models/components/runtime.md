@@ -6,7 +6,7 @@ The numscript runtime used to execute the script. Uses "machine" by default, unl
 
 ```go
 import (
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 )
 
 value := components.RuntimeExperimentalInterpreter

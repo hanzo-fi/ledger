@@ -51,7 +51,7 @@ func (r *RDSDatabaseComponent) GetPort() pulumix.Input[int] {
 
 func newRDSDatabaseComponent(ctx *pulumi.Context, args *RDSComponentArgs, opts ...pulumi.ResourceOption) (*RDSDatabaseComponent, error) {
 	cmp := &RDSDatabaseComponent{}
-	err := ctx.RegisterComponentResource("Formance:Ledger:RDS", "storage", cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:RDS", "storage", cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

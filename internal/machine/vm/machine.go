@@ -19,9 +19,9 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/machine"
-	"github.com/formancehq/ledger/internal/machine/vm/program"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/machine"
+	"github.com/hanzo-fi/ledger/internal/machine/vm/program"
 )
 
 type Machine struct {

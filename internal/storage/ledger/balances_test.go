@@ -16,10 +16,10 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/common"
-	ledgerstore "github.com/formancehq/ledger/internal/storage/ledger"
-	"github.com/formancehq/ledger/pkg/features"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
+	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
+	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
 func TestBalancesGet(t *testing.T) {
@@ -397,7 +397,7 @@ func TestBalancesAggregates(t *testing.T) {
 	})
 }
 
-// Regression test for https://github.com/formancehq/ledger/issues/1416:
+// Regression test for https://github.com/hanzo-fi/ledger/issues/1416:
 // /aggregate/balances with PIT + metadata filter used to silently return an
 // empty result when ACCOUNT_METADATA_HISTORY was DISABLED because the query
 // joined the unpopulated accounts_metadata history table. When the feature is

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/formancehq/ledger/pkg/features"
+	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
 func TestFeatures(t *testing.T) {

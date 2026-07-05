@@ -1,15 +1,15 @@
-module github.com/formancehq/ledger/tools/generator
+module github.com/hanzo-fi/ledger/tools/generator
 
 go 1.26.0
 
-replace github.com/formancehq/ledger => ../..
+replace github.com/hanzo-fi/ledger => ../..
 
-replace github.com/formancehq/ledger/pkg/client => ../../pkg/client
+replace github.com/hanzo-fi/ledger/pkg/client => ../../pkg/client
 
 require (
 	github.com/formancehq/go-libs/v5 v5.6.1
-	github.com/formancehq/ledger v0.0.0-00010101000000-000000000000
-	github.com/formancehq/ledger/pkg/client v0.0.0-00010101000000-000000000000
+	github.com/hanzo-fi/ledger v0.0.0-00010101000000-000000000000
+	github.com/hanzo-fi/ledger/pkg/client v0.0.0-00010101000000-000000000000
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/oauth2 v0.35.0

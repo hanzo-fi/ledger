@@ -3,7 +3,7 @@
 # ledger
 
 ```go
-import "github.com/formancehq/ledger/internal"
+import "github.com/hanzo-fi/ledger/internal"
 ```
 
 ## Index
@@ -281,7 +281,7 @@ var Zero = big.NewInt(0)
 ```
 
 <a name="ComputeIdempotencyHash"></a>
-## func [ComputeIdempotencyHash](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L457>)
+## func [ComputeIdempotencyHash](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L457>)
 
 ```go
 func ComputeIdempotencyHash(inputs any) string
@@ -290,7 +290,7 @@ func ComputeIdempotencyHash(inputs any) string
 
 
 <a name="ComputeMetadata"></a>
-## func [ComputeMetadata](<https://github.com/formancehq/ledger/blob/main/internal/metadata.go#L29>)
+## func [ComputeMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/metadata.go#L29>)
 
 ```go
 func ComputeMetadata(key, value string) metadata.Metadata
@@ -299,7 +299,7 @@ func ComputeMetadata(key, value string) metadata.Metadata
 
 
 <a name="MarkReverts"></a>
-## func [MarkReverts](<https://github.com/formancehq/ledger/blob/main/internal/metadata.go#L21>)
+## func [MarkReverts](<https://github.com/hanzo-fi/ledger/blob/main/internal/metadata.go#L21>)
 
 ```go
 func MarkReverts(m metadata.Metadata, txID uint64) metadata.Metadata
@@ -308,7 +308,7 @@ func MarkReverts(m metadata.Metadata, txID uint64) metadata.Metadata
 
 
 <a name="RevertMetadata"></a>
-## func [RevertMetadata](<https://github.com/formancehq/ledger/blob/main/internal/metadata.go#L35>)
+## func [RevertMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/metadata.go#L35>)
 
 ```go
 func RevertMetadata(txID uint64) metadata.Metadata
@@ -317,7 +317,7 @@ func RevertMetadata(txID uint64) metadata.Metadata
 
 
 <a name="RevertMetadataSpecKey"></a>
-## func [RevertMetadataSpecKey](<https://github.com/formancehq/ledger/blob/main/internal/metadata.go#L25>)
+## func [RevertMetadataSpecKey](<https://github.com/hanzo-fi/ledger/blob/main/internal/metadata.go#L25>)
 
 ```go
 func RevertMetadataSpecKey() string
@@ -326,7 +326,7 @@ func RevertMetadataSpecKey() string
 
 
 <a name="SpecMetadata"></a>
-## func [SpecMetadata](<https://github.com/formancehq/ledger/blob/main/internal/metadata.go#L17>)
+## func [SpecMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/metadata.go#L17>)
 
 ```go
 func SpecMetadata(name string) string
@@ -335,7 +335,7 @@ func SpecMetadata(name string) string
 
 
 <a name="ValidateSegment"></a>
-## func [ValidateSegment](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L46>)
+## func [ValidateSegment](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L46>)
 
 ```go
 func ValidateSegment(addr string) bool
@@ -344,7 +344,7 @@ func ValidateSegment(addr string) bool
 
 
 <a name="Account"></a>
-## type [Account](<https://github.com/formancehq/ledger/blob/main/internal/account.go#L16-L26>)
+## type [Account](<https://github.com/hanzo-fi/ledger/blob/main/internal/account.go#L16-L26>)
 
 
 
@@ -363,7 +363,7 @@ type Account struct {
 ```
 
 <a name="Account.GetAddress"></a>
-### func \(Account\) [GetAddress](<https://github.com/formancehq/ledger/blob/main/internal/account.go#L28>)
+### func \(Account\) [GetAddress](<https://github.com/hanzo-fi/ledger/blob/main/internal/account.go#L28>)
 
 ```go
 func (a Account) GetAddress() string
@@ -372,7 +372,7 @@ func (a Account) GetAddress() string
 
 
 <a name="AccountMetadata"></a>
-## type [AccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L211>)
+## type [AccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L211>)
 
 
 
@@ -381,7 +381,7 @@ type AccountMetadata map[string]metadata.Metadata
 ```
 
 <a name="AccountWithDefaultMetadata"></a>
-## type [AccountWithDefaultMetadata](<https://github.com/formancehq/ledger/blob/main/internal/account.go#L41-L44>)
+## type [AccountWithDefaultMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/account.go#L41-L44>)
 
 
 
@@ -393,7 +393,7 @@ type AccountWithDefaultMetadata struct {
 ```
 
 <a name="AccountsVolumes"></a>
-## type [AccountsVolumes](<https://github.com/formancehq/ledger/blob/main/internal/account.go#L32-L39>)
+## type [AccountsVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/account.go#L32-L39>)
 
 
 
@@ -409,7 +409,7 @@ type AccountsVolumes struct {
 ```
 
 <a name="AggregatedVolumes"></a>
-## type [AggregatedVolumes](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L171-L173>)
+## type [AggregatedVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L171-L173>)
 
 
 
@@ -420,7 +420,7 @@ type AggregatedVolumes struct {
 ```
 
 <a name="Balances"></a>
-## type [Balances](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L175>)
+## type [Balances](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L175>)
 
 
 
@@ -429,7 +429,7 @@ type Balances = map[string]map[string]*big.Int
 ```
 
 <a name="BalancesByAssets"></a>
-## type [BalancesByAssets](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L97>)
+## type [BalancesByAssets](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L97>)
 
 
 
@@ -438,7 +438,7 @@ type BalancesByAssets map[string]*big.Int
 ```
 
 <a name="BalancesByAssetsByAccounts"></a>
-## type [BalancesByAssetsByAccounts](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L101>)
+## type [BalancesByAssetsByAccounts](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L101>)
 
 
 
@@ -447,7 +447,7 @@ type BalancesByAssetsByAccounts map[string]BalancesByAssets
 ```
 
 <a name="ChartAccount"></a>
-## type [ChartAccount](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L18-L21>)
+## type [ChartAccount](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L18-L21>)
 
 
 
@@ -459,7 +459,7 @@ type ChartAccount struct {
 ```
 
 <a name="ChartAccount.DefaultMetadata"></a>
-### func \(\*ChartAccount\) [DefaultMetadata](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L318>)
+### func \(\*ChartAccount\) [DefaultMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L318>)
 
 ```go
 func (c *ChartAccount) DefaultMetadata() metadata.Metadata
@@ -468,7 +468,7 @@ func (c *ChartAccount) DefaultMetadata() metadata.Metadata
 
 
 <a name="ChartAccountMetadata"></a>
-## type [ChartAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L14-L16>)
+## type [ChartAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L14-L16>)
 
 
 
@@ -479,7 +479,7 @@ type ChartAccountMetadata struct {
 ```
 
 <a name="ChartAccountRules"></a>
-## type [ChartAccountRules](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L12>)
+## type [ChartAccountRules](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L12>)
 
 
 
@@ -488,7 +488,7 @@ type ChartAccountRules struct{}
 ```
 
 <a name="ChartOfAccounts"></a>
-## type [ChartOfAccounts](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L42>)
+## type [ChartOfAccounts](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L42>)
 
 
 
@@ -497,7 +497,7 @@ type ChartOfAccounts map[string]ChartSegment
 ```
 
 <a name="ChartOfAccounts.FindAccountSchema"></a>
-### func \(\*ChartOfAccounts\) [FindAccountSchema](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L298>)
+### func \(\*ChartOfAccounts\) [FindAccountSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L298>)
 
 ```go
 func (c *ChartOfAccounts) FindAccountSchema(account string) (*ChartAccount, error)
@@ -506,7 +506,7 @@ func (c *ChartOfAccounts) FindAccountSchema(account string) (*ChartAccount, erro
 
 
 <a name="ChartOfAccounts.MarshalJSON"></a>
-### func \(ChartOfAccounts\) [MarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L188>)
+### func \(ChartOfAccounts\) [MarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L188>)
 
 ```go
 func (s ChartOfAccounts) MarshalJSON() ([]byte, error)
@@ -515,7 +515,7 @@ func (s ChartOfAccounts) MarshalJSON() ([]byte, error)
 
 
 <a name="ChartOfAccounts.UnmarshalJSON"></a>
-### func \(\*ChartOfAccounts\) [UnmarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L50>)
+### func \(\*ChartOfAccounts\) [UnmarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L50>)
 
 ```go
 func (s *ChartOfAccounts) UnmarshalJSON(data []byte) error
@@ -524,7 +524,7 @@ func (s *ChartOfAccounts) UnmarshalJSON(data []byte) error
 
 
 <a name="ChartOfAccounts.ValidatePosting"></a>
-### func \(\*ChartOfAccounts\) [ValidatePosting](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L306>)
+### func \(\*ChartOfAccounts\) [ValidatePosting](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L306>)
 
 ```go
 func (c *ChartOfAccounts) ValidatePosting(posting Posting) error
@@ -533,7 +533,7 @@ func (c *ChartOfAccounts) ValidatePosting(posting Posting) error
 
 
 <a name="ChartSegment"></a>
-## type [ChartSegment](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L23-L27>)
+## type [ChartSegment](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L23-L27>)
 
 
 
@@ -546,7 +546,7 @@ type ChartSegment struct {
 ```
 
 <a name="ChartSegment.MarshalJSON"></a>
-### func \(ChartSegment\) [MarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L232>)
+### func \(ChartSegment\) [MarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L232>)
 
 ```go
 func (s ChartSegment) MarshalJSON() ([]byte, error)
@@ -555,7 +555,7 @@ func (s ChartSegment) MarshalJSON() ([]byte, error)
 
 
 <a name="ChartSegment.UnmarshalJSON"></a>
-### func \(\*ChartSegment\) [UnmarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L89>)
+### func \(\*ChartSegment\) [UnmarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L89>)
 
 ```go
 func (s *ChartSegment) UnmarshalJSON(data []byte) error
@@ -564,7 +564,7 @@ func (s *ChartSegment) UnmarshalJSON(data []byte) error
 
 
 <a name="ChartVariableSegment"></a>
-## type [ChartVariableSegment](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L29-L34>)
+## type [ChartVariableSegment](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L29-L34>)
 
 
 
@@ -578,7 +578,7 @@ type ChartVariableSegment struct {
 ```
 
 <a name="ChartVariableSegment.MarshalJSON"></a>
-### func \(ChartVariableSegment\) [MarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/chart.go#L240>)
+### func \(ChartVariableSegment\) [MarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/chart.go#L240>)
 
 ```go
 func (s ChartVariableSegment) MarshalJSON() ([]byte, error)
@@ -587,7 +587,7 @@ func (s ChartVariableSegment) MarshalJSON() ([]byte, error)
 
 
 <a name="Configuration"></a>
-## type [Configuration](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L96-L100>)
+## type [Configuration](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L96-L100>)
 
 
 
@@ -600,7 +600,7 @@ type Configuration struct {
 ```
 
 <a name="NewDefaultConfiguration"></a>
-### func [NewDefaultConfiguration](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L127>)
+### func [NewDefaultConfiguration](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L127>)
 
 ```go
 func NewDefaultConfiguration() Configuration
@@ -609,7 +609,7 @@ func NewDefaultConfiguration() Configuration
 
 
 <a name="Configuration.SetDefaults"></a>
-### func \(\*Configuration\) [SetDefaults](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L102>)
+### func \(\*Configuration\) [SetDefaults](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L102>)
 
 ```go
 func (c *Configuration) SetDefaults()
@@ -618,7 +618,7 @@ func (c *Configuration) SetDefaults()
 
 
 <a name="Configuration.Validate"></a>
-### func \(\*Configuration\) [Validate](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L117>)
+### func \(\*Configuration\) [Validate](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L117>)
 
 ```go
 func (c *Configuration) Validate() error
@@ -627,7 +627,7 @@ func (c *Configuration) Validate() error
 
 
 <a name="CreatedTransaction"></a>
-## type [CreatedTransaction](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L213-L216>)
+## type [CreatedTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L213-L216>)
 
 
 
@@ -639,7 +639,7 @@ type CreatedTransaction struct {
 ```
 
 <a name="CreatedTransaction.GetMemento"></a>
-### func \(CreatedTransaction\) [GetMemento](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L237>)
+### func \(CreatedTransaction\) [GetMemento](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L237>)
 
 ```go
 func (p CreatedTransaction) GetMemento() any
@@ -648,7 +648,7 @@ func (p CreatedTransaction) GetMemento() any
 
 
 <a name="CreatedTransaction.NeedsSchema"></a>
-### func \(CreatedTransaction\) [NeedsSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L218>)
+### func \(CreatedTransaction\) [NeedsSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L218>)
 
 ```go
 func (p CreatedTransaction) NeedsSchema() bool
@@ -657,7 +657,7 @@ func (p CreatedTransaction) NeedsSchema() bool
 
 
 <a name="CreatedTransaction.Type"></a>
-### func \(CreatedTransaction\) [Type](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L231>)
+### func \(CreatedTransaction\) [Type](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L231>)
 
 ```go
 func (p CreatedTransaction) Type() LogType
@@ -666,7 +666,7 @@ func (p CreatedTransaction) Type() LogType
 
 
 <a name="CreatedTransaction.ValidateWithSchema"></a>
-### func \(CreatedTransaction\) [ValidateWithSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L221>)
+### func \(CreatedTransaction\) [ValidateWithSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L221>)
 
 ```go
 func (p CreatedTransaction) ValidateWithSchema(schema Schema) error
@@ -675,7 +675,7 @@ func (p CreatedTransaction) ValidateWithSchema(schema Schema) error
 
 
 <a name="DeletedMetadata"></a>
-## type [DeletedMetadata](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L318-L322>)
+## type [DeletedMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L318-L322>)
 
 
 
@@ -688,7 +688,7 @@ type DeletedMetadata struct {
 ```
 
 <a name="DeletedMetadata.NeedsSchema"></a>
-### func \(DeletedMetadata\) [NeedsSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L324>)
+### func \(DeletedMetadata\) [NeedsSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L324>)
 
 ```go
 func (p DeletedMetadata) NeedsSchema() bool
@@ -697,7 +697,7 @@ func (p DeletedMetadata) NeedsSchema() bool
 
 
 <a name="DeletedMetadata.Type"></a>
-### func \(DeletedMetadata\) [Type](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L331>)
+### func \(DeletedMetadata\) [Type](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L331>)
 
 ```go
 func (s DeletedMetadata) Type() LogType
@@ -706,7 +706,7 @@ func (s DeletedMetadata) Type() LogType
 
 
 <a name="DeletedMetadata.UnmarshalJSON"></a>
-### func \(\*DeletedMetadata\) [UnmarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L337>)
+### func \(\*DeletedMetadata\) [UnmarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L337>)
 
 ```go
 func (s *DeletedMetadata) UnmarshalJSON(data []byte) error
@@ -715,7 +715,7 @@ func (s *DeletedMetadata) UnmarshalJSON(data []byte) error
 
 
 <a name="DeletedMetadata.ValidateWithSchema"></a>
-### func \(DeletedMetadata\) [ValidateWithSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L327>)
+### func \(DeletedMetadata\) [ValidateWithSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L327>)
 
 ```go
 func (s DeletedMetadata) ValidateWithSchema(schema Schema) error
@@ -724,7 +724,7 @@ func (s DeletedMetadata) ValidateWithSchema(schema Schema) error
 
 
 <a name="ErrAlreadyStarted"></a>
-## type [ErrAlreadyStarted](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L76>)
+## type [ErrAlreadyStarted](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L76>)
 
 
 
@@ -733,7 +733,7 @@ type ErrAlreadyStarted string
 ```
 
 <a name="NewErrAlreadyStarted"></a>
-### func [NewErrAlreadyStarted](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L87>)
+### func [NewErrAlreadyStarted](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L87>)
 
 ```go
 func NewErrAlreadyStarted(id string) ErrAlreadyStarted
@@ -742,7 +742,7 @@ func NewErrAlreadyStarted(id string) ErrAlreadyStarted
 
 
 <a name="ErrAlreadyStarted.Error"></a>
-### func \(ErrAlreadyStarted\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L78>)
+### func \(ErrAlreadyStarted\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L78>)
 
 ```go
 func (e ErrAlreadyStarted) Error() string
@@ -751,7 +751,7 @@ func (e ErrAlreadyStarted) Error() string
 
 
 <a name="ErrAlreadyStarted.Is"></a>
-### func \(ErrAlreadyStarted\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L82>)
+### func \(ErrAlreadyStarted\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L82>)
 
 ```go
 func (e ErrAlreadyStarted) Is(err error) bool
@@ -760,7 +760,7 @@ func (e ErrAlreadyStarted) Is(err error) bool
 
 
 <a name="ErrInvalidAccount"></a>
-## type [ErrInvalidAccount](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L106-L111>)
+## type [ErrInvalidAccount](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L106-L111>)
 
 
 
@@ -771,7 +771,7 @@ type ErrInvalidAccount struct {
 ```
 
 <a name="ErrInvalidAccount.Error"></a>
-### func \(ErrInvalidAccount\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L113>)
+### func \(ErrInvalidAccount\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L113>)
 
 ```go
 func (e ErrInvalidAccount) Error() string
@@ -780,7 +780,7 @@ func (e ErrInvalidAccount) Error() string
 
 
 <a name="ErrInvalidAccount.Is"></a>
-### func \(ErrInvalidAccount\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L126>)
+### func \(ErrInvalidAccount\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L126>)
 
 ```go
 func (e ErrInvalidAccount) Is(err error) bool
@@ -789,7 +789,7 @@ func (e ErrInvalidAccount) Is(err error) bool
 
 
 <a name="ErrInvalidBucketName"></a>
-## type [ErrInvalidBucketName](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L26-L29>)
+## type [ErrInvalidBucketName](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L26-L29>)
 
 
 
@@ -800,7 +800,7 @@ type ErrInvalidBucketName struct {
 ```
 
 <a name="ErrInvalidBucketName.Error"></a>
-### func \(ErrInvalidBucketName\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L31>)
+### func \(ErrInvalidBucketName\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L31>)
 
 ```go
 func (e ErrInvalidBucketName) Error() string
@@ -809,7 +809,7 @@ func (e ErrInvalidBucketName) Error() string
 
 
 <a name="ErrInvalidBucketName.Is"></a>
-### func \(ErrInvalidBucketName\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L35>)
+### func \(ErrInvalidBucketName\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L35>)
 
 ```go
 func (e ErrInvalidBucketName) Is(err error) bool
@@ -818,7 +818,7 @@ func (e ErrInvalidBucketName) Is(err error) bool
 
 
 <a name="ErrInvalidLedgerName"></a>
-## type [ErrInvalidLedgerName](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L8-L11>)
+## type [ErrInvalidLedgerName](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L8-L11>)
 
 
 
@@ -829,7 +829,7 @@ type ErrInvalidLedgerName struct {
 ```
 
 <a name="ErrInvalidLedgerName.Error"></a>
-### func \(ErrInvalidLedgerName\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L13>)
+### func \(ErrInvalidLedgerName\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L13>)
 
 ```go
 func (e ErrInvalidLedgerName) Error() string
@@ -838,7 +838,7 @@ func (e ErrInvalidLedgerName) Error() string
 
 
 <a name="ErrInvalidLedgerName.Is"></a>
-### func \(ErrInvalidLedgerName\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L17>)
+### func \(ErrInvalidLedgerName\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L17>)
 
 ```go
 func (e ErrInvalidLedgerName) Is(err error) bool
@@ -847,7 +847,7 @@ func (e ErrInvalidLedgerName) Is(err error) bool
 
 
 <a name="ErrInvalidSchema"></a>
-## type [ErrInvalidSchema](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L91-L93>)
+## type [ErrInvalidSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L91-L93>)
 
 
 
@@ -858,7 +858,7 @@ type ErrInvalidSchema struct {
 ```
 
 <a name="NewErrInvalidSchema"></a>
-### func [NewErrInvalidSchema](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L102>)
+### func [NewErrInvalidSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L102>)
 
 ```go
 func NewErrInvalidSchema(err error) ErrInvalidSchema
@@ -867,7 +867,7 @@ func NewErrInvalidSchema(err error) ErrInvalidSchema
 
 
 <a name="ErrInvalidSchema.Error"></a>
-### func \(ErrInvalidSchema\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L95>)
+### func \(ErrInvalidSchema\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L95>)
 
 ```go
 func (e ErrInvalidSchema) Error() string
@@ -876,7 +876,7 @@ func (e ErrInvalidSchema) Error() string
 
 
 <a name="ErrInvalidSchema.Is"></a>
-### func \(ErrInvalidSchema\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L98>)
+### func \(ErrInvalidSchema\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L98>)
 
 ```go
 func (e ErrInvalidSchema) Is(err error) bool
@@ -885,7 +885,7 @@ func (e ErrInvalidSchema) Is(err error) bool
 
 
 <a name="ErrPipelineAlreadyExists"></a>
-## type [ErrPipelineAlreadyExists](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L46>)
+## type [ErrPipelineAlreadyExists](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L46>)
 
 ErrPipelineAlreadyExists denotes a pipeline already created The store is in charge of returning this error on a failing call on Store.CreatePipeline
 
@@ -894,7 +894,7 @@ type ErrPipelineAlreadyExists PipelineConfiguration
 ```
 
 <a name="NewErrPipelineAlreadyExists"></a>
-### func [NewErrPipelineAlreadyExists](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L57>)
+### func [NewErrPipelineAlreadyExists](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L57>)
 
 ```go
 func NewErrPipelineAlreadyExists(pipelineConfiguration PipelineConfiguration) ErrPipelineAlreadyExists
@@ -903,7 +903,7 @@ func NewErrPipelineAlreadyExists(pipelineConfiguration PipelineConfiguration) Er
 
 
 <a name="ErrPipelineAlreadyExists.Error"></a>
-### func \(ErrPipelineAlreadyExists\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L48>)
+### func \(ErrPipelineAlreadyExists\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L48>)
 
 ```go
 func (e ErrPipelineAlreadyExists) Error() string
@@ -912,7 +912,7 @@ func (e ErrPipelineAlreadyExists) Error() string
 
 
 <a name="ErrPipelineAlreadyExists.Is"></a>
-### func \(ErrPipelineAlreadyExists\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L52>)
+### func \(ErrPipelineAlreadyExists\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L52>)
 
 ```go
 func (e ErrPipelineAlreadyExists) Is(err error) bool
@@ -921,7 +921,7 @@ func (e ErrPipelineAlreadyExists) Is(err error) bool
 
 
 <a name="ErrPipelineNotFound"></a>
-## type [ErrPipelineNotFound](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L61>)
+## type [ErrPipelineNotFound](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L61>)
 
 
 
@@ -930,7 +930,7 @@ type ErrPipelineNotFound string
 ```
 
 <a name="NewErrPipelineNotFound"></a>
-### func [NewErrPipelineNotFound](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L72>)
+### func [NewErrPipelineNotFound](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L72>)
 
 ```go
 func NewErrPipelineNotFound(id string) ErrPipelineNotFound
@@ -939,7 +939,7 @@ func NewErrPipelineNotFound(id string) ErrPipelineNotFound
 
 
 <a name="ErrPipelineNotFound.Error"></a>
-### func \(ErrPipelineNotFound\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L63>)
+### func \(ErrPipelineNotFound\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L63>)
 
 ```go
 func (e ErrPipelineNotFound) Error() string
@@ -948,7 +948,7 @@ func (e ErrPipelineNotFound) Error() string
 
 
 <a name="ErrPipelineNotFound.Is"></a>
-### func \(ErrPipelineNotFound\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/errors.go#L67>)
+### func \(ErrPipelineNotFound\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/errors.go#L67>)
 
 ```go
 func (e ErrPipelineNotFound) Is(err error) bool
@@ -957,7 +957,7 @@ func (e ErrPipelineNotFound) Is(err error) bool
 
 
 <a name="Exporter"></a>
-## type [Exporter](<https://github.com/formancehq/ledger/blob/main/internal/exporter.go#L24-L30>)
+## type [Exporter](<https://github.com/hanzo-fi/ledger/blob/main/internal/exporter.go#L24-L30>)
 
 
 
@@ -972,7 +972,7 @@ type Exporter struct {
 ```
 
 <a name="NewExporter"></a>
-### func [NewExporter](<https://github.com/formancehq/ledger/blob/main/internal/exporter.go#L32>)
+### func [NewExporter](<https://github.com/hanzo-fi/ledger/blob/main/internal/exporter.go#L32>)
 
 ```go
 func NewExporter(configuration ExporterConfiguration) Exporter
@@ -981,7 +981,7 @@ func NewExporter(configuration ExporterConfiguration) Exporter
 
 
 <a name="ExporterConfiguration"></a>
-## type [ExporterConfiguration](<https://github.com/formancehq/ledger/blob/main/internal/exporter.go#L12-L15>)
+## type [ExporterConfiguration](<https://github.com/hanzo-fi/ledger/blob/main/internal/exporter.go#L12-L15>)
 
 
 
@@ -993,7 +993,7 @@ type ExporterConfiguration struct {
 ```
 
 <a name="NewExporterConfiguration"></a>
-### func [NewExporterConfiguration](<https://github.com/formancehq/ledger/blob/main/internal/exporter.go#L17>)
+### func [NewExporterConfiguration](<https://github.com/hanzo-fi/ledger/blob/main/internal/exporter.go#L17>)
 
 ```go
 func NewExporterConfiguration(driver string, config json.RawMessage) ExporterConfiguration
@@ -1002,7 +1002,7 @@ func NewExporterConfiguration(driver string, config json.RawMessage) ExporterCon
 
 
 <a name="GetAggregatedVolumesOptions"></a>
-## type [GetAggregatedVolumesOptions](<https://github.com/formancehq/ledger/blob/main/internal/resources.go#L3-L5>)
+## type [GetAggregatedVolumesOptions](<https://github.com/hanzo-fi/ledger/blob/main/internal/resources.go#L3-L5>)
 
 
 
@@ -1013,7 +1013,7 @@ type GetAggregatedVolumesOptions struct {
 ```
 
 <a name="GetVolumesOptions"></a>
-## type [GetVolumesOptions](<https://github.com/formancehq/ledger/blob/main/internal/resources.go#L7-L10>)
+## type [GetVolumesOptions](<https://github.com/hanzo-fi/ledger/blob/main/internal/resources.go#L7-L10>)
 
 
 
@@ -1025,7 +1025,7 @@ type GetVolumesOptions struct {
 ```
 
 <a name="InsertedSchema"></a>
-## type [InsertedSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L416-L418>)
+## type [InsertedSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L416-L418>)
 
 
 
@@ -1036,7 +1036,7 @@ type InsertedSchema struct {
 ```
 
 <a name="InsertedSchema.NeedsSchema"></a>
-### func \(InsertedSchema\) [NeedsSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L420>)
+### func \(InsertedSchema\) [NeedsSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L420>)
 
 ```go
 func (p InsertedSchema) NeedsSchema() bool
@@ -1045,7 +1045,7 @@ func (p InsertedSchema) NeedsSchema() bool
 
 
 <a name="InsertedSchema.Type"></a>
-### func \(InsertedSchema\) [Type](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L427>)
+### func \(InsertedSchema\) [Type](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L427>)
 
 ```go
 func (u InsertedSchema) Type() LogType
@@ -1054,7 +1054,7 @@ func (u InsertedSchema) Type() LogType
 
 
 <a name="InsertedSchema.ValidateWithSchema"></a>
-### func \(InsertedSchema\) [ValidateWithSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L423>)
+### func \(InsertedSchema\) [ValidateWithSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L423>)
 
 ```go
 func (u InsertedSchema) ValidateWithSchema(schema Schema) error
@@ -1063,7 +1063,7 @@ func (u InsertedSchema) ValidateWithSchema(schema Schema) error
 
 
 <a name="Ledger"></a>
-## type [Ledger](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L21-L30>)
+## type [Ledger](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L21-L30>)
 
 
 
@@ -1081,7 +1081,7 @@ type Ledger struct {
 ```
 
 <a name="MustNewWithDefault"></a>
-### func [MustNewWithDefault](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L72>)
+### func [MustNewWithDefault](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L72>)
 
 ```go
 func MustNewWithDefault(name string) Ledger
@@ -1090,7 +1090,7 @@ func MustNewWithDefault(name string) Ledger
 
 
 <a name="New"></a>
-### func [New](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L45>)
+### func [New](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L45>)
 
 ```go
 func New(name string, configuration Configuration) (*Ledger, error)
@@ -1099,7 +1099,7 @@ func New(name string, configuration Configuration) (*Ledger, error)
 
 
 <a name="NewWithDefaults"></a>
-### func [NewWithDefaults](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L68>)
+### func [NewWithDefaults](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L68>)
 
 ```go
 func NewWithDefaults(name string) (*Ledger, error)
@@ -1108,7 +1108,7 @@ func NewWithDefaults(name string) (*Ledger, error)
 
 
 <a name="Ledger.HasFeature"></a>
-### func \(Ledger\) [HasFeature](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L32>)
+### func \(Ledger\) [HasFeature](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L32>)
 
 ```go
 func (l Ledger) HasFeature(feature, value string) bool
@@ -1117,7 +1117,7 @@ func (l Ledger) HasFeature(feature, value string) bool
 
 
 <a name="Ledger.WithMetadata"></a>
-### func \(Ledger\) [WithMetadata](<https://github.com/formancehq/ledger/blob/main/internal/ledger.go#L40>)
+### func \(Ledger\) [WithMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/ledger.go#L40>)
 
 ```go
 func (l Ledger) WithMetadata(m metadata.Metadata) Ledger
@@ -1126,7 +1126,7 @@ func (l Ledger) WithMetadata(m metadata.Metadata) Ledger
 
 
 <a name="Log"></a>
-## type [Log](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L89-L102>)
+## type [Log](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L89-L102>)
 
 Log represents atomic actions made on the ledger.
 
@@ -1148,7 +1148,7 @@ type Log struct {
 ```
 
 <a name="NewLog"></a>
-### func [NewLog](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L194>)
+### func [NewLog](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L194>)
 
 ```go
 func NewLog(payload LogPayload) Log
@@ -1157,7 +1157,7 @@ func NewLog(payload LogPayload) Log
 
 
 <a name="Log.ChainLog"></a>
-### func \(Log\) [ChainLog](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L115>)
+### func \(Log\) [ChainLog](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L115>)
 
 ```go
 func (l Log) ChainLog(previous *Log) Log
@@ -1166,7 +1166,7 @@ func (l Log) ChainLog(previous *Log) Log
 
 
 <a name="Log.ComputeHash"></a>
-### func \(\*Log\) [ComputeHash](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L146>)
+### func \(\*Log\) [ComputeHash](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L146>)
 
 ```go
 func (l *Log) ComputeHash(previous *Log)
@@ -1175,7 +1175,7 @@ func (l *Log) ComputeHash(previous *Log)
 
 
 <a name="Log.UnmarshalJSON"></a>
-### func \(\*Log\) [UnmarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L126>)
+### func \(\*Log\) [UnmarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L126>)
 
 ```go
 func (l *Log) UnmarshalJSON(data []byte) error
@@ -1184,7 +1184,7 @@ func (l *Log) UnmarshalJSON(data []byte) error
 
 
 <a name="Log.ValidateWithSchema"></a>
-### func \(Log\) [ValidateWithSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L190>)
+### func \(Log\) [ValidateWithSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L190>)
 
 ```go
 func (l Log) ValidateWithSchema(schema Schema) error
@@ -1193,7 +1193,7 @@ func (l Log) ValidateWithSchema(schema Schema) error
 
 
 <a name="Log.WithDate"></a>
-### func \(Log\) [WithDate](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L104>)
+### func \(Log\) [WithDate](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L104>)
 
 ```go
 func (l Log) WithDate(date time.Time) Log
@@ -1202,7 +1202,7 @@ func (l Log) WithDate(date time.Time) Log
 
 
 <a name="Log.WithID"></a>
-### func \(Log\) [WithID](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L185>)
+### func \(Log\) [WithID](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L185>)
 
 ```go
 func (l Log) WithID(i uint64) Log
@@ -1211,7 +1211,7 @@ func (l Log) WithID(i uint64) Log
 
 
 <a name="Log.WithIdempotencyKey"></a>
-### func \(Log\) [WithIdempotencyKey](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L110>)
+### func \(Log\) [WithIdempotencyKey](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L110>)
 
 ```go
 func (l Log) WithIdempotencyKey(key string) Log
@@ -1220,7 +1220,7 @@ func (l Log) WithIdempotencyKey(key string) Log
 
 
 <a name="LogPayload"></a>
-## type [LogPayload](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L201-L205>)
+## type [LogPayload](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L201-L205>)
 
 
 
@@ -1233,7 +1233,7 @@ type LogPayload interface {
 ```
 
 <a name="HydrateLog"></a>
-### func [HydrateLog](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L433>)
+### func [HydrateLog](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L433>)
 
 ```go
 func HydrateLog(_type LogType, data []byte) (LogPayload, error)
@@ -1242,7 +1242,7 @@ func HydrateLog(_type LogType, data []byte) (LogPayload, error)
 
 
 <a name="LogType"></a>
-## type [LogType](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L28>)
+## type [LogType](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L28>)
 
 
 
@@ -1263,7 +1263,7 @@ const (
 ```
 
 <a name="LogTypeFromString"></a>
-### func [LogTypeFromString](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L71>)
+### func [LogTypeFromString](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L71>)
 
 ```go
 func LogTypeFromString(logType string) LogType
@@ -1272,7 +1272,7 @@ func LogTypeFromString(logType string) LogType
 
 
 <a name="LogType.MarshalJSON"></a>
-### func \(LogType\) [MarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L39>)
+### func \(LogType\) [MarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L39>)
 
 ```go
 func (lt LogType) MarshalJSON() ([]byte, error)
@@ -1281,7 +1281,7 @@ func (lt LogType) MarshalJSON() ([]byte, error)
 
 
 <a name="LogType.Scan"></a>
-### func \(\*LogType\) [Scan](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L34>)
+### func \(\*LogType\) [Scan](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L34>)
 
 ```go
 func (lt *LogType) Scan(src interface{}) error
@@ -1290,7 +1290,7 @@ func (lt *LogType) Scan(src interface{}) error
 
 
 <a name="LogType.String"></a>
-### func \(LogType\) [String](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L54>)
+### func \(LogType\) [String](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L54>)
 
 ```go
 func (lt LogType) String() string
@@ -1299,7 +1299,7 @@ func (lt LogType) String() string
 
 
 <a name="LogType.UnmarshalJSON"></a>
-### func \(\*LogType\) [UnmarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L43>)
+### func \(\*LogType\) [UnmarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L43>)
 
 ```go
 func (lt *LogType) UnmarshalJSON(data []byte) error
@@ -1308,7 +1308,7 @@ func (lt *LogType) UnmarshalJSON(data []byte) error
 
 
 <a name="LogType.Value"></a>
-### func \(LogType\) [Value](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L30>)
+### func \(LogType\) [Value](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L30>)
 
 ```go
 func (lt LogType) Value() (driver.Value, error)
@@ -1317,7 +1317,7 @@ func (lt LogType) Value() (driver.Value, error)
 
 
 <a name="Memento"></a>
-## type [Memento](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L207-L209>)
+## type [Memento](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L207-L209>)
 
 
 
@@ -1328,7 +1328,7 @@ type Memento interface {
 ```
 
 <a name="Move"></a>
-## type [Move](<https://github.com/formancehq/ledger/blob/main/internal/moves.go#L13-L25>)
+## type [Move](<https://github.com/hanzo-fi/ledger/blob/main/internal/moves.go#L13-L25>)
 
 
 
@@ -1349,7 +1349,7 @@ type Move struct {
 ```
 
 <a name="Moves"></a>
-## type [Moves](<https://github.com/formancehq/ledger/blob/main/internal/moves.go#L27>)
+## type [Moves](<https://github.com/hanzo-fi/ledger/blob/main/internal/moves.go#L27>)
 
 
 
@@ -1358,7 +1358,7 @@ type Moves []*Move
 ```
 
 <a name="Moves.ComputePostCommitEffectiveVolumes"></a>
-### func \(Moves\) [ComputePostCommitEffectiveVolumes](<https://github.com/formancehq/ledger/blob/main/internal/moves.go#L29>)
+### func \(Moves\) [ComputePostCommitEffectiveVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/moves.go#L29>)
 
 ```go
 func (m Moves) ComputePostCommitEffectiveVolumes() PostCommitVolumes
@@ -1367,7 +1367,7 @@ func (m Moves) ComputePostCommitEffectiveVolumes() PostCommitVolumes
 
 
 <a name="Pipeline"></a>
-## type [Pipeline](<https://github.com/formancehq/ledger/blob/main/internal/pipeline.go#L28-L37>)
+## type [Pipeline](<https://github.com/hanzo-fi/ledger/blob/main/internal/pipeline.go#L28-L37>)
 
 
 
@@ -1385,7 +1385,7 @@ type Pipeline struct {
 ```
 
 <a name="NewPipeline"></a>
-### func [NewPipeline](<https://github.com/formancehq/ledger/blob/main/internal/pipeline.go#L39>)
+### func [NewPipeline](<https://github.com/hanzo-fi/ledger/blob/main/internal/pipeline.go#L39>)
 
 ```go
 func NewPipeline(pipelineConfiguration PipelineConfiguration) Pipeline
@@ -1394,7 +1394,7 @@ func NewPipeline(pipelineConfiguration PipelineConfiguration) Pipeline
 
 
 <a name="PipelineConfiguration"></a>
-## type [PipelineConfiguration](<https://github.com/formancehq/ledger/blob/main/internal/pipeline.go#L12-L15>)
+## type [PipelineConfiguration](<https://github.com/hanzo-fi/ledger/blob/main/internal/pipeline.go#L12-L15>)
 
 
 
@@ -1406,7 +1406,7 @@ type PipelineConfiguration struct {
 ```
 
 <a name="NewPipelineConfiguration"></a>
-### func [NewPipelineConfiguration](<https://github.com/formancehq/ledger/blob/main/internal/pipeline.go#L21>)
+### func [NewPipelineConfiguration](<https://github.com/hanzo-fi/ledger/blob/main/internal/pipeline.go#L21>)
 
 ```go
 func NewPipelineConfiguration(ledger, exporterID string) PipelineConfiguration
@@ -1415,7 +1415,7 @@ func NewPipelineConfiguration(ledger, exporterID string) PipelineConfiguration
 
 
 <a name="PipelineConfiguration.String"></a>
-### func \(PipelineConfiguration\) [String](<https://github.com/formancehq/ledger/blob/main/internal/pipeline.go#L17>)
+### func \(PipelineConfiguration\) [String](<https://github.com/hanzo-fi/ledger/blob/main/internal/pipeline.go#L17>)
 
 ```go
 func (p PipelineConfiguration) String() string
@@ -1424,7 +1424,7 @@ func (p PipelineConfiguration) String() string
 
 
 <a name="PostCommitVolumes"></a>
-## type [PostCommitVolumes](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L119>)
+## type [PostCommitVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L119>)
 
 
 
@@ -1433,7 +1433,7 @@ type PostCommitVolumes map[string]VolumesByAssets
 ```
 
 <a name="PostCommitVolumes.AddInput"></a>
-### func \(PostCommitVolumes\) [AddInput](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L134>)
+### func \(PostCommitVolumes\) [AddInput](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L134>)
 
 ```go
 func (a PostCommitVolumes) AddInput(account, asset string, input *big.Int)
@@ -1442,7 +1442,7 @@ func (a PostCommitVolumes) AddInput(account, asset string, input *big.Int)
 
 
 <a name="PostCommitVolumes.AddOutput"></a>
-### func \(PostCommitVolumes\) [AddOutput](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L140>)
+### func \(PostCommitVolumes\) [AddOutput](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L140>)
 
 ```go
 func (a PostCommitVolumes) AddOutput(account, asset string, output *big.Int)
@@ -1451,7 +1451,7 @@ func (a PostCommitVolumes) AddOutput(account, asset string, output *big.Int)
 
 
 <a name="PostCommitVolumes.Copy"></a>
-### func \(PostCommitVolumes\) [Copy](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L146>)
+### func \(PostCommitVolumes\) [Copy](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L146>)
 
 ```go
 func (a PostCommitVolumes) Copy() PostCommitVolumes
@@ -1460,7 +1460,7 @@ func (a PostCommitVolumes) Copy() PostCommitVolumes
 
 
 <a name="PostCommitVolumes.Merge"></a>
-### func \(PostCommitVolumes\) [Merge](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L154>)
+### func \(PostCommitVolumes\) [Merge](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L154>)
 
 ```go
 func (a PostCommitVolumes) Merge(volumes PostCommitVolumes) PostCommitVolumes
@@ -1469,7 +1469,7 @@ func (a PostCommitVolumes) Merge(volumes PostCommitVolumes) PostCommitVolumes
 
 
 <a name="PostCommitVolumes.SubtractPostings"></a>
-### func \(PostCommitVolumes\) [SubtractPostings](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L121>)
+### func \(PostCommitVolumes\) [SubtractPostings](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L121>)
 
 ```go
 func (a PostCommitVolumes) SubtractPostings(postings Postings) PostCommitVolumes
@@ -1478,7 +1478,7 @@ func (a PostCommitVolumes) SubtractPostings(postings Postings) PostCommitVolumes
 
 
 <a name="Posting"></a>
-## type [Posting](<https://github.com/formancehq/ledger/blob/main/internal/posting.go#L11-L16>)
+## type [Posting](<https://github.com/hanzo-fi/ledger/blob/main/internal/posting.go#L11-L16>)
 
 
 
@@ -1492,7 +1492,7 @@ type Posting struct {
 ```
 
 <a name="NewPosting"></a>
-### func [NewPosting](<https://github.com/formancehq/ledger/blob/main/internal/posting.go#L26>)
+### func [NewPosting](<https://github.com/hanzo-fi/ledger/blob/main/internal/posting.go#L26>)
 
 ```go
 func NewPosting(source string, destination string, asset string, amount *big.Int) Posting
@@ -1501,7 +1501,7 @@ func NewPosting(source string, destination string, asset string, amount *big.Int
 
 
 <a name="Posting.GetDestination"></a>
-### func \(Posting\) [GetDestination](<https://github.com/formancehq/ledger/blob/main/internal/posting.go#L22>)
+### func \(Posting\) [GetDestination](<https://github.com/hanzo-fi/ledger/blob/main/internal/posting.go#L22>)
 
 ```go
 func (p Posting) GetDestination() string
@@ -1510,7 +1510,7 @@ func (p Posting) GetDestination() string
 
 
 <a name="Posting.GetSource"></a>
-### func \(Posting\) [GetSource](<https://github.com/formancehq/ledger/blob/main/internal/posting.go#L18>)
+### func \(Posting\) [GetSource](<https://github.com/hanzo-fi/ledger/blob/main/internal/posting.go#L18>)
 
 ```go
 func (p Posting) GetSource() string
@@ -1519,7 +1519,7 @@ func (p Posting) GetSource() string
 
 
 <a name="Postings"></a>
-## type [Postings](<https://github.com/formancehq/ledger/blob/main/internal/posting.go#L35>)
+## type [Postings](<https://github.com/hanzo-fi/ledger/blob/main/internal/posting.go#L35>)
 
 
 
@@ -1528,7 +1528,7 @@ type Postings []Posting
 ```
 
 <a name="Postings.Reverse"></a>
-### func \(Postings\) [Reverse](<https://github.com/formancehq/ledger/blob/main/internal/posting.go#L37>)
+### func \(Postings\) [Reverse](<https://github.com/hanzo-fi/ledger/blob/main/internal/posting.go#L37>)
 
 ```go
 func (p Postings) Reverse() Postings
@@ -1537,7 +1537,7 @@ func (p Postings) Reverse() Postings
 
 
 <a name="Postings.Validate"></a>
-### func \(Postings\) [Validate](<https://github.com/formancehq/ledger/blob/main/internal/posting.go#L52>)
+### func \(Postings\) [Validate](<https://github.com/hanzo-fi/ledger/blob/main/internal/posting.go#L52>)
 
 ```go
 func (p Postings) Validate() (int, error)
@@ -1546,7 +1546,7 @@ func (p Postings) Validate() (int, error)
 
 
 <a name="QueryTemplate"></a>
-## type [QueryTemplate](<https://github.com/formancehq/ledger/blob/main/internal/query_template.go#L99-L105>)
+## type [QueryTemplate](<https://github.com/hanzo-fi/ledger/blob/main/internal/query_template.go#L99-L105>)
 
 
 
@@ -1561,7 +1561,7 @@ type QueryTemplate struct {
 ```
 
 <a name="QueryTemplate.Validate"></a>
-### func \(QueryTemplate\) [Validate](<https://github.com/formancehq/ledger/blob/main/internal/query_template.go#L108>)
+### func \(QueryTemplate\) [Validate](<https://github.com/hanzo-fi/ledger/blob/main/internal/query_template.go#L108>)
 
 ```go
 func (q QueryTemplate) Validate() error
@@ -1570,7 +1570,7 @@ func (q QueryTemplate) Validate() error
 Validate a query template
 
 <a name="QueryTemplateParams"></a>
-## type [QueryTemplateParams](<https://github.com/formancehq/ledger/blob/main/internal/query_template.go#L30-L38>)
+## type [QueryTemplateParams](<https://github.com/hanzo-fi/ledger/blob/main/internal/query_template.go#L30-L38>)
 
 
 
@@ -1587,7 +1587,7 @@ type QueryTemplateParams[Opts any] struct {
 ```
 
 <a name="QueryTemplateParams[Opts].Overwrite"></a>
-### func \(QueryTemplateParams\[Opts\]\) [Overwrite](<https://github.com/formancehq/ledger/blob/main/internal/query_template.go#L83>)
+### func \(QueryTemplateParams\[Opts\]\) [Overwrite](<https://github.com/hanzo-fi/ledger/blob/main/internal/query_template.go#L83>)
 
 ```go
 func (q QueryTemplateParams[Opts]) Overwrite(others ...json.RawMessage) (*QueryTemplateParams[Opts], error)
@@ -1596,7 +1596,7 @@ func (q QueryTemplateParams[Opts]) Overwrite(others ...json.RawMessage) (*QueryT
 
 
 <a name="QueryTemplateParams[Opts].UnmarshalJSON"></a>
-### func \(\*QueryTemplateParams\[Opts\]\) [UnmarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/query_template.go#L40>)
+### func \(\*QueryTemplateParams\[Opts\]\) [UnmarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/query_template.go#L40>)
 
 ```go
 func (p *QueryTemplateParams[Opts]) UnmarshalJSON(b []byte) error
@@ -1605,7 +1605,7 @@ func (p *QueryTemplateParams[Opts]) UnmarshalJSON(b []byte) error
 
 
 <a name="QueryTemplates"></a>
-## type [QueryTemplates](<https://github.com/formancehq/ledger/blob/main/internal/query_template.go#L19>)
+## type [QueryTemplates](<https://github.com/hanzo-fi/ledger/blob/main/internal/query_template.go#L19>)
 
 
 
@@ -1614,7 +1614,7 @@ type QueryTemplates map[string]QueryTemplate
 ```
 
 <a name="QueryTemplates.Validate"></a>
-### func \(QueryTemplates\) [Validate](<https://github.com/formancehq/ledger/blob/main/internal/query_template.go#L21>)
+### func \(QueryTemplates\) [Validate](<https://github.com/hanzo-fi/ledger/blob/main/internal/query_template.go#L21>)
 
 ```go
 func (t QueryTemplates) Validate() error
@@ -1623,7 +1623,7 @@ func (t QueryTemplates) Validate() error
 
 
 <a name="RevertedTransaction"></a>
-## type [RevertedTransaction](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L370-L373>)
+## type [RevertedTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L370-L373>)
 
 
 
@@ -1635,7 +1635,7 @@ type RevertedTransaction struct {
 ```
 
 <a name="RevertedTransaction.GetMemento"></a>
-### func \(RevertedTransaction\) [GetMemento](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L388>)
+### func \(RevertedTransaction\) [GetMemento](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L388>)
 
 ```go
 func (r RevertedTransaction) GetMemento() any
@@ -1644,7 +1644,7 @@ func (r RevertedTransaction) GetMemento() any
 
 
 <a name="RevertedTransaction.NeedsSchema"></a>
-### func \(RevertedTransaction\) [NeedsSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L375>)
+### func \(RevertedTransaction\) [NeedsSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L375>)
 
 ```go
 func (p RevertedTransaction) NeedsSchema() bool
@@ -1653,7 +1653,7 @@ func (p RevertedTransaction) NeedsSchema() bool
 
 
 <a name="RevertedTransaction.Type"></a>
-### func \(RevertedTransaction\) [Type](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L382>)
+### func \(RevertedTransaction\) [Type](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L382>)
 
 ```go
 func (r RevertedTransaction) Type() LogType
@@ -1662,7 +1662,7 @@ func (r RevertedTransaction) Type() LogType
 
 
 <a name="RevertedTransaction.ValidateWithSchema"></a>
-### func \(RevertedTransaction\) [ValidateWithSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L378>)
+### func \(RevertedTransaction\) [ValidateWithSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L378>)
 
 ```go
 func (r RevertedTransaction) ValidateWithSchema(schema Schema) error
@@ -1671,7 +1671,7 @@ func (r RevertedTransaction) ValidateWithSchema(schema Schema) error
 
 
 <a name="RuntimeType"></a>
-## type [RuntimeType](<https://github.com/formancehq/ledger/blob/main/internal/transaction_templates.go#L8>)
+## type [RuntimeType](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction_templates.go#L8>)
 
 
 
@@ -1689,7 +1689,7 @@ const (
 ```
 
 <a name="SavedMetadata"></a>
-## type [SavedMetadata](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L266-L270>)
+## type [SavedMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L266-L270>)
 
 
 
@@ -1702,7 +1702,7 @@ type SavedMetadata struct {
 ```
 
 <a name="SavedMetadata.NeedsSchema"></a>
-### func \(SavedMetadata\) [NeedsSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L272>)
+### func \(SavedMetadata\) [NeedsSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L272>)
 
 ```go
 func (p SavedMetadata) NeedsSchema() bool
@@ -1711,7 +1711,7 @@ func (p SavedMetadata) NeedsSchema() bool
 
 
 <a name="SavedMetadata.Type"></a>
-### func \(SavedMetadata\) [Type](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L279>)
+### func \(SavedMetadata\) [Type](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L279>)
 
 ```go
 func (s SavedMetadata) Type() LogType
@@ -1720,7 +1720,7 @@ func (s SavedMetadata) Type() LogType
 
 
 <a name="SavedMetadata.UnmarshalJSON"></a>
-### func \(\*SavedMetadata\) [UnmarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L285>)
+### func \(\*SavedMetadata\) [UnmarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L285>)
 
 ```go
 func (s *SavedMetadata) UnmarshalJSON(data []byte) error
@@ -1729,7 +1729,7 @@ func (s *SavedMetadata) UnmarshalJSON(data []byte) error
 
 
 <a name="SavedMetadata.ValidateWithSchema"></a>
-### func \(SavedMetadata\) [ValidateWithSchema](<https://github.com/formancehq/ledger/blob/main/internal/log.go#L275>)
+### func \(SavedMetadata\) [ValidateWithSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/log.go#L275>)
 
 ```go
 func (s SavedMetadata) ValidateWithSchema(schema Schema) error
@@ -1738,7 +1738,7 @@ func (s SavedMetadata) ValidateWithSchema(schema Schema) error
 
 
 <a name="Schema"></a>
-## type [Schema](<https://github.com/formancehq/ledger/blob/main/internal/schema.go#L17-L23>)
+## type [Schema](<https://github.com/hanzo-fi/ledger/blob/main/internal/schema.go#L17-L23>)
 
 
 
@@ -1753,7 +1753,7 @@ type Schema struct {
 ```
 
 <a name="NewSchema"></a>
-### func [NewSchema](<https://github.com/formancehq/ledger/blob/main/internal/schema.go#L25>)
+### func [NewSchema](<https://github.com/hanzo-fi/ledger/blob/main/internal/schema.go#L25>)
 
 ```go
 func NewSchema(version string, data SchemaData) (Schema, error)
@@ -1762,7 +1762,7 @@ func NewSchema(version string, data SchemaData) (Schema, error)
 
 
 <a name="SchemaData"></a>
-## type [SchemaData](<https://github.com/formancehq/ledger/blob/main/internal/schema.go#L11-L15>)
+## type [SchemaData](<https://github.com/hanzo-fi/ledger/blob/main/internal/schema.go#L11-L15>)
 
 
 
@@ -1775,7 +1775,7 @@ type SchemaData struct {
 ```
 
 <a name="Transaction"></a>
-## type [Transaction](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L38-L53>)
+## type [Transaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L38-L53>)
 
 
 
@@ -1799,7 +1799,7 @@ type Transaction struct {
 ```
 
 <a name="NewTransaction"></a>
-### func [NewTransaction](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L234>)
+### func [NewTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L234>)
 
 ```go
 func NewTransaction() Transaction
@@ -1808,7 +1808,7 @@ func NewTransaction() Transaction
 
 
 <a name="Transaction.AccountsWithDefaultMetadata"></a>
-### func \(\*Transaction\) [AccountsWithDefaultMetadata](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L240>)
+### func \(\*Transaction\) [AccountsWithDefaultMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L240>)
 
 ```go
 func (tx *Transaction) AccountsWithDefaultMetadata(schema *Schema, accountMetadata map[string]metadata.Metadata) []AccountWithDefaultMetadata
@@ -1817,7 +1817,7 @@ func (tx *Transaction) AccountsWithDefaultMetadata(schema *Schema, accountMetada
 
 
 <a name="Transaction.InvolvedAccounts"></a>
-### func \(Transaction\) [InvolvedAccounts](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L118>)
+### func \(Transaction\) [InvolvedAccounts](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L118>)
 
 ```go
 func (tx Transaction) InvolvedAccounts() []string
@@ -1826,7 +1826,7 @@ func (tx Transaction) InvolvedAccounts() []string
 
 
 <a name="Transaction.InvolvedDestinations"></a>
-### func \(Transaction\) [InvolvedDestinations](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L104>)
+### func \(Transaction\) [InvolvedDestinations](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L104>)
 
 ```go
 func (tx Transaction) InvolvedDestinations() map[string][]string
@@ -1835,7 +1835,7 @@ func (tx Transaction) InvolvedDestinations() map[string][]string
 
 
 <a name="Transaction.IsReverted"></a>
-### func \(Transaction\) [IsReverted](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L207>)
+### func \(Transaction\) [IsReverted](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L207>)
 
 ```go
 func (tx Transaction) IsReverted() bool
@@ -1844,7 +1844,7 @@ func (tx Transaction) IsReverted() bool
 
 
 <a name="Transaction.JSONSchemaExtend"></a>
-### func \(Transaction\) [JSONSchemaExtend](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L55>)
+### func \(Transaction\) [JSONSchemaExtend](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L55>)
 
 ```go
 func (Transaction) JSONSchemaExtend(schema *jsonschema.Schema)
@@ -1853,7 +1853,7 @@ func (Transaction) JSONSchemaExtend(schema *jsonschema.Schema)
 
 
 <a name="Transaction.MarshalJSON"></a>
-### func \(Transaction\) [MarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L190>)
+### func \(Transaction\) [MarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L190>)
 
 ```go
 func (tx Transaction) MarshalJSON() ([]byte, error)
@@ -1862,7 +1862,7 @@ func (tx Transaction) MarshalJSON() ([]byte, error)
 
 
 <a name="Transaction.Reverse"></a>
-### func \(Transaction\) [Reverse](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L64>)
+### func \(Transaction\) [Reverse](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L64>)
 
 ```go
 func (tx Transaction) Reverse() Transaction
@@ -1871,7 +1871,7 @@ func (tx Transaction) Reverse() Transaction
 
 
 <a name="Transaction.VolumeUpdates"></a>
-### func \(Transaction\) [VolumeUpdates](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L129>)
+### func \(Transaction\) [VolumeUpdates](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L129>)
 
 ```go
 func (tx Transaction) VolumeUpdates() []AccountsVolumes
@@ -1880,7 +1880,7 @@ func (tx Transaction) VolumeUpdates() []AccountsVolumes
 
 
 <a name="Transaction.WithID"></a>
-### func \(Transaction\) [WithID](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L69>)
+### func \(Transaction\) [WithID](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L69>)
 
 ```go
 func (tx Transaction) WithID(id uint64) Transaction
@@ -1889,7 +1889,7 @@ func (tx Transaction) WithID(id uint64) Transaction
 
 
 <a name="Transaction.WithInsertedAt"></a>
-### func \(Transaction\) [WithInsertedAt](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L94>)
+### func \(Transaction\) [WithInsertedAt](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L94>)
 
 ```go
 func (tx Transaction) WithInsertedAt(date time.Time) Transaction
@@ -1898,7 +1898,7 @@ func (tx Transaction) WithInsertedAt(date time.Time) Transaction
 
 
 <a name="Transaction.WithMetadata"></a>
-### func \(Transaction\) [WithMetadata](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L89>)
+### func \(Transaction\) [WithMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L89>)
 
 ```go
 func (tx Transaction) WithMetadata(m metadata.Metadata) Transaction
@@ -1907,7 +1907,7 @@ func (tx Transaction) WithMetadata(m metadata.Metadata) Transaction
 
 
 <a name="Transaction.WithPostCommitEffectiveVolumes"></a>
-### func \(Transaction\) [WithPostCommitEffectiveVolumes](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L222>)
+### func \(Transaction\) [WithPostCommitEffectiveVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L222>)
 
 ```go
 func (tx Transaction) WithPostCommitEffectiveVolumes(volumes PostCommitVolumes) Transaction
@@ -1916,7 +1916,7 @@ func (tx Transaction) WithPostCommitEffectiveVolumes(volumes PostCommitVolumes) 
 
 
 <a name="Transaction.WithPostCommitVolumes"></a>
-### func \(Transaction\) [WithPostCommitVolumes](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L216>)
+### func \(Transaction\) [WithPostCommitVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L216>)
 
 ```go
 func (tx Transaction) WithPostCommitVolumes(volumes PostCommitVolumes) Transaction
@@ -1925,7 +1925,7 @@ func (tx Transaction) WithPostCommitVolumes(volumes PostCommitVolumes) Transacti
 
 
 <a name="Transaction.WithPostings"></a>
-### func \(Transaction\) [WithPostings](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L74>)
+### func \(Transaction\) [WithPostings](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L74>)
 
 ```go
 func (tx Transaction) WithPostings(postings ...Posting) Transaction
@@ -1934,7 +1934,7 @@ func (tx Transaction) WithPostings(postings ...Posting) Transaction
 
 
 <a name="Transaction.WithReference"></a>
-### func \(Transaction\) [WithReference](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L79>)
+### func \(Transaction\) [WithReference](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L79>)
 
 ```go
 func (tx Transaction) WithReference(ref string) Transaction
@@ -1943,7 +1943,7 @@ func (tx Transaction) WithReference(ref string) Transaction
 
 
 <a name="Transaction.WithRevertedAt"></a>
-### func \(Transaction\) [WithRevertedAt](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L211>)
+### func \(Transaction\) [WithRevertedAt](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L211>)
 
 ```go
 func (tx Transaction) WithRevertedAt(timestamp time.Time) Transaction
@@ -1952,7 +1952,7 @@ func (tx Transaction) WithRevertedAt(timestamp time.Time) Transaction
 
 
 <a name="Transaction.WithTemplate"></a>
-### func \(Transaction\) [WithTemplate](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L99>)
+### func \(Transaction\) [WithTemplate](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L99>)
 
 ```go
 func (tx Transaction) WithTemplate(template string) Transaction
@@ -1961,7 +1961,7 @@ func (tx Transaction) WithTemplate(template string) Transaction
 
 
 <a name="Transaction.WithTimestamp"></a>
-### func \(Transaction\) [WithTimestamp](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L84>)
+### func \(Transaction\) [WithTimestamp](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L84>)
 
 ```go
 func (tx Transaction) WithTimestamp(ts time.Time) Transaction
@@ -1970,7 +1970,7 @@ func (tx Transaction) WithTimestamp(ts time.Time) Transaction
 
 
 <a name="Transaction.WithUpdatedAt"></a>
-### func \(Transaction\) [WithUpdatedAt](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L228>)
+### func \(Transaction\) [WithUpdatedAt](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L228>)
 
 ```go
 func (tx Transaction) WithUpdatedAt(at time.Time) Transaction
@@ -1979,7 +1979,7 @@ func (tx Transaction) WithUpdatedAt(at time.Time) Transaction
 
 
 <a name="TransactionData"></a>
-## type [TransactionData](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L20-L25>)
+## type [TransactionData](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L20-L25>)
 
 
 
@@ -1993,7 +1993,7 @@ type TransactionData struct {
 ```
 
 <a name="NewTransactionData"></a>
-### func [NewTransactionData](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L32>)
+### func [NewTransactionData](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L32>)
 
 ```go
 func NewTransactionData() TransactionData
@@ -2002,7 +2002,7 @@ func NewTransactionData() TransactionData
 
 
 <a name="TransactionData.WithPostings"></a>
-### func \(TransactionData\) [WithPostings](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L27>)
+### func \(TransactionData\) [WithPostings](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L27>)
 
 ```go
 func (data TransactionData) WithPostings(postings ...Posting) TransactionData
@@ -2011,7 +2011,7 @@ func (data TransactionData) WithPostings(postings ...Posting) TransactionData
 
 
 <a name="TransactionTemplate"></a>
-## type [TransactionTemplate](<https://github.com/formancehq/ledger/blob/main/internal/transaction_templates.go#L15-L19>)
+## type [TransactionTemplate](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction_templates.go#L15-L19>)
 
 
 
@@ -2024,7 +2024,7 @@ type TransactionTemplate struct {
 ```
 
 <a name="TransactionTemplates"></a>
-## type [TransactionTemplates](<https://github.com/formancehq/ledger/blob/main/internal/transaction_templates.go#L21>)
+## type [TransactionTemplates](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction_templates.go#L21>)
 
 
 
@@ -2033,7 +2033,7 @@ type TransactionTemplates map[string]TransactionTemplate
 ```
 
 <a name="TransactionTemplates.Validate"></a>
-### func \(TransactionTemplates\) [Validate](<https://github.com/formancehq/ledger/blob/main/internal/transaction_templates.go#L23>)
+### func \(TransactionTemplates\) [Validate](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction_templates.go#L23>)
 
 ```go
 func (t TransactionTemplates) Validate() error
@@ -2042,7 +2042,7 @@ func (t TransactionTemplates) Validate() error
 
 
 <a name="Transactions"></a>
-## type [Transactions](<https://github.com/formancehq/ledger/blob/main/internal/transaction.go#L16-L18>)
+## type [Transactions](<https://github.com/hanzo-fi/ledger/blob/main/internal/transaction.go#L16-L18>)
 
 
 
@@ -2053,7 +2053,7 @@ type Transactions struct {
 ```
 
 <a name="Volumes"></a>
-## type [Volumes](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L13-L16>)
+## type [Volumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L13-L16>)
 
 
 
@@ -2065,7 +2065,7 @@ type Volumes struct {
 ```
 
 <a name="NewEmptyVolumes"></a>
-### func [NewEmptyVolumes](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L53>)
+### func [NewEmptyVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L53>)
 
 ```go
 func NewEmptyVolumes() Volumes
@@ -2074,7 +2074,7 @@ func NewEmptyVolumes() Volumes
 
 
 <a name="NewVolumesInt64"></a>
-### func [NewVolumesInt64](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L57>)
+### func [NewVolumesInt64](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L57>)
 
 ```go
 func NewVolumesInt64(input, output int64) Volumes
@@ -2083,7 +2083,7 @@ func NewVolumesInt64(input, output int64) Volumes
 
 
 <a name="Volumes.Balance"></a>
-### func \(Volumes\) [Balance](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L86>)
+### func \(Volumes\) [Balance](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L86>)
 
 ```go
 func (v Volumes) Balance() *big.Int
@@ -2092,7 +2092,7 @@ func (v Volumes) Balance() *big.Int
 
 
 <a name="Volumes.Copy"></a>
-### func \(Volumes\) [Copy](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L46>)
+### func \(Volumes\) [Copy](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L46>)
 
 ```go
 func (v Volumes) Copy() Volumes
@@ -2101,7 +2101,7 @@ func (v Volumes) Copy() Volumes
 
 
 <a name="Volumes.JSONSchemaExtend"></a>
-### func \(Volumes\) [JSONSchemaExtend](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L41>)
+### func \(Volumes\) [JSONSchemaExtend](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L41>)
 
 ```go
 func (Volumes) JSONSchemaExtend(schema *jsonschema.Schema)
@@ -2110,7 +2110,7 @@ func (Volumes) JSONSchemaExtend(schema *jsonschema.Schema)
 
 
 <a name="Volumes.MarshalJSON"></a>
-### func \(Volumes\) [MarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L78>)
+### func \(Volumes\) [MarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L78>)
 
 ```go
 func (v Volumes) MarshalJSON() ([]byte, error)
@@ -2119,7 +2119,7 @@ func (v Volumes) MarshalJSON() ([]byte, error)
 
 
 <a name="Volumes.Scan"></a>
-### func \(\*Volumes\) [Scan](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L22>)
+### func \(\*Volumes\) [Scan](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L22>)
 
 ```go
 func (v *Volumes) Scan(src interface{}) error
@@ -2128,7 +2128,7 @@ func (v *Volumes) Scan(src interface{}) error
 
 
 <a name="Volumes.Value"></a>
-### func \(Volumes\) [Value](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L18>)
+### func \(Volumes\) [Value](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L18>)
 
 ```go
 func (v Volumes) Value() (driver.Value, error)
@@ -2137,7 +2137,7 @@ func (v Volumes) Value() (driver.Value, error)
 
 
 <a name="VolumesByAssets"></a>
-## type [VolumesByAssets](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L99>)
+## type [VolumesByAssets](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L99>)
 
 
 
@@ -2146,7 +2146,7 @@ type VolumesByAssets map[string]Volumes
 ```
 
 <a name="VolumesByAssets.Balances"></a>
-### func \(VolumesByAssets\) [Balances](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L103>)
+### func \(VolumesByAssets\) [Balances](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L103>)
 
 ```go
 func (v VolumesByAssets) Balances() BalancesByAssets
@@ -2155,7 +2155,7 @@ func (v VolumesByAssets) Balances() BalancesByAssets
 
 
 <a name="VolumesWithBalance"></a>
-## type [VolumesWithBalance](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L70-L74>)
+## type [VolumesWithBalance](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L70-L74>)
 
 
 
@@ -2168,7 +2168,7 @@ type VolumesWithBalance struct {
 ```
 
 <a name="VolumesWithBalanceByAssetByAccount"></a>
-## type [VolumesWithBalanceByAssetByAccount](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L64-L68>)
+## type [VolumesWithBalanceByAssetByAccount](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L64-L68>)
 
 
 
@@ -2181,7 +2181,7 @@ type VolumesWithBalanceByAssetByAccount struct {
 ```
 
 <a name="VolumesWithBalanceByAssets"></a>
-## type [VolumesWithBalanceByAssets](<https://github.com/formancehq/ledger/blob/main/internal/volumes.go#L76>)
+## type [VolumesWithBalanceByAssets](<https://github.com/hanzo-fi/ledger/blob/main/internal/volumes.go#L76>)
 
 
 

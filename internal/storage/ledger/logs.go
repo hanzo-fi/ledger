@@ -10,9 +10,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/tracing"
-	"github.com/formancehq/ledger/pkg/features"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/tracing"
+	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
 // Log override ledger.Log to be able to properly read/write payload which is jsonb

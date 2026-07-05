@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	"github.com/formancehq/ledger/internal/machine/vm"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	"github.com/hanzo-fi/ledger/internal/machine/vm"
 )
 
 func ParseTextStream(scanner *bufio.Scanner) (*BulkElement, error) {

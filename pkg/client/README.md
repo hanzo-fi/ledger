@@ -48,7 +48,7 @@ It has been generated successfully based on your OpenAPI spec. However, it is no
 
 To add the SDK as a dependency to your project:
 ```bash
-go get github.com/formancehq/ledger/pkg/client
+go get github.com/hanzo-fi/ledger/pkg/client
 ```
 <!-- End SDK Installation [installation] -->
 
@@ -62,8 +62,8 @@ package main
 
 import (
 	"context"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 	"log"
 	"os"
 )
@@ -184,9 +184,9 @@ package main
 
 import (
 	"context"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client/retry"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/retry"
 	"log"
 	"models/operations"
 	"os"
@@ -229,9 +229,9 @@ package main
 
 import (
 	"context"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client/retry"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/retry"
 	"log"
 	"os"
 )
@@ -291,9 +291,9 @@ package main
 import (
 	"context"
 	"errors"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client/models/sdkerrors"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/models/sdkerrors"
 	"log"
 	"os"
 )
@@ -339,8 +339,8 @@ package main
 
 import (
 	"context"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 	"log"
 	"os"
 )
@@ -386,7 +386,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/formancehq/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client"
 )
 
 var (
@@ -415,8 +415,8 @@ package main
 
 import (
 	"context"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 	"log"
 	"os"
 )

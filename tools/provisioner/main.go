@@ -1,6 +1,6 @@
 package main
 
-import "github.com/formancehq/ledger/tools/provisioner/cmd"
+import "github.com/hanzo-fi/ledger/tools/provisioner/cmd"
 
 func main() {
 	cmd.Execute()

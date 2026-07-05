@@ -14,7 +14,7 @@ import (
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 func TestResolverMiddleware(t *testing.T) {

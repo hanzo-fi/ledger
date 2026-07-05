@@ -10,7 +10,7 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/types/collections"
 
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/utils"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/utils"
 )
 
 type JaegerExporterArgs struct {

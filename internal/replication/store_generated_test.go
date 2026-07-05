@@ -12,8 +12,8 @@ import (
 	reflect "reflect"
 
 	paginate "github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	ledger "github.com/formancehq/ledger/internal"
-	common "github.com/formancehq/ledger/internal/storage/common"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	common "github.com/hanzo-fi/ledger/internal/storage/common"
 	gomock "go.uber.org/mock/gomock"
 )
 

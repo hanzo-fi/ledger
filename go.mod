@@ -1,10 +1,10 @@
-module github.com/formancehq/ledger
+module github.com/hanzo-fi/ledger
 
 go 1.26.0
 
 toolchain go1.26.1
 
-replace github.com/formancehq/ledger/pkg/client => ./pkg/client
+replace github.com/hanzo-fi/ledger/pkg/client => ./pkg/client
 
 replace google.golang.org/genproto v0.0.0-20200423170343-7949de9c1215 => google.golang.org/genproto v0.0.0-20240903143218-8af14fe29dc1
 
@@ -14,7 +14,7 @@ require (
 	github.com/antlr/antlr4/runtime/Go/antlr v1.4.10
 	github.com/bluele/gcache v0.0.2
 	github.com/dop251/goja v0.0.0-20250630131328-58d95d85e994
-	github.com/formancehq/ledger/pkg/client v0.0.0-00010101000000-000000000000
+	github.com/hanzo-fi/ledger/pkg/client v0.0.0-00010101000000-000000000000
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/go-chi/cors v1.2.2
 	github.com/google/go-cmp v0.7.0

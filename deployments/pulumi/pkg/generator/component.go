@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/api"
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/common"
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/utils"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/api"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/common"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/utils"
 	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/apps/v1"
 	batchv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/batch/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
@@ -65,7 +65,7 @@ type ComponentArgs struct {
 
 func NewComponent(ctx *pulumi.Context, name string, args ComponentArgs, opts ...pulumi.ResourceOption) (*Component, error) {
 	cmp := &Component{}
-	err := ctx.RegisterComponentResource("Formance:Ledger:Tools:Generator", name, cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:Tools:Generator", name, cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

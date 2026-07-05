@@ -7,8 +7,8 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/fx"
 
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	systemstore "github.com/formancehq/ledger/internal/storage/system"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 type DatabaseRetryConfiguration struct {

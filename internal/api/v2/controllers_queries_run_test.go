@@ -15,9 +15,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/authn/jwt"
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/queries"
-	storagecommon "github.com/formancehq/ledger/internal/storage/common"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/queries"
+	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
 func TestQueriesRun(t *testing.T) {

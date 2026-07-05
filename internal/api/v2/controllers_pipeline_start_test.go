@@ -13,8 +13,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/authn/jwt"
 	sharedapi "github.com/formancehq/go-libs/v5/pkg/testing/api"
 
-	ledger "github.com/formancehq/ledger/internal"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 func TestStartPipeline(t *testing.T) {

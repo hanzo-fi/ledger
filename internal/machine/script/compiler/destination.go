@@ -3,9 +3,9 @@ package compiler
 import (
 	"errors"
 
-	"github.com/formancehq/ledger/internal/machine"
-	"github.com/formancehq/ledger/internal/machine/script/parser"
-	"github.com/formancehq/ledger/internal/machine/vm/program"
+	"github.com/hanzo-fi/ledger/internal/machine"
+	"github.com/hanzo-fi/ledger/internal/machine/script/parser"
+	"github.com/hanzo-fi/ledger/internal/machine/vm/program"
 )
 
 func (p *parseVisitor) VisitDestination(c parser.IDestinationContext) *CompileError {

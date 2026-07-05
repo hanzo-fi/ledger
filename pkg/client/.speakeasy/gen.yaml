@@ -61,7 +61,7 @@ go:
   multipartArrayFormat: legacy
   nullableOptionalWrapper: false
   outputModelSuffix: output
-  packageName: github.com/formancehq/ledger/pkg/client
+  packageName: github.com/hanzo-fi/ledger/pkg/client
   respectRequiredFields: false
   respectTitlesForPrimitiveUnionMembers: false
   responseFormat: envelope-http

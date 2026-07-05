@@ -3,7 +3,7 @@ package elasticsearch
 import (
 	"github.com/pkg/errors"
 
-	"github.com/formancehq/ledger/internal/replication/config"
+	"github.com/hanzo-fi/ledger/internal/replication/config"
 )
 
 const (

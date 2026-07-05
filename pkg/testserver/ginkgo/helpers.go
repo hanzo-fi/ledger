@@ -6,8 +6,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
 	. "github.com/formancehq/go-libs/v5/pkg/testing/testservice/ginkgo"
 
-	"github.com/formancehq/ledger/cmd"
-	"github.com/formancehq/ledger/pkg/testserver"
+	"github.com/hanzo-fi/ledger/cmd"
+	"github.com/hanzo-fi/ledger/pkg/testserver"
 )
 
 func DeferTestServer(postgresConnectionOptions *deferred.Deferred[connect.ConnectionOptions], options ...testservice.Option) *deferred.Deferred[*testservice.Service] {

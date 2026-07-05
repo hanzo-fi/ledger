@@ -6,9 +6,9 @@ import (
 
 	"github.com/uptrace/bun"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/queries"
-	"github.com/formancehq/ledger/internal/storage/common"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/queries"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
 var (

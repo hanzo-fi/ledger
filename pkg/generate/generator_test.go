@@ -15,8 +15,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
 	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
 
-	"github.com/formancehq/ledger/pkg/client/models/operations"
-	. "github.com/formancehq/ledger/pkg/testserver"
+	"github.com/hanzo-fi/ledger/pkg/client/models/operations"
+	. "github.com/hanzo-fi/ledger/pkg/testserver"
 )
 
 func TestGenerator(t *testing.T) {

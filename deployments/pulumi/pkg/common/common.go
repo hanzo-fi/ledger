@@ -1,8 +1,8 @@
 package common
 
 import (
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/monitoring"
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/utils"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/monitoring"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/utils"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )

@@ -11,9 +11,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/collections"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	"github.com/formancehq/ledger/internal/api/common"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	ledgerstore "github.com/formancehq/ledger/internal/storage/ledger"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
 )
 
 type JsonBulkHandler struct {

@@ -10,9 +10,9 @@ import (
 	. "github.com/formancehq/go-libs/v5/pkg/types/collections"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/controller/system"
-	"github.com/formancehq/ledger/internal/replication/grpc"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/controller/system"
+	"github.com/hanzo-fi/ledger/internal/replication/grpc"
 )
 
 type ThroughGRPCBackend struct {

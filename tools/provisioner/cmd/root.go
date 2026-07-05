@@ -9,9 +9,9 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 
-	"github.com/formancehq/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client"
 
-	provisionner "github.com/formancehq/ledger/tools/provisioner/pkg"
+	provisionner "github.com/hanzo-fi/ledger/tools/provisioner/pkg"
 )
 
 var rootCmd = &cobra.Command{
