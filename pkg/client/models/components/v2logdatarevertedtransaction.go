@@ -3,7 +3,7 @@
 package components
 
 import (
-	"github.com/formancehq/ledger/pkg/client/internal/utils"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/utils"
 )
 
 // V2LogDataRevertedTransaction - Payload for REVERTED_TRANSACTION log entries. Contains both the original reverted transaction and the new reverting transaction.

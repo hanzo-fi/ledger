@@ -13,7 +13,7 @@ import (
 
 	topicmapper "github.com/formancehq/go-libs/v5/pkg/messaging/publish/topicmap"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 func TestMonitor(t *testing.T) {

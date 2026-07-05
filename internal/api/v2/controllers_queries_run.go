@@ -11,11 +11,11 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/api/common"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	"github.com/formancehq/ledger/internal/queries"
-	storage "github.com/formancehq/ledger/internal/storage/common"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	"github.com/hanzo-fi/ledger/internal/queries"
+	storage "github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
 func runQuery(paginationConfig storage.PaginationConfig) http.HandlerFunc {

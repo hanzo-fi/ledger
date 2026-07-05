@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"testing"
 
-	ledgerclient "github.com/formancehq/ledger/pkg/client"
+	ledgerclient "github.com/hanzo-fi/ledger/pkg/client"
 )
 
 type RemoteLedgerEnvFactory struct {

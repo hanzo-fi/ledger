@@ -17,9 +17,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/api/common"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 func TestTransactionsCreate(t *testing.T) {

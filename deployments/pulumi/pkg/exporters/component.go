@@ -6,7 +6,7 @@ import (
 
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/common"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/common"
 )
 
 type ExporterArgs struct {
@@ -38,7 +38,7 @@ func NewComponent(ctx *pulumi.Context, name string, args ComponentArgs, opts ...
 	cmp := &Component{
 		Exporters: map[string]Exporter{},
 	}
-	err := ctx.RegisterComponentResource("Formance:Ledger:Exporters", name, cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:Exporters", name, cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

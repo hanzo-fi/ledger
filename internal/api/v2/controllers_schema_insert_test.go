@@ -15,7 +15,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/authn/jwt"
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 func TestInsertSchema(t *testing.T) {

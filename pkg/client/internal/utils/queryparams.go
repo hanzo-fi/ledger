@@ -12,8 +12,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/formancehq/ledger/pkg/client/optionalnullable"
-	"github.com/formancehq/ledger/pkg/client/types"
+	"github.com/hanzo-fi/ledger/pkg/client/optionalnullable"
+	"github.com/hanzo-fi/ledger/pkg/client/types"
 )
 
 func PopulateQueryParams(_ context.Context, req *http.Request, queryParams interface{}, globals interface{}, allowEmptyValue map[string]struct{}) error {

@@ -5,7 +5,7 @@ package hooks
 import (
 	"context"
 	"errors"
-	"github.com/formancehq/ledger/pkg/client/internal/config"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/config"
 	"net/http"
 )
 

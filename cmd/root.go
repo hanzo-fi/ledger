@@ -9,7 +9,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/service"
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/migrate"
 
-	"github.com/formancehq/ledger/internal/storage/driver"
+	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
+	"github.com/hanzo-fi/ledger/internal/storage/driver"
 )
 
 const (
@@ -64,6 +65,7 @@ func newMigrationCommand() *cobra.Command {
 	})
 	observe.AddFlags(ret.Flags())
 	traces.AddFlags(ret.Flags())
+	bunconnect.AddFlags(ret.Flags())
 
 	return ret
 }

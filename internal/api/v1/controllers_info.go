@@ -8,7 +8,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	"github.com/formancehq/ledger/internal/api/common"
+	"github.com/hanzo-fi/ledger/internal/api/common"
 )
 
 type Info struct {

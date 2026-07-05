@@ -7,7 +7,7 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
 
-	"github.com/formancehq/ledger/cmd"
+	"github.com/hanzo-fi/ledger/cmd"
 )
 
 // LogsHashBlockMaxSizeInstrumentation returns an instrumentation function that appends the worker async block hasher max block size flag and the provided size to the run configuration's CLI arguments.

@@ -16,11 +16,11 @@ import (
 
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	"github.com/formancehq/go-libs/v5/pkg/service"
-	ledgerclient "github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client/models/operations"
-	"github.com/formancehq/ledger/pkg/client/models/sdkerrors"
-	"github.com/formancehq/ledger/pkg/generate"
+	ledgerclient "github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/models/operations"
+	"github.com/hanzo-fi/ledger/pkg/client/models/sdkerrors"
+	"github.com/hanzo-fi/ledger/pkg/generate"
 )
 
 const (

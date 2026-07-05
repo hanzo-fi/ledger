@@ -14,10 +14,10 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 	"github.com/formancehq/numscript"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/machine/vm"
-	"github.com/formancehq/ledger/internal/storage/common"
-	ledgerstore "github.com/formancehq/ledger/internal/storage/ledger"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/machine/vm"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
+	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
 )
 
 type Balance struct {

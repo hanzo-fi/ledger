@@ -14,10 +14,10 @@ import (
 
 	paginate "github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	migrations "github.com/formancehq/go-libs/v5/pkg/storage/migrations"
-	ledger "github.com/formancehq/ledger/internal"
-	ledger0 "github.com/formancehq/ledger/internal/controller/ledger"
-	queries "github.com/formancehq/ledger/internal/queries"
-	common "github.com/formancehq/ledger/internal/storage/common"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledger0 "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	queries "github.com/hanzo-fi/ledger/internal/queries"
+	common "github.com/hanzo-fi/ledger/internal/storage/common"
 	bun "github.com/uptrace/bun"
 	gomock "go.uber.org/mock/gomock"
 )

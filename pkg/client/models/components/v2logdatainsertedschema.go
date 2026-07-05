@@ -3,7 +3,7 @@
 package components
 
 import (
-	"github.com/formancehq/ledger/pkg/client/internal/utils"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/utils"
 )
 
 // V2LogDataInsertedSchema - Payload for INSERTED_SCHEMA log entries. Contains the schema that was inserted into the ledger.

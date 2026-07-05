@@ -12,7 +12,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	"github.com/formancehq/ledger/internal/queries"
+	"github.com/hanzo-fi/ledger/internal/queries"
 )
 
 type columnPaginator[ResourceType, OptionsType any] struct {

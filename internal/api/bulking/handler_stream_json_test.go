@@ -11,7 +11,7 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 func TestBulkStreamHandlerJSON(t *testing.T) {

@@ -10,17 +10,17 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/formancehq/go-libs/v5/pkg/fx/storagefx"
 	"github.com/formancehq/go-libs/v5/pkg/observe/metrics"
 	"github.com/formancehq/go-libs/v5/pkg/observe/traces"
 	"github.com/formancehq/go-libs/v5/pkg/service"
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
 
-	"github.com/formancehq/ledger/internal/replication"
-	"github.com/formancehq/ledger/internal/replication/drivers"
-	"github.com/formancehq/ledger/internal/replication/drivers/alldrivers"
-	"github.com/formancehq/ledger/internal/storage"
-	"github.com/formancehq/ledger/internal/worker"
+	"github.com/hanzo-fi/ledger/internal/replication"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers/alldrivers"
+	"github.com/hanzo-fi/ledger/internal/storage"
+	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
+	"github.com/hanzo-fi/ledger/internal/worker"
 )
 
 const (
@@ -98,6 +98,11 @@ func NewWorkerCommand() *cobra.Command {
 				return err
 			}
 
+			storageDriver, sqliteDSN, err := bunconnect.FromFlags(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
 			cfg, err := LoadConfig[WorkerCommandConfiguration](cmd)
 			if err != nil {
 				return fmt.Errorf("loading config: %w", err)
@@ -110,7 +115,7 @@ func NewWorkerCommand() *cobra.Command {
 			return service.New(cmd.OutOrStdout(),
 				fx.NopLogger,
 				otlpModule(cmd, cfg.commonConfig),
-				storagefx.BunConnectModule(*connectionOptions, service.IsDebug(cmd)),
+				bunconnect.Module(storageDriver, *connectionOptions, sqliteDSN, service.IsDebug(cmd)),
 				storage.NewFXModule(storage.ModuleConfig{}),
 				drivers.NewFXModule(),
 				fx.Invoke(alldrivers.Register),
@@ -130,6 +135,7 @@ func NewWorkerCommand() *cobra.Command {
 	addWorkerFlags(cmd)
 	service.AddFlags(cmd.Flags())
 	connect.AddFlags(cmd.Flags())
+	bunconnect.AddFlags(cmd.Flags())
 	metrics.AddFlags(cmd.Flags())
 	traces.AddFlags(cmd.Flags())
 

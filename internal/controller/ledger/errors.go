@@ -8,7 +8,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 	"github.com/formancehq/numscript"
 
-	"github.com/formancehq/ledger/internal/machine"
+	"github.com/hanzo-fi/ledger/internal/machine"
 )
 
 var ErrNotFound = postgres.ErrNotFound

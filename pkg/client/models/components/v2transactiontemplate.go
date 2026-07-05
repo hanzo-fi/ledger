@@ -3,7 +3,7 @@
 package components
 
 import (
-	"github.com/formancehq/ledger/pkg/client/internal/utils"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/utils"
 )
 
 type V2TransactionTemplate struct {

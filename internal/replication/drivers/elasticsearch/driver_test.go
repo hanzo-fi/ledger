@@ -15,8 +15,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/platform/elastictesting"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/replication/drivers"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers"
 )
 
 func TestElasticSearchDriver(t *testing.T) {

@@ -17,10 +17,10 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/docker"
 	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
 
-	"github.com/formancehq/ledger/internal/storage/bucket"
-	"github.com/formancehq/ledger/internal/storage/driver"
-	"github.com/formancehq/ledger/internal/storage/ledger"
-	"github.com/formancehq/ledger/internal/storage/system"
+	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/driver"
+	"github.com/hanzo-fi/ledger/internal/storage/ledger"
+	"github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 var (

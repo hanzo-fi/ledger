@@ -6,8 +6,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 	"github.com/formancehq/go-libs/v5/pkg/types/collections"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/tracing"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/tracing"
 )
 
 func (store *Store) UpdateVolumes(ctx context.Context, accountVolumes ...ledger.AccountsVolumes) (ledger.PostCommitVolumes, error) {

@@ -10,7 +10,7 @@ import (
 	"github.com/invopop/jsonschema"
 	"github.com/spf13/cobra"
 
-	"github.com/formancehq/ledger/pkg/events"
+	"github.com/hanzo-fi/ledger/pkg/events"
 )
 
 func NewDocEventsCommand() *cobra.Command {

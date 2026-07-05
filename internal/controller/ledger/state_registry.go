@@ -3,7 +3,7 @@ package ledger
 import (
 	"sync"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 type State struct {

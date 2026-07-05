@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/formancehq/ledger/pkg/client/types"
+	"github.com/hanzo-fi/ledger/pkg/client/types"
 )
 
 // UnionCandidate represents a candidate type during union deserialization

@@ -8,8 +8,8 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/tracing"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/tracing"
 )
 
 func (store *Store) GetBalances(ctx context.Context, query BalanceQuery) (ledger.Balances, error) {

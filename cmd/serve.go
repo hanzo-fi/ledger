@@ -20,7 +20,6 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/fx/authnfx"
 	"github.com/formancehq/go-libs/v5/pkg/fx/messagingfx"
 	"github.com/formancehq/go-libs/v5/pkg/fx/observefx"
-	"github.com/formancehq/go-libs/v5/pkg/fx/storagefx"
 	"github.com/formancehq/go-libs/v5/pkg/fx/transportfx"
 	"github.com/formancehq/go-libs/v5/pkg/messaging/publish"
 	"github.com/formancehq/go-libs/v5/pkg/observe"
@@ -33,18 +32,19 @@ import (
 	apilib "github.com/formancehq/go-libs/v5/pkg/transport/api"
 	"github.com/formancehq/go-libs/v5/pkg/transport/httpserver"
 
-	"github.com/formancehq/ledger/internal/api"
-	"github.com/formancehq/ledger/internal/bus"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	systemcontroller "github.com/formancehq/ledger/internal/controller/system"
-	"github.com/formancehq/ledger/internal/replication"
-	"github.com/formancehq/ledger/internal/replication/drivers"
-	"github.com/formancehq/ledger/internal/replication/drivers/alldrivers"
-	"github.com/formancehq/ledger/internal/storage"
-	storagecommon "github.com/formancehq/ledger/internal/storage/common"
-	systemstore "github.com/formancehq/ledger/internal/storage/system"
-	"github.com/formancehq/ledger/internal/tracing"
-	"github.com/formancehq/ledger/internal/worker"
+	"github.com/hanzo-fi/ledger/internal/api"
+	"github.com/hanzo-fi/ledger/internal/bus"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	systemcontroller "github.com/hanzo-fi/ledger/internal/controller/system"
+	"github.com/hanzo-fi/ledger/internal/replication"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers/alldrivers"
+	"github.com/hanzo-fi/ledger/internal/storage"
+	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
+	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
+	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
+	"github.com/hanzo-fi/ledger/internal/tracing"
+	"github.com/hanzo-fi/ledger/internal/worker"
 )
 
 type ServeCommandConfig struct {
@@ -110,13 +110,18 @@ func NewServeCommand() *cobra.Command {
 				return err
 			}
 
+			storageDriver, sqliteDSN, err := bunconnect.FromFlags(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
 			options := []fx.Option{
 				fx.NopLogger,
 				otlpModule(cmd, cfg.commonConfig),
 				messagingfx.PublishModuleFromFlags(cmd, service.IsDebug(cmd)),
 				authnfx.JWTModuleFromFlags(cmd),
 				fx.Supply(connectionOptions),
-				storagefx.BunConnectModule(*connectionOptions, service.IsDebug(cmd)),
+				bunconnect.Module(storageDriver, *connectionOptions, sqliteDSN, service.IsDebug(cmd)),
 				storage.NewFXModule(storage.ModuleConfig{
 					AutoUpgrade:                     cfg.AutoUpgrade,
 					DisableScopedSelectOptimization: cfg.DisableLedgerScopeOptimization,
@@ -225,6 +230,7 @@ func NewServeCommand() *cobra.Command {
 
 	addWorkerFlags(cmd)
 	connect.AddFlags(cmd.Flags())
+	bunconnect.AddFlags(cmd.Flags())
 	observe.AddFlags(cmd.Flags())
 	metrics.AddFlags(cmd.Flags())
 	traces.AddFlags(cmd.Flags())

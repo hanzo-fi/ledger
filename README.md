@@ -1,65 +1,52 @@
-<p align="center">
-  <img src="https://formance01.b-cdn.net/Github-Attachements/banners/ledger-readme-banner.webp" alt="ledger" width="100%" />
-</p>
+# Hanzo Ledger
 
-#  Formance Ledger
+Hanzo Ledger is the programmable financial core ledger at the heart of **Hanzo Finance**. It provides a foundation for all kinds of money-moving applications: an atomic multi-postings transaction system, account-based modeling, and programmability via [numscript](https://github.com/formancehq/numscript), a built-in DSL to model financial transactions.
 
-Formance Ledger is a programmable financial core ledger that provides a foundation for all kind of money-moving applications. It provides an atomic multi-postings transactions system, account-based modeling, and is programmable in [numscript](https://docs.formance.com/modules/numscript/introduction), a built-in DSL to model financial transactions.
+The ledger runs either as a standalone micro-service or as part of the Hanzo platform. It shines for financial applications requiring centralized state-keeping of the assets they orchestrate, such as:
 
-The ledger can be used either as a standalone micro-service or as part of the [Formance Platform](https://www.formance.com/). It will shine for financial applications requiring a centralized state-keeping of the assets they orchestrate, such as:
-
-* Users balances holding apps, where the ownership of funds held in FBO accounts need to be fine-grained in a ledger
-* Digital assets platforms and exchanges, where funds in various denominations are represented
+* User balance-holding apps, where ownership of funds held in FBO accounts must be fine-grained in a ledger
+* Digital asset platforms and exchanges, where funds in various denominations are represented
 * Payment systems, where funds are cycled through a series of steps from acquiring to payouts
-* Loan managment systems, where a sophisticated structure of amounts dues and to be disbursed are orchestrated
+* Loan management systems, where a sophisticated structure of amounts due and to be disbursed is orchestrated
 
-Is uses PostgreSQL as its main transactional storage layer and comes with a built-in mechanism to ship ledger logs to replica data stores for OLAP optimized querying.
+By default Hanzo Ledger uses **Hanzo Base (embedded SQLite), per-tenant**, so each org/project gets its own isolated, zero-contention ledger with no external database to run. **PostgreSQL remains a first-class, opt-in option** for shared/multi-instance production deployments. Either way, the ledger ships its logs to replica data stores for OLAP-optimized querying.
 
-## Localhost ⚡
+## Localhost
 
-To quickly get started using the Formance Ledger on your computer, you can use the local-optimized, all-in-one docker image:
+To get started locally with the default embedded Base (SQLite) storage:
+
+```
+go run . serve
+```
+
+Or with the full Postgres-backed stack:
 
 ```
 docker compose -f examples/standalone/docker-compose.yml up
 ```
 
-Which will start:
-* A Postgres DB
-* 1 Gateway Server process (Caddy based reverse proxy)
-* 1 Ledger server process
-* 1 Ledger worker process
-* The Console UI
-
-With the system is up and running, you can now start using the ledger:
+Once the system is up, start using the ledger:
 
 ```shell
 # Create a ledger
-http POST :8080/api/ledger/v2/quickstart
+http POST :8080/v2/quickstart
 # Create a first transaction
-http POST :8080/api/ledger/v2/quickstart/transactions postings:='[{"amount":100,"asset":"USD/2","destination":"users:1234","source":"world"}]'
+http POST :8080/v2/quickstart/transactions postings:='[{"amount":100,"asset":"USD/2","destination":"users:1234","source":"world"}]'
 ```
 
-And get a visual feedback on the Ledger Console UI started on [http://localhost:3000/formance/localhost?region=localhost](http://localhost:3000/formance/localhost?region=localhost):
+## Storage
 
-![console](https://formance01.b-cdn.net/Github-Attachements/console-screenshot.png)
+* **`sqlite` (default)** — embedded, per-tenant Hanzo Base files (`data/{tenant}.db`), single-writer, zero contention, IAM-multitenant. Best for local dev and per-org isolation.
+* **`postgres` (opt-in)** — shared transactional store for multi-instance scale. Select via `STORAGE_DRIVER=postgres` (or `--storage.driver postgres`).
 
-## Production 🛡️
+## Docs
 
-Production usage of the Formance Ledger is (only) supported through the official k8s [operator](https://github.com/formancehq/operator) deployment mode. Follow the [installation instructions](https://docs.formance.com/build/deployment/operator/installation) to learn more.
+The Ledger API is described in [`openapi.yaml`](./openapi.yaml).
 
-## Artifacts 📦
+## Contributing
 
-Standalone binary builds can be downloaded from the [releases page](https://github.com/formancehq/ledger/releases).
-Container images can be found on the [ghcr registry](https://github.com/formancehq/ledger/pkgs/container/ledger).
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-## Docs 📚
+## Attribution
 
-You can find the exhaustive Formance Platform documentation at [docs.formance.com](https://docs.formance.com).
-
-## Community 💬
-
-If you need help, want to show us what you built or just hang out and chat about ledgers you are more than welcome in our [GitHub Discussions](https://github.com/orgs/formancehq/discussions) - looking forward to see you there!
-
-## Contributing 🛠️
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
+Hanzo Ledger is a fork of [Formance Ledger](https://github.com/formancehq/ledger), MIT-licensed. See [LICENSE](./LICENSE). Upstream copyright remains with Formance Solutions; Hanzo modifications © Hanzo AI, Inc.

@@ -8,8 +8,8 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/common"
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/storage"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/common"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/storage"
 )
 
 type Args struct {
@@ -37,7 +37,7 @@ type ComponentArgs struct {
 
 func NewComponent(ctx *pulumi.Context, name string, args ComponentArgs, opts ...pulumi.ResourceOption) (*Component, error) {
 	cmp := &Component{}
-	err := ctx.RegisterComponentResource("Formance:Ledger:Worker", name, cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:Worker", name, cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -3,7 +3,7 @@ package drivers
 import (
 	"context"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 //go:generate mockgen -source store.go -destination store_generated.go -package drivers . Store

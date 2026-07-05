@@ -9,7 +9,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/deferred"
 	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
 
-	"github.com/formancehq/ledger/cmd"
+	"github.com/hanzo-fi/ledger/cmd"
 )
 
 func GetTestServerOptions(postgresConnectionOptions *deferred.Deferred[connect.ConnectionOptions]) testservice.Option {

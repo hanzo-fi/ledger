@@ -20,11 +20,11 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/bucket"
-	"github.com/formancehq/ledger/internal/storage/common"
-	ledgerstore "github.com/formancehq/ledger/internal/storage/ledger"
-	"github.com/formancehq/ledger/internal/storage/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
+	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
+	"github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 func TestMigrations(t *testing.T) {

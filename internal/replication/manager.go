@@ -13,9 +13,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/controller/system"
-	"github.com/formancehq/ledger/internal/replication/drivers"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/controller/system"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers"
 )
 
 type Manager struct {

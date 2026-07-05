@@ -9,7 +9,7 @@ import (
 
 	"github.com/formancehq/numscript"
 
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 func TestMissingFundsUnwrap(t *testing.T) {

@@ -35,7 +35,7 @@ export-docs-events:
 
 tests:
     go test -race -covermode=atomic \
-        -coverpkg=github.com/formancehq/ledger/internal/...,github.com/formancehq/ledger/pkg/events/...,github.com/formancehq/ledger/pkg/accounts/...,github.com/formancehq/ledger/pkg/assets/...,github.com/formancehq/ledger/cmd/... \
+        -coverpkg=github.com/hanzo-fi/ledger/internal/...,github.com/hanzo-fi/ledger/pkg/events/...,github.com/hanzo-fi/ledger/pkg/accounts/...,github.com/hanzo-fi/ledger/pkg/assets/...,github.com/hanzo-fi/ledger/cmd/... \
         -coverprofile coverage.txt \
         -tags it \
         ./...

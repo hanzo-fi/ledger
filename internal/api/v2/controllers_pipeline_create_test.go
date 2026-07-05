@@ -15,9 +15,9 @@ import (
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	sharedapi "github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	ledger "github.com/formancehq/ledger/internal"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	systemcontroller "github.com/formancehq/ledger/internal/controller/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	systemcontroller "github.com/hanzo-fi/ledger/internal/controller/system"
 )
 
 func TestCreatePipeline(t *testing.T) {

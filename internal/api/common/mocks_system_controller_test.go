@@ -12,10 +12,10 @@ import (
 	reflect "reflect"
 
 	paginate "github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	ledger "github.com/formancehq/ledger/internal"
-	ledger0 "github.com/formancehq/ledger/internal/controller/ledger"
-	common "github.com/formancehq/ledger/internal/storage/common"
-	system "github.com/formancehq/ledger/internal/storage/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledger0 "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	common "github.com/hanzo-fi/ledger/internal/storage/common"
+	system "github.com/hanzo-fi/ledger/internal/storage/system"
 	gomock "go.uber.org/mock/gomock"
 )
 

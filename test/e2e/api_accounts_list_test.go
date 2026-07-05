@@ -20,10 +20,10 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client/models/operations"
-	. "github.com/formancehq/ledger/pkg/testserver"
-	. "github.com/formancehq/ledger/pkg/testserver/ginkgo"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/models/operations"
+	. "github.com/hanzo-fi/ledger/pkg/testserver"
+	. "github.com/hanzo-fi/ledger/pkg/testserver/ginkgo"
 )
 
 var _ = Context("Ledger accounts list API tests", func() {

@@ -5,14 +5,14 @@ import (
 	"go.uber.org/fx"
 
 	"github.com/formancehq/go-libs/v5/pkg/fx/observefx"
-	"github.com/formancehq/go-libs/v5/pkg/fx/storagefx"
 	"github.com/formancehq/go-libs/v5/pkg/observe"
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	"github.com/formancehq/go-libs/v5/pkg/service"
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
 
-	"github.com/formancehq/ledger/internal/storage"
-	"github.com/formancehq/ledger/internal/storage/driver"
+	"github.com/hanzo-fi/ledger/internal/storage"
+	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
+	"github.com/hanzo-fi/ledger/internal/storage/driver"
 )
 
 func NewBucketUpgrade() *cobra.Command {
@@ -33,6 +33,7 @@ func NewBucketUpgrade() *cobra.Command {
 
 	service.AddFlags(cmd.Flags())
 	connect.AddFlags(cmd.Flags())
+	bunconnect.AddFlags(cmd.Flags())
 
 	return cmd
 }
@@ -46,12 +47,17 @@ func withStorageDriver(cmd *cobra.Command, fn func(driver *driver.Driver) error)
 		return err
 	}
 
+	storageDriver, sqliteDSN, err := bunconnect.FromFlags(cmd.Flags())
+	if err != nil {
+		return err
+	}
+
 	var d *driver.Driver
 	app := fx.New(
 		fx.NopLogger,
 		observefx.ResourceModuleFromFlags(cmd, observe.WithServiceVersion(Version)),
 		observefx.TracesModuleFromFlags(cmd),
-		storagefx.BunConnectModule(*connectionOptions, service.IsDebug(cmd)),
+		bunconnect.Module(storageDriver, *connectionOptions, sqliteDSN, service.IsDebug(cmd)),
 		storage.NewFXModule(storage.ModuleConfig{}),
 		fx.Supply(fx.Annotate(logger, fx.As(new(logging.Logger)))),
 		fx.Populate(&d),

@@ -3,7 +3,7 @@ package program
 import (
 	"fmt"
 
-	"github.com/formancehq/ledger/internal/machine"
+	"github.com/hanzo-fi/ledger/internal/machine"
 )
 
 type Resource interface {

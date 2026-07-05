@@ -6,7 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/formancehq/ledger/pkg/client/retry"
+	"github.com/hanzo-fi/ledger/pkg/client/retry"
 	"io"
 	"math"
 	"math/rand"

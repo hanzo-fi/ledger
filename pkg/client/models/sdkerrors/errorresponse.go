@@ -4,7 +4,7 @@ package sdkerrors
 
 import (
 	"encoding/json"
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 )
 
 type ErrorResponse struct {
