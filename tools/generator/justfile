@@ -5,6 +5,6 @@ set positional-arguments
 push-image version='latest':
     docker buildx build . \
         --build-context root=../.. \
-        -t ghcr.io/formancehq/ledger-generator:{{ version }} \
+        -t registry.hanzo.ai/hanzo-fi/ledger-generator:{{ version }} \
         --push \
         --platform linux/amd64,linux/arm64

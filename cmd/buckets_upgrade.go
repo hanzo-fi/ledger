@@ -11,8 +11,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/service"
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
 
-	"github.com/formancehq/ledger/internal/storage"
-	"github.com/formancehq/ledger/internal/storage/driver"
+	"github.com/hanzo-fi/ledger/internal/storage"
+	"github.com/hanzo-fi/ledger/internal/storage/driver"
 )
 
 func NewBucketUpgrade() *cobra.Command {

@@ -6,9 +6,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/api/common"
-	storagecommon "github.com/formancehq/ledger/internal/storage/common"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
 func listAccounts(paginationConfig storagecommon.PaginationConfig) http.HandlerFunc {

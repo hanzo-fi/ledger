@@ -10,9 +10,9 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/machine"
-	"github.com/formancehq/ledger/internal/machine/script/compiler"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/machine"
+	"github.com/hanzo-fi/ledger/internal/machine/script/compiler"
 )
 
 type runTestCase struct {

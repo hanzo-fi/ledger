@@ -11,9 +11,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	"github.com/formancehq/ledger/internal/api/common"
-	"github.com/formancehq/ledger/internal/controller/ledger"
-	"github.com/formancehq/ledger/pkg/accounts"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	"github.com/hanzo-fi/ledger/internal/controller/ledger"
+	"github.com/hanzo-fi/ledger/pkg/accounts"
 )
 
 func addAccountMetadata(w http.ResponseWriter, r *http.Request) {

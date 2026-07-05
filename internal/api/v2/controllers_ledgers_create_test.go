@@ -16,9 +16,9 @@ import (
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/api/common"
-	"github.com/formancehq/ledger/internal/controller/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	"github.com/hanzo-fi/ledger/internal/controller/system"
 )
 
 func TestLedgersCreate(t *testing.T) {

@@ -11,7 +11,7 @@ import (
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 
-	"github.com/formancehq/ledger/internal/replication/config"
+	"github.com/hanzo-fi/ledger/internal/replication/config"
 )
 
 // Registry holds all available drivers

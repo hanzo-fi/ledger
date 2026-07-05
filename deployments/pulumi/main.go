@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 
-	ledger "github.com/formancehq/ledger/deployments/pulumi/pkg"
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/config"
-	_ "github.com/formancehq/ledger/deployments/pulumi/pkg/exporters/clickhouse"
+	ledger "github.com/hanzo-fi/ledger/deployments/pulumi/pkg"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/config"
+	_ "github.com/hanzo-fi/ledger/deployments/pulumi/pkg/exporters/clickhouse"
 )
 
 func main() {

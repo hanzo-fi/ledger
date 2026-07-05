@@ -1,0 +1,21 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Lightweight, secretless build/test gate. The full image+deploy pipeline lives
+# in cicd.yml (hanzoai/ci). This just keeps the Go build green on every PR.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+          cache: true
+      - name: go build (root module)
+        run: go build ./...
+      - name: go vet (root module)
+        run: go vet ./...

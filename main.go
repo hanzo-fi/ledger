@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/formancehq/ledger/cmd"
+	"github.com/hanzo-fi/ledger/cmd"
 )
 
 func main() {

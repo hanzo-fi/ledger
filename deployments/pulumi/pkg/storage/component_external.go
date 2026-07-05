@@ -53,7 +53,7 @@ type ExternalDatabaseComponentArgs struct {
 
 func newExternalDatabaseComponent(ctx *pulumi.Context, name string, args ExternalDatabaseComponentArgs, opts ...pulumi.ResourceOption) (*externalDatabaseComponent, error) {
 	cmp := &externalDatabaseComponent{}
-	err := ctx.RegisterComponentResource("Formance:Ledger:ExternalPostgres", name, cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:ExternalPostgres", name, cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/formancehq/ledger/pkg/accounts"
-	"github.com/formancehq/ledger/pkg/assets"
+	"github.com/hanzo-fi/ledger/pkg/accounts"
+	"github.com/hanzo-fi/ledger/pkg/assets"
 )
 
 type Posting struct {

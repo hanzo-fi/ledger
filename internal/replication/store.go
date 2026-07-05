@@ -5,10 +5,10 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/common"
-	"github.com/formancehq/ledger/internal/storage/driver"
-	systemstore "github.com/formancehq/ledger/internal/storage/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/driver"
+	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 //go:generate mockgen -write_source_comment=false -write_package_comment=false -source store.go -destination store_generated_test.go -package replication . LogFetcher

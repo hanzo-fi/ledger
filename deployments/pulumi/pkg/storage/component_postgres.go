@@ -93,7 +93,7 @@ type PostgresComponentArgs struct {
 
 func newPostgresComponent(ctx *pulumi.Context, name string, args *PostgresComponentArgs, opts ...pulumi.ResourceOption) (*PostgresDatabaseComponent, error) {
 	cmp := &PostgresDatabaseComponent{}
-	err := ctx.RegisterComponentResource("Formance:Ledger:Postgres", name, cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:Postgres", name, cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

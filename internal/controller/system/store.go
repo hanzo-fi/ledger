@@ -5,10 +5,10 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	ledger "github.com/formancehq/ledger/internal"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	"github.com/formancehq/ledger/internal/storage/common"
-	"github.com/formancehq/ledger/internal/storage/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 type Store interface {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 func TestParseStream(t *testing.T) {

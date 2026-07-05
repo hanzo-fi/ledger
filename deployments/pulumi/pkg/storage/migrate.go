@@ -6,8 +6,8 @@ import (
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/meta/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/common"
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/utils"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/common"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/utils"
 )
 
 type migrationArgs struct {

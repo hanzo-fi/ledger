@@ -12,7 +12,7 @@ import (
 	reflect "reflect"
 
 	migrations "github.com/formancehq/go-libs/v5/pkg/storage/migrations"
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 	bun "github.com/uptrace/bun"
 	gomock "go.uber.org/mock/gomock"
 )

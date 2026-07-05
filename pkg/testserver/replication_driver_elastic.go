@@ -9,8 +9,8 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/types/collections"
 
-	"github.com/formancehq/ledger/internal/replication/drivers"
-	"github.com/formancehq/ledger/internal/replication/drivers/elasticsearch"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers/elasticsearch"
 )
 
 type ElasticDriver struct {

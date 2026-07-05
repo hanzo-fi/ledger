@@ -4,7 +4,7 @@
     "github>formancehq/shared-config//renovate/presets/golang"
   ],
   "ignoreDeps": [
-    "github.com/formancehq/ledger/pkg/client"
+    "github.com/hanzo-fi/ledger/pkg/client"
   ],
   "baseBranches": [
     "main"

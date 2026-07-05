@@ -1,4 +1,4 @@
-module github.com/formancehq/ledger/pkg/client
+module github.com/hanzo-fi/ledger/pkg/client
 
 go 1.22
 

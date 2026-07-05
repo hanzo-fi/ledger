@@ -12,9 +12,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/transport/grpcserver"
 	"github.com/formancehq/go-libs/v5/pkg/transport/serverport"
 
-	"github.com/formancehq/ledger/internal/replication"
-	innergrpc "github.com/formancehq/ledger/internal/replication/grpc"
-	"github.com/formancehq/ledger/internal/storage"
+	"github.com/hanzo-fi/ledger/internal/replication"
+	innergrpc "github.com/hanzo-fi/ledger/internal/replication/grpc"
+	"github.com/hanzo-fi/ledger/internal/storage"
 )
 
 type GRPCServerModuleConfig struct {

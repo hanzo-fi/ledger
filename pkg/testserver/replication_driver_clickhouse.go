@@ -11,9 +11,9 @@ import (
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/replication/drivers"
-	clickhousedriver "github.com/formancehq/ledger/internal/replication/drivers/clickhouse"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers"
+	clickhousedriver "github.com/hanzo-fi/ledger/internal/replication/drivers/clickhouse"
 )
 
 type ClickhouseDriver struct {

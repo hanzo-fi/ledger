@@ -7,8 +7,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	"github.com/formancehq/ledger/internal/api/common"
-	storagecommon "github.com/formancehq/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
 func buildGetLogsQuery(r *http.Request) query.Builder {

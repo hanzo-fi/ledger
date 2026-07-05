@@ -1,16 +1,16 @@
-module github.com/formancehq/ledger/tools/provisioner
+module github.com/hanzo-fi/ledger/tools/provisioner
 
 go 1.26.0
 
 replace (
-	github.com/formancehq/ledger => ../..
-	github.com/formancehq/ledger/pkg/client => ../../pkg/client
+	github.com/hanzo-fi/ledger => ../..
+	github.com/hanzo-fi/ledger/pkg/client => ../../pkg/client
 )
 
 require (
 	github.com/formancehq/go-libs/v5 v5.6.1
-	github.com/formancehq/ledger v0.0.0-00010101000000-000000000000
-	github.com/formancehq/ledger/pkg/client v0.0.0-00010101000000-000000000000
+	github.com/hanzo-fi/ledger v0.0.0-00010101000000-000000000000
+	github.com/hanzo-fi/ledger/pkg/client v0.0.0-00010101000000-000000000000
 	github.com/google/go-cmp v0.7.0
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1

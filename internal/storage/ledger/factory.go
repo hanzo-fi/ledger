@@ -6,8 +6,8 @@ import (
 
 	"github.com/uptrace/bun"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/bucket"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/bucket"
 )
 
 type Factory interface {

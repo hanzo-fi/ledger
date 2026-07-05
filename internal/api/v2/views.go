@@ -8,7 +8,7 @@ import (
 
 	. "github.com/formancehq/go-libs/v5/pkg/types/collections"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 const HeaderBigIntAsString = "Formance-Bigint-As-String"

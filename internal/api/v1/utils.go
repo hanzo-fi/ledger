@@ -7,8 +7,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	storagecommon "github.com/formancehq/ledger/internal/storage/common"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
 func getCommandParameters[INPUT any](r *http.Request, input INPUT) ledgercontroller.Parameters[INPUT] {

@@ -3,7 +3,7 @@ package vm
 import (
 	"testing"
 
-	"github.com/formancehq/ledger/internal/machine"
+	"github.com/hanzo-fi/ledger/internal/machine"
 )
 
 func TestKeptDestinationAllotment(t *testing.T) {

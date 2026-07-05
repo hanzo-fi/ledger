@@ -3,8 +3,8 @@
 package operations
 
 import (
-	"github.com/formancehq/ledger/pkg/client/internal/utils"
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/utils"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 )
 
 type V2ListLedgersRequest struct {

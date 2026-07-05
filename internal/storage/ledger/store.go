@@ -17,10 +17,10 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/bucket"
-	"github.com/formancehq/ledger/internal/storage/common"
-	"github.com/formancehq/ledger/internal/tracing"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/tracing"
 )
 
 type Store struct {

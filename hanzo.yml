@@ -1,0 +1,10 @@
+# Canonical Hanzo CI/CD manifest — read by hanzoai/ci and platform.hanzo.ai.
+# One file, one way. Builds push to registry.hanzo.ai/hanzo-fi/<app>.
+images:
+  - name: ledger
+    dockerfile: build.Dockerfile
+    context: .
+
+test:
+  - go build ./...
+  - go test ./...

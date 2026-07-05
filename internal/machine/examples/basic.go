@@ -7,9 +7,9 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/machine/script/compiler"
-	"github.com/formancehq/ledger/internal/machine/vm"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/machine/script/compiler"
+	"github.com/hanzo-fi/ledger/internal/machine/vm"
 )
 
 func main() {

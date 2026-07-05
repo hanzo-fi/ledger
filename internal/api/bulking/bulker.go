@@ -15,8 +15,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/observe"
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 
-	ledger "github.com/formancehq/ledger/internal"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )
 
 var ErrAtomicParallelConflict = errors.New("atomic and parallel options are mutually exclusive")

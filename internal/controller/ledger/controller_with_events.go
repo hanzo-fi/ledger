@@ -7,7 +7,7 @@ import (
 
 	"github.com/uptrace/bun"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 type ControllerWithEvents struct {

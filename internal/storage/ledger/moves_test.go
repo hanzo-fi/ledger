@@ -18,8 +18,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/common"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
 func TestMovesInsert(t *testing.T) {

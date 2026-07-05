@@ -21,11 +21,11 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
 	. "github.com/formancehq/go-libs/v5/pkg/testing/utils"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/bucket"
-	"github.com/formancehq/ledger/internal/storage/driver"
-	ledgerstore "github.com/formancehq/ledger/internal/storage/ledger"
-	systemstore "github.com/formancehq/ledger/internal/storage/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/driver"
+	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
+	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 var (

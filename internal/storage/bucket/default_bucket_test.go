@@ -13,8 +13,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/debug"
 
-	"github.com/formancehq/ledger/internal/storage/bucket"
-	"github.com/formancehq/ledger/internal/storage/system"
+	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 func TestBuckets(t *testing.T) {

@@ -20,8 +20,8 @@ package main
 import(
 	"context"
 	"os"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client"
 	"log"
 )
 
@@ -76,8 +76,8 @@ package main
 import(
 	"context"
 	"os"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client"
 	"log"
 )
 

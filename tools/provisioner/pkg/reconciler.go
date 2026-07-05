@@ -10,9 +10,9 @@ import (
 
 	. "github.com/formancehq/go-libs/v5/pkg/types/collections"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client/models/operations"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/models/operations"
 )
 
 type Reconciler struct {
