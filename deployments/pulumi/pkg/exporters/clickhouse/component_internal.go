@@ -11,7 +11,7 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/internals"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/common"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/common"
 )
 
 type internalComponent struct {
@@ -45,7 +45,7 @@ type internalComponentArgs struct {
 
 func newInternalComponent(ctx *pulumi.Context, name string, args internalComponentArgs, opts ...pulumi.ResourceOption) (*internalComponent, error) {
 	cmp := &internalComponent{}
-	err := ctx.RegisterComponentResource("Formance:Ledger:Clickhouse:Internal", name, cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:Clickhouse:Internal", name, cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

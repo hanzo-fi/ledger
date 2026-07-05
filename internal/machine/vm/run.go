@@ -7,8 +7,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/machine"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/machine"
 )
 
 type RunScript struct {

@@ -6,7 +6,7 @@ import (
 	"context"
 	"testing"
 
-	ledgerclient "github.com/formancehq/ledger/pkg/client"
+	ledgerclient "github.com/hanzo-fi/ledger/pkg/client"
 )
 
 type Env interface {

@@ -1,4 +1,4 @@
-module github.com/formancehq/ledger/deployments/pulumi
+module github.com/hanzo-fi/ledger/deployments/pulumi
 
 go 1.25.0
 

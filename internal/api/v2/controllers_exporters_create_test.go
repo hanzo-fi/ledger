@@ -15,7 +15,7 @@ import (
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	sharedapi "github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 func TestCreateExporter(t *testing.T) {

@@ -8,9 +8,9 @@ import (
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/common"
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/storage"
-	"github.com/formancehq/ledger/deployments/pulumi/pkg/worker"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/common"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/storage"
+	"github.com/hanzo-fi/ledger/deployments/pulumi/pkg/worker"
 )
 
 type Component struct {
@@ -52,7 +52,7 @@ type ComponentArgs struct {
 
 func NewComponent(ctx *pulumi.Context, name string, args ComponentArgs, opts ...pulumi.ResourceOption) (*Component, error) {
 	cmp := &Component{}
-	err := ctx.RegisterComponentResource("Formance:Ledger:API", name, cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:API", name, cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

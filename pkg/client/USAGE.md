@@ -4,8 +4,8 @@ package main
 
 import (
 	"context"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 	"log"
 	"os"
 )

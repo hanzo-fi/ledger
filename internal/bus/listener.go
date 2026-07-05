@@ -9,9 +9,9 @@ import (
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	ledger "github.com/formancehq/ledger/internal"
-	ledgercontroller "github.com/formancehq/ledger/internal/controller/ledger"
-	"github.com/formancehq/ledger/pkg/events"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	"github.com/hanzo-fi/ledger/pkg/events"
 )
 
 type LedgerListener struct {

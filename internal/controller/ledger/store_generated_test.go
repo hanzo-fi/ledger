@@ -16,9 +16,9 @@ import (
 	migrations "github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 	metadata "github.com/formancehq/go-libs/v5/pkg/types/metadata"
 	time "github.com/formancehq/go-libs/v5/pkg/types/time"
-	ledger "github.com/formancehq/ledger/internal"
-	common "github.com/formancehq/ledger/internal/storage/common"
-	ledger0 "github.com/formancehq/ledger/internal/storage/ledger"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	common "github.com/hanzo-fi/ledger/internal/storage/common"
+	ledger0 "github.com/hanzo-fi/ledger/internal/storage/ledger"
 	bun "github.com/uptrace/bun"
 	gomock "go.uber.org/mock/gomock"
 )

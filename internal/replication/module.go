@@ -9,9 +9,9 @@ import (
 
 	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
 
-	"github.com/formancehq/ledger/internal/controller/system"
-	"github.com/formancehq/ledger/internal/replication/drivers"
-	innergrpc "github.com/formancehq/ledger/internal/replication/grpc"
+	"github.com/hanzo-fi/ledger/internal/controller/system"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers"
+	innergrpc "github.com/hanzo-fi/ledger/internal/replication/grpc"
 )
 
 type WorkerModuleConfig struct {

@@ -13,7 +13,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	"github.com/formancehq/ledger/internal/queries"
+	"github.com/hanzo-fi/ledger/internal/queries"
 )
 
 type QueryTemplates map[string]QueryTemplate

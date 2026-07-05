@@ -7,11 +7,11 @@ package client
 import (
 	"context"
 	"fmt"
-	"github.com/formancehq/ledger/pkg/client/internal/config"
-	"github.com/formancehq/ledger/pkg/client/internal/hooks"
-	"github.com/formancehq/ledger/pkg/client/internal/utils"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client/retry"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/config"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/hooks"
+	"github.com/hanzo-fi/ledger/pkg/client/internal/utils"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/retry"
 	"net/http"
 	"time"
 )
@@ -127,7 +127,7 @@ func New(opts ...SDKOption) *Formance {
 	sdk := &Formance{
 		SDKVersion: "0.10.2",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/go 0.10.2 2.866.2 v2 github.com/formancehq/ledger/pkg/client",
+			UserAgent:  "speakeasy-sdk/go 0.10.2 2.866.2 v2 github.com/hanzo-fi/ledger/pkg/client",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),

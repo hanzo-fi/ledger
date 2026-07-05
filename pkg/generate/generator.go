@@ -17,11 +17,11 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/collections"
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/api/bulking"
-	"github.com/formancehq/ledger/pkg/client"
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	"github.com/formancehq/ledger/pkg/client/models/operations"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/api/bulking"
+	"github.com/hanzo-fi/ledger/pkg/client"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/models/operations"
 )
 
 type Action struct {

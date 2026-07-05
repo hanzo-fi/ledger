@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/formancehq/ledger/internal/machine/script/compiler"
+	"github.com/hanzo-fi/ledger/internal/machine/script/compiler"
 )
 
 func TestProgram_String(t *testing.T) {

@@ -11,7 +11,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
 	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
 
-	. "github.com/formancehq/ledger/pkg/testserver/ginkgo"
+	. "github.com/hanzo-fi/ledger/pkg/testserver/ginkgo"
 )
 
 // Regression test for TS-456.

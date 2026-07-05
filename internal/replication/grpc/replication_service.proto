@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "github.com/formancehq/ledger/internal/replication/grpc";
+option go_package = "github.com/hanzo-fi/ledger/internal/replication/grpc";
 
 import "google/protobuf/timestamp.proto";
 

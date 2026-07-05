@@ -11,10 +11,10 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/queries"
-	"github.com/formancehq/ledger/internal/storage/common"
-	"github.com/formancehq/ledger/internal/tracing"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/queries"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/tracing"
 )
 
 type ControllerWithTraces struct {

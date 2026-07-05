@@ -23,7 +23,7 @@ type externalComponentArgs struct {
 
 func newExternalComponent(ctx *pulumi.Context, name string, args externalComponentArgs, opts ...pulumi.ResourceOption) (*externalComponent, error) {
 	cmp := &externalComponent{}
-	err := ctx.RegisterComponentResource("Formance:Ledger:Clickhouse:External", name, cmp, opts...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:Clickhouse:External", name, cmp, opts...)
 	if err != nil {
 		return nil, err
 	}

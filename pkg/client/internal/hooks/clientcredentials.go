@@ -9,7 +9,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 	"golang.org/x/sync/singleflight"
 	"io"
 	"net/http"

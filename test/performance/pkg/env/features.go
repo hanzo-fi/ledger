@@ -7,7 +7,7 @@ import (
 
 	. "github.com/formancehq/go-libs/v5/pkg/types/collections"
 
-	"github.com/formancehq/ledger/pkg/features"
+	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
 func BuildAllPossibleConfigurations() []Configuration {

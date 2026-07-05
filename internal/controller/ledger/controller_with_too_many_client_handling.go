@@ -13,9 +13,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/queries"
-	"github.com/formancehq/ledger/internal/storage/common"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/queries"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
 //go:generate mockgen -write_source_comment=false -typed -write_package_comment=false -source controller_with_too_many_client_handling.go -destination controller_with_too_many_client_handling_generated_test.go -package ledger . DelayCalculator

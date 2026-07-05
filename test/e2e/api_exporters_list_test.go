@@ -14,9 +14,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
 	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
 
-	"github.com/formancehq/ledger/pkg/client/models/components"
-	. "github.com/formancehq/ledger/pkg/testserver"
-	. "github.com/formancehq/ledger/pkg/testserver/ginkgo"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
+	. "github.com/hanzo-fi/ledger/pkg/testserver"
+	. "github.com/hanzo-fi/ledger/pkg/testserver/ginkgo"
 )
 
 var _ = Context("Exporters list API tests", func() {

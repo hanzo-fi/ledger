@@ -6,7 +6,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 //go:generate mockgen -write_source_comment=false -write_package_comment=false -source store.go -destination store_generated_test.go -package driver_test . SystemStore

@@ -14,8 +14,8 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 
-	. "github.com/formancehq/ledger/deployments/pulumi/pkg/common"
-	. "github.com/formancehq/ledger/deployments/pulumi/pkg/utils"
+	. "github.com/hanzo-fi/ledger/deployments/pulumi/pkg/common"
+	. "github.com/hanzo-fi/ledger/deployments/pulumi/pkg/utils"
 )
 
 type ConnectivityDatabaseArgs struct {
@@ -250,7 +250,7 @@ func NewComponent(ctx *pulumi.Context, name string, args ComponentArgs, options 
 	cmp := &Component{
 		ConnectivityDatabaseArgs: args.ConnectivityDatabaseArgs,
 	}
-	err := ctx.RegisterComponentResource("Formance:Ledger:Storage", name, cmp, options...)
+	err := ctx.RegisterComponentResource("Hanzo:Ledger:Storage", name, cmp, options...)
 	if err != nil {
 		return nil, err
 	}

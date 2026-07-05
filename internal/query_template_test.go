@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/formancehq/ledger/internal/queries"
+	"github.com/hanzo-fi/ledger/internal/queries"
 )
 
 func TestQueryTemplateValidation(t *testing.T) {

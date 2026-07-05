@@ -3,7 +3,7 @@
 # ledger
 
 ```go
-import "github.com/formancehq/ledger/internal/controller/ledger"
+import "github.com/hanzo-fi/ledger/internal/controller/ledger"
 ```
 
 Ledger Controller doc
@@ -194,7 +194,7 @@ var ErrNotFound = postgres.ErrNotFound
 ```
 
 <a name="Balance"></a>
-## type [Balance](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L21-L24>)
+## type [Balance](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L21-L24>)
 
 
 
@@ -206,7 +206,7 @@ type Balance struct {
 ```
 
 <a name="BalanceQuery"></a>
-## type [BalanceQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L26>)
+## type [BalanceQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L26>)
 
 
 
@@ -215,7 +215,7 @@ type BalanceQuery = vm.BalanceQuery
 ```
 
 <a name="Balances"></a>
-## type [Balances](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L27>)
+## type [Balances](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L27>)
 
 
 
@@ -224,7 +224,7 @@ type Balances = vm.Balances
 ```
 
 <a name="CacheConfiguration"></a>
-## type [CacheConfiguration](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/compiler.go#L35-L37>)
+## type [CacheConfiguration](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/compiler.go#L35-L37>)
 
 
 
@@ -235,7 +235,7 @@ type CacheConfiguration struct {
 ```
 
 <a name="CachedCompiler"></a>
-## type [CachedCompiler](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/compiler.go#L39-L42>)
+## type [CachedCompiler](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/compiler.go#L39-L42>)
 
 
 
@@ -246,7 +246,7 @@ type CachedCompiler struct {
 ```
 
 <a name="NewCachedCompiler"></a>
-### func [NewCachedCompiler](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/compiler.go#L68>)
+### func [NewCachedCompiler](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/compiler.go#L68>)
 
 ```go
 func NewCachedCompiler(compiler Compiler, configuration CacheConfiguration) *CachedCompiler
@@ -255,7 +255,7 @@ func NewCachedCompiler(compiler Compiler, configuration CacheConfiguration) *Cac
 
 
 <a name="CachedCompiler.Compile"></a>
-### func \(\*CachedCompiler\) [Compile](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/compiler.go#L44>)
+### func \(\*CachedCompiler\) [Compile](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/compiler.go#L44>)
 
 ```go
 func (c *CachedCompiler) Compile(script string) (*program.Program, error)
@@ -264,7 +264,7 @@ func (c *CachedCompiler) Compile(script string) (*program.Program, error)
 
 
 <a name="Compiler"></a>
-## type [Compiler](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/compiler.go#L16-L18>)
+## type [Compiler](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/compiler.go#L16-L18>)
 
 Compiler can return following errors:
 
@@ -277,7 +277,7 @@ type Compiler interface {
 ```
 
 <a name="CompilerFn"></a>
-## type [CompilerFn](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/compiler.go#L19>)
+## type [CompilerFn](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/compiler.go#L19>)
 
 
 
@@ -286,7 +286,7 @@ type CompilerFn func(script string) (*program.Program, error)
 ```
 
 <a name="NewDefaultCompiler"></a>
-### func [NewDefaultCompiler](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/compiler.go#L25>)
+### func [NewDefaultCompiler](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/compiler.go#L25>)
 
 ```go
 func NewDefaultCompiler() CompilerFn
@@ -295,7 +295,7 @@ func NewDefaultCompiler() CompilerFn
 
 
 <a name="CompilerFn.Compile"></a>
-### func \(CompilerFn\) [Compile](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/compiler.go#L21>)
+### func \(CompilerFn\) [Compile](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/compiler.go#L21>)
 
 ```go
 func (fn CompilerFn) Compile(script string) (*program.Program, error)
@@ -304,7 +304,7 @@ func (fn CompilerFn) Compile(script string) (*program.Program, error)
 
 
 <a name="Controller"></a>
-## type [Controller](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L15-L71>)
+## type [Controller](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L15-L71>)
 
 
 
@@ -369,7 +369,7 @@ type Controller interface {
 ```
 
 <a name="ControllerWithCache"></a>
-## type [ControllerWithCache](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_cache.go#L9-L13>)
+## type [ControllerWithCache](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_cache.go#L9-L13>)
 
 
 
@@ -381,7 +381,7 @@ type ControllerWithCache struct {
 ```
 
 <a name="NewControllerWithCache"></a>
-### func [NewControllerWithCache](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_cache.go#L34>)
+### func [NewControllerWithCache](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_cache.go#L34>)
 
 ```go
 func NewControllerWithCache(ledger ledger.Ledger, underlying Controller, registry *StateRegistry) *ControllerWithCache
@@ -390,7 +390,7 @@ func NewControllerWithCache(ledger ledger.Ledger, underlying Controller, registr
 
 
 <a name="ControllerWithCache.IsDatabaseUpToDate"></a>
-### func \(\*ControllerWithCache\) [IsDatabaseUpToDate](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_cache.go#L15>)
+### func \(\*ControllerWithCache\) [IsDatabaseUpToDate](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_cache.go#L15>)
 
 ```go
 func (c *ControllerWithCache) IsDatabaseUpToDate(ctx context.Context) (bool, error)
@@ -399,7 +399,7 @@ func (c *ControllerWithCache) IsDatabaseUpToDate(ctx context.Context) (bool, err
 
 
 <a name="ControllerWithEvents"></a>
-## type [ControllerWithEvents](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L9-L13>)
+## type [ControllerWithEvents](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L9-L13>)
 
 
 
@@ -411,7 +411,7 @@ type ControllerWithEvents struct {
 ```
 
 <a name="NewControllerWithEvents"></a>
-### func [NewControllerWithEvents](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L15>)
+### func [NewControllerWithEvents](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L15>)
 
 ```go
 func NewControllerWithEvents(ledger ledger.Ledger, underlying Controller, listener Listener) *ControllerWithEvents
@@ -420,7 +420,7 @@ func NewControllerWithEvents(ledger ledger.Ledger, underlying Controller, listen
 
 
 <a name="ControllerWithEvents.CreateTransaction"></a>
-### func \(\*ControllerWithEvents\) [CreateTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L23>)
+### func \(\*ControllerWithEvents\) [CreateTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L23>)
 
 ```go
 func (ctrl *ControllerWithEvents) CreateTransaction(ctx context.Context, parameters Parameters[RunScript]) (*ledger.CreatedTransaction, error)
@@ -429,7 +429,7 @@ func (ctrl *ControllerWithEvents) CreateTransaction(ctx context.Context, paramet
 
 
 <a name="ControllerWithEvents.DeleteAccountMetadata"></a>
-### func \(\*ControllerWithEvents\) [DeleteAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L106>)
+### func \(\*ControllerWithEvents\) [DeleteAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L106>)
 
 ```go
 func (ctrl *ControllerWithEvents) DeleteAccountMetadata(ctx context.Context, parameters Parameters[DeleteAccountMetadata]) error
@@ -438,7 +438,7 @@ func (ctrl *ControllerWithEvents) DeleteAccountMetadata(ctx context.Context, par
 
 
 <a name="ControllerWithEvents.DeleteTransactionMetadata"></a>
-### func \(\*ControllerWithEvents\) [DeleteTransactionMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L88>)
+### func \(\*ControllerWithEvents\) [DeleteTransactionMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L88>)
 
 ```go
 func (ctrl *ControllerWithEvents) DeleteTransactionMetadata(ctx context.Context, parameters Parameters[DeleteTransactionMetadata]) error
@@ -447,7 +447,7 @@ func (ctrl *ControllerWithEvents) DeleteTransactionMetadata(ctx context.Context,
 
 
 <a name="ControllerWithEvents.RevertTransaction"></a>
-### func \(\*ControllerWithEvents\) [RevertTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L35>)
+### func \(\*ControllerWithEvents\) [RevertTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L35>)
 
 ```go
 func (ctrl *ControllerWithEvents) RevertTransaction(ctx context.Context, parameters Parameters[RevertTransaction]) (*ledger.RevertedTransaction, error)
@@ -456,7 +456,7 @@ func (ctrl *ControllerWithEvents) RevertTransaction(ctx context.Context, paramet
 
 
 <a name="ControllerWithEvents.SaveAccountMetadata"></a>
-### func \(\*ControllerWithEvents\) [SaveAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L70>)
+### func \(\*ControllerWithEvents\) [SaveAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L70>)
 
 ```go
 func (ctrl *ControllerWithEvents) SaveAccountMetadata(ctx context.Context, parameters Parameters[SaveAccountMetadata]) error
@@ -465,7 +465,7 @@ func (ctrl *ControllerWithEvents) SaveAccountMetadata(ctx context.Context, param
 
 
 <a name="ControllerWithEvents.SaveTransactionMetadata"></a>
-### func \(\*ControllerWithEvents\) [SaveTransactionMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L52>)
+### func \(\*ControllerWithEvents\) [SaveTransactionMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_events.go#L52>)
 
 ```go
 func (ctrl *ControllerWithEvents) SaveTransactionMetadata(ctx context.Context, parameters Parameters[SaveTransactionMetadata]) error
@@ -474,7 +474,7 @@ func (ctrl *ControllerWithEvents) SaveTransactionMetadata(ctx context.Context, p
 
 
 <a name="ControllerWithTraces"></a>
-## type [ControllerWithTraces](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L12-L14>)
+## type [ControllerWithTraces](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L12-L14>)
 
 
 
@@ -485,7 +485,7 @@ type ControllerWithTraces struct {
 ```
 
 <a name="NewControllerWithTraces"></a>
-### func [NewControllerWithTraces](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L16>)
+### func [NewControllerWithTraces](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L16>)
 
 ```go
 func NewControllerWithTraces(underlying Controller) *ControllerWithTraces
@@ -494,7 +494,7 @@ func NewControllerWithTraces(underlying Controller) *ControllerWithTraces
 
 
 <a name="ControllerWithTraces.CountAccounts"></a>
-### func \(\*ControllerWithTraces\) [CountAccounts](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L44>)
+### func \(\*ControllerWithTraces\) [CountAccounts](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L44>)
 
 ```go
 func (ctrl *ControllerWithTraces) CountAccounts(ctx context.Context, a ListAccountsQuery) (int, error)
@@ -503,7 +503,7 @@ func (ctrl *ControllerWithTraces) CountAccounts(ctx context.Context, a ListAccou
 
 
 <a name="ControllerWithTraces.CountTransactions"></a>
-### func \(\*ControllerWithTraces\) [CountTransactions](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L32>)
+### func \(\*ControllerWithTraces\) [CountTransactions](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L32>)
 
 ```go
 func (ctrl *ControllerWithTraces) CountTransactions(ctx context.Context, q ListTransactionsQuery) (int, error)
@@ -512,7 +512,7 @@ func (ctrl *ControllerWithTraces) CountTransactions(ctx context.Context, q ListT
 
 
 <a name="ControllerWithTraces.CreateTransaction"></a>
-### func \(\*ControllerWithTraces\) [CreateTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L98>)
+### func \(\*ControllerWithTraces\) [CreateTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L98>)
 
 ```go
 func (ctrl *ControllerWithTraces) CreateTransaction(ctx context.Context, parameters Parameters[RunScript]) (*ledger.CreatedTransaction, error)
@@ -521,7 +521,7 @@ func (ctrl *ControllerWithTraces) CreateTransaction(ctx context.Context, paramet
 
 
 <a name="ControllerWithTraces.DeleteAccountMetadata"></a>
-### func \(\*ControllerWithTraces\) [DeleteAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L128>)
+### func \(\*ControllerWithTraces\) [DeleteAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L128>)
 
 ```go
 func (ctrl *ControllerWithTraces) DeleteAccountMetadata(ctx context.Context, parameters Parameters[DeleteAccountMetadata]) error
@@ -530,7 +530,7 @@ func (ctrl *ControllerWithTraces) DeleteAccountMetadata(ctx context.Context, par
 
 
 <a name="ControllerWithTraces.DeleteTransactionMetadata"></a>
-### func \(\*ControllerWithTraces\) [DeleteTransactionMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L122>)
+### func \(\*ControllerWithTraces\) [DeleteTransactionMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L122>)
 
 ```go
 func (ctrl *ControllerWithTraces) DeleteTransactionMetadata(ctx context.Context, parameters Parameters[DeleteTransactionMetadata]) error
@@ -539,7 +539,7 @@ func (ctrl *ControllerWithTraces) DeleteTransactionMetadata(ctx context.Context,
 
 
 <a name="ControllerWithTraces.Export"></a>
-### func \(\*ControllerWithTraces\) [Export](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L80>)
+### func \(\*ControllerWithTraces\) [Export](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L80>)
 
 ```go
 func (ctrl *ControllerWithTraces) Export(ctx context.Context, w ExportWriter) error
@@ -548,7 +548,7 @@ func (ctrl *ControllerWithTraces) Export(ctx context.Context, w ExportWriter) er
 
 
 <a name="ControllerWithTraces.GetAccount"></a>
-### func \(\*ControllerWithTraces\) [GetAccount](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L56>)
+### func \(\*ControllerWithTraces\) [GetAccount](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L56>)
 
 ```go
 func (ctrl *ControllerWithTraces) GetAccount(ctx context.Context, q GetAccountQuery) (*ledger.Account, error)
@@ -557,7 +557,7 @@ func (ctrl *ControllerWithTraces) GetAccount(ctx context.Context, q GetAccountQu
 
 
 <a name="ControllerWithTraces.GetAggregatedBalances"></a>
-### func \(\*ControllerWithTraces\) [GetAggregatedBalances](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L62>)
+### func \(\*ControllerWithTraces\) [GetAggregatedBalances](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L62>)
 
 ```go
 func (ctrl *ControllerWithTraces) GetAggregatedBalances(ctx context.Context, q GetAggregatedBalanceQuery) (ledger.BalancesByAssets, error)
@@ -566,7 +566,7 @@ func (ctrl *ControllerWithTraces) GetAggregatedBalances(ctx context.Context, q G
 
 
 <a name="ControllerWithTraces.GetMigrationsInfo"></a>
-### func \(\*ControllerWithTraces\) [GetMigrationsInfo](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L22>)
+### func \(\*ControllerWithTraces\) [GetMigrationsInfo](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L22>)
 
 ```go
 func (ctrl *ControllerWithTraces) GetMigrationsInfo(ctx context.Context) ([]migrations.Info, error)
@@ -575,7 +575,7 @@ func (ctrl *ControllerWithTraces) GetMigrationsInfo(ctx context.Context) ([]migr
 
 
 <a name="ControllerWithTraces.GetStats"></a>
-### func \(\*ControllerWithTraces\) [GetStats](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L134>)
+### func \(\*ControllerWithTraces\) [GetStats](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L134>)
 
 ```go
 func (ctrl *ControllerWithTraces) GetStats(ctx context.Context) (Stats, error)
@@ -584,7 +584,7 @@ func (ctrl *ControllerWithTraces) GetStats(ctx context.Context) (Stats, error)
 
 
 <a name="ControllerWithTraces.GetTransaction"></a>
-### func \(\*ControllerWithTraces\) [GetTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L38>)
+### func \(\*ControllerWithTraces\) [GetTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L38>)
 
 ```go
 func (ctrl *ControllerWithTraces) GetTransaction(ctx context.Context, query GetTransactionQuery) (*ledger.Transaction, error)
@@ -593,7 +593,7 @@ func (ctrl *ControllerWithTraces) GetTransaction(ctx context.Context, query GetT
 
 
 <a name="ControllerWithTraces.GetVolumesWithBalances"></a>
-### func \(\*ControllerWithTraces\) [GetVolumesWithBalances](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L92>)
+### func \(\*ControllerWithTraces\) [GetVolumesWithBalances](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L92>)
 
 ```go
 func (ctrl *ControllerWithTraces) GetVolumesWithBalances(ctx context.Context, q GetVolumesWithBalancesQuery) (*bunpaginate.Cursor[ledger.VolumesWithBalanceByAssetByAccount], error)
@@ -602,7 +602,7 @@ func (ctrl *ControllerWithTraces) GetVolumesWithBalances(ctx context.Context, q 
 
 
 <a name="ControllerWithTraces.Import"></a>
-### func \(\*ControllerWithTraces\) [Import](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L74>)
+### func \(\*ControllerWithTraces\) [Import](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L74>)
 
 ```go
 func (ctrl *ControllerWithTraces) Import(ctx context.Context, stream chan ledger.Log) error
@@ -611,7 +611,7 @@ func (ctrl *ControllerWithTraces) Import(ctx context.Context, stream chan ledger
 
 
 <a name="ControllerWithTraces.IsDatabaseUpToDate"></a>
-### func \(\*ControllerWithTraces\) [IsDatabaseUpToDate](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L86>)
+### func \(\*ControllerWithTraces\) [IsDatabaseUpToDate](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L86>)
 
 ```go
 func (ctrl *ControllerWithTraces) IsDatabaseUpToDate(ctx context.Context) (bool, error)
@@ -620,7 +620,7 @@ func (ctrl *ControllerWithTraces) IsDatabaseUpToDate(ctx context.Context) (bool,
 
 
 <a name="ControllerWithTraces.ListAccounts"></a>
-### func \(\*ControllerWithTraces\) [ListAccounts](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L50>)
+### func \(\*ControllerWithTraces\) [ListAccounts](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L50>)
 
 ```go
 func (ctrl *ControllerWithTraces) ListAccounts(ctx context.Context, a ListAccountsQuery) (*bunpaginate.Cursor[ledger.Account], error)
@@ -629,7 +629,7 @@ func (ctrl *ControllerWithTraces) ListAccounts(ctx context.Context, a ListAccoun
 
 
 <a name="ControllerWithTraces.ListLogs"></a>
-### func \(\*ControllerWithTraces\) [ListLogs](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L68>)
+### func \(\*ControllerWithTraces\) [ListLogs](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L68>)
 
 ```go
 func (ctrl *ControllerWithTraces) ListLogs(ctx context.Context, q GetLogsQuery) (*bunpaginate.Cursor[ledger.Log], error)
@@ -638,7 +638,7 @@ func (ctrl *ControllerWithTraces) ListLogs(ctx context.Context, q GetLogsQuery) 
 
 
 <a name="ControllerWithTraces.ListTransactions"></a>
-### func \(\*ControllerWithTraces\) [ListTransactions](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L26>)
+### func \(\*ControllerWithTraces\) [ListTransactions](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L26>)
 
 ```go
 func (ctrl *ControllerWithTraces) ListTransactions(ctx context.Context, q ListTransactionsQuery) (*bunpaginate.Cursor[ledger.Transaction], error)
@@ -647,7 +647,7 @@ func (ctrl *ControllerWithTraces) ListTransactions(ctx context.Context, q ListTr
 
 
 <a name="ControllerWithTraces.RevertTransaction"></a>
-### func \(\*ControllerWithTraces\) [RevertTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L104>)
+### func \(\*ControllerWithTraces\) [RevertTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L104>)
 
 ```go
 func (ctrl *ControllerWithTraces) RevertTransaction(ctx context.Context, parameters Parameters[RevertTransaction]) (*ledger.RevertedTransaction, error)
@@ -656,7 +656,7 @@ func (ctrl *ControllerWithTraces) RevertTransaction(ctx context.Context, paramet
 
 
 <a name="ControllerWithTraces.SaveAccountMetadata"></a>
-### func \(\*ControllerWithTraces\) [SaveAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L116>)
+### func \(\*ControllerWithTraces\) [SaveAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L116>)
 
 ```go
 func (ctrl *ControllerWithTraces) SaveAccountMetadata(ctx context.Context, parameters Parameters[SaveAccountMetadata]) error
@@ -665,7 +665,7 @@ func (ctrl *ControllerWithTraces) SaveAccountMetadata(ctx context.Context, param
 
 
 <a name="ControllerWithTraces.SaveTransactionMetadata"></a>
-### func \(\*ControllerWithTraces\) [SaveTransactionMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L110>)
+### func \(\*ControllerWithTraces\) [SaveTransactionMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_with_traces.go#L110>)
 
 ```go
 func (ctrl *ControllerWithTraces) SaveTransactionMetadata(ctx context.Context, parameters Parameters[SaveTransactionMetadata]) error
@@ -674,7 +674,7 @@ func (ctrl *ControllerWithTraces) SaveTransactionMetadata(ctx context.Context, p
 
 
 <a name="DefaultController"></a>
-## type [DefaultController](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L30-L34>)
+## type [DefaultController](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L30-L34>)
 
 
 
@@ -685,7 +685,7 @@ type DefaultController struct {
 ```
 
 <a name="NewDefaultController"></a>
-### func [NewDefaultController](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L36-L40>)
+### func [NewDefaultController](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L36-L40>)
 
 ```go
 func NewDefaultController(ledger ledger.Ledger, store Store, machineFactory MachineFactory) *DefaultController
@@ -694,7 +694,7 @@ func NewDefaultController(ledger ledger.Ledger, store Store, machineFactory Mach
 
 
 <a name="DefaultController.CountAccounts"></a>
-### func \(\*DefaultController\) [CountAccounts](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L66>)
+### func \(\*DefaultController\) [CountAccounts](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L66>)
 
 ```go
 func (ctrl *DefaultController) CountAccounts(ctx context.Context, a ListAccountsQuery) (int, error)
@@ -703,7 +703,7 @@ func (ctrl *DefaultController) CountAccounts(ctx context.Context, a ListAccounts
 
 
 <a name="DefaultController.CountTransactions"></a>
-### func \(\*DefaultController\) [CountTransactions](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L58>)
+### func \(\*DefaultController\) [CountTransactions](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L58>)
 
 ```go
 func (ctrl *DefaultController) CountTransactions(ctx context.Context, q ListTransactionsQuery) (int, error)
@@ -712,7 +712,7 @@ func (ctrl *DefaultController) CountTransactions(ctx context.Context, q ListTran
 
 
 <a name="DefaultController.CreateTransaction"></a>
-### func \(\*DefaultController\) [CreateTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L210>)
+### func \(\*DefaultController\) [CreateTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L210>)
 
 ```go
 func (ctrl *DefaultController) CreateTransaction(ctx context.Context, parameters Parameters[RunScript]) (*ledger.CreatedTransaction, error)
@@ -721,7 +721,7 @@ func (ctrl *DefaultController) CreateTransaction(ctx context.Context, parameters
 
 
 <a name="DefaultController.DeleteAccountMetadata"></a>
-### func \(\*DefaultController\) [DeleteAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L402>)
+### func \(\*DefaultController\) [DeleteAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L402>)
 
 ```go
 func (ctrl *DefaultController) DeleteAccountMetadata(ctx context.Context, parameters Parameters[DeleteAccountMetadata]) error
@@ -730,7 +730,7 @@ func (ctrl *DefaultController) DeleteAccountMetadata(ctx context.Context, parame
 
 
 <a name="DefaultController.DeleteTransactionMetadata"></a>
-### func \(\*DefaultController\) [DeleteTransactionMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L381>)
+### func \(\*DefaultController\) [DeleteTransactionMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L381>)
 
 ```go
 func (ctrl *DefaultController) DeleteTransactionMetadata(ctx context.Context, parameters Parameters[DeleteTransactionMetadata]) error
@@ -739,7 +739,7 @@ func (ctrl *DefaultController) DeleteTransactionMetadata(ctx context.Context, pa
 
 
 <a name="DefaultController.Export"></a>
-### func \(\*DefaultController\) [Export](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L183>)
+### func \(\*DefaultController\) [Export](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L183>)
 
 ```go
 func (ctrl *DefaultController) Export(ctx context.Context, w ExportWriter) error
@@ -748,7 +748,7 @@ func (ctrl *DefaultController) Export(ctx context.Context, w ExportWriter) error
 
 
 <a name="DefaultController.GetAccount"></a>
-### func \(\*DefaultController\) [GetAccount](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L74>)
+### func \(\*DefaultController\) [GetAccount](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L74>)
 
 ```go
 func (ctrl *DefaultController) GetAccount(ctx context.Context, q GetAccountQuery) (*ledger.Account, error)
@@ -757,7 +757,7 @@ func (ctrl *DefaultController) GetAccount(ctx context.Context, q GetAccountQuery
 
 
 <a name="DefaultController.GetAggregatedBalances"></a>
-### func \(\*DefaultController\) [GetAggregatedBalances](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L78>)
+### func \(\*DefaultController\) [GetAggregatedBalances](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L78>)
 
 ```go
 func (ctrl *DefaultController) GetAggregatedBalances(ctx context.Context, q GetAggregatedBalanceQuery) (ledger.BalancesByAssets, error)
@@ -766,7 +766,7 @@ func (ctrl *DefaultController) GetAggregatedBalances(ctx context.Context, q GetA
 
 
 <a name="DefaultController.GetMigrationsInfo"></a>
-### func \(\*DefaultController\) [GetMigrationsInfo](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L50>)
+### func \(\*DefaultController\) [GetMigrationsInfo](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L50>)
 
 ```go
 func (ctrl *DefaultController) GetMigrationsInfo(ctx context.Context) ([]migrations.Info, error)
@@ -775,7 +775,7 @@ func (ctrl *DefaultController) GetMigrationsInfo(ctx context.Context) ([]migrati
 
 
 <a name="DefaultController.GetStats"></a>
-### func \(\*DefaultController\) [GetStats](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/stats.go#L13>)
+### func \(\*DefaultController\) [GetStats](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/stats.go#L13>)
 
 ```go
 func (ctrl *DefaultController) GetStats(ctx context.Context) (Stats, error)
@@ -784,7 +784,7 @@ func (ctrl *DefaultController) GetStats(ctx context.Context) (Stats, error)
 
 
 <a name="DefaultController.GetTransaction"></a>
-### func \(\*DefaultController\) [GetTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L62>)
+### func \(\*DefaultController\) [GetTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L62>)
 
 ```go
 func (ctrl *DefaultController) GetTransaction(ctx context.Context, query GetTransactionQuery) (*ledger.Transaction, error)
@@ -793,7 +793,7 @@ func (ctrl *DefaultController) GetTransaction(ctx context.Context, query GetTran
 
 
 <a name="DefaultController.GetVolumesWithBalances"></a>
-### func \(\*DefaultController\) [GetVolumesWithBalances](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L206>)
+### func \(\*DefaultController\) [GetVolumesWithBalances](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L206>)
 
 ```go
 func (ctrl *DefaultController) GetVolumesWithBalances(ctx context.Context, q GetVolumesWithBalancesQuery) (*bunpaginate.Cursor[ledger.VolumesWithBalanceByAssetByAccount], error)
@@ -802,7 +802,7 @@ func (ctrl *DefaultController) GetVolumesWithBalances(ctx context.Context, q Get
 
 
 <a name="DefaultController.Import"></a>
-### func \(\*DefaultController\) [Import](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L86>)
+### func \(\*DefaultController\) [Import](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L86>)
 
 ```go
 func (ctrl *DefaultController) Import(ctx context.Context, stream chan ledger.Log) error
@@ -811,7 +811,7 @@ func (ctrl *DefaultController) Import(ctx context.Context, stream chan ledger.Lo
 
 
 <a name="DefaultController.IsDatabaseUpToDate"></a>
-### func \(\*DefaultController\) [IsDatabaseUpToDate](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L202>)
+### func \(\*DefaultController\) [IsDatabaseUpToDate](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L202>)
 
 ```go
 func (ctrl *DefaultController) IsDatabaseUpToDate(ctx context.Context) (bool, error)
@@ -820,7 +820,7 @@ func (ctrl *DefaultController) IsDatabaseUpToDate(ctx context.Context) (bool, er
 
 
 <a name="DefaultController.ListAccounts"></a>
-### func \(\*DefaultController\) [ListAccounts](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L70>)
+### func \(\*DefaultController\) [ListAccounts](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L70>)
 
 ```go
 func (ctrl *DefaultController) ListAccounts(ctx context.Context, a ListAccountsQuery) (*bunpaginate.Cursor[ledger.Account], error)
@@ -829,7 +829,7 @@ func (ctrl *DefaultController) ListAccounts(ctx context.Context, a ListAccountsQ
 
 
 <a name="DefaultController.ListLogs"></a>
-### func \(\*DefaultController\) [ListLogs](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L82>)
+### func \(\*DefaultController\) [ListLogs](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L82>)
 
 ```go
 func (ctrl *DefaultController) ListLogs(ctx context.Context, q GetLogsQuery) (*bunpaginate.Cursor[ledger.Log], error)
@@ -838,7 +838,7 @@ func (ctrl *DefaultController) ListLogs(ctx context.Context, q GetLogsQuery) (*b
 
 
 <a name="DefaultController.ListTransactions"></a>
-### func \(\*DefaultController\) [ListTransactions](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L54>)
+### func \(\*DefaultController\) [ListTransactions](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L54>)
 
 ```go
 func (ctrl *DefaultController) ListTransactions(ctx context.Context, q ListTransactionsQuery) (*bunpaginate.Cursor[ledger.Transaction], error)
@@ -847,7 +847,7 @@ func (ctrl *DefaultController) ListTransactions(ctx context.Context, q ListTrans
 
 
 <a name="DefaultController.RevertTransaction"></a>
-### func \(\*DefaultController\) [RevertTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L278>)
+### func \(\*DefaultController\) [RevertTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L278>)
 
 ```go
 func (ctrl *DefaultController) RevertTransaction(ctx context.Context, parameters Parameters[RevertTransaction]) (*ledger.RevertedTransaction, error)
@@ -856,7 +856,7 @@ func (ctrl *DefaultController) RevertTransaction(ctx context.Context, parameters
 
 
 <a name="DefaultController.SaveAccountMetadata"></a>
-### func \(\*DefaultController\) [SaveAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L358>)
+### func \(\*DefaultController\) [SaveAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L358>)
 
 ```go
 func (ctrl *DefaultController) SaveAccountMetadata(ctx context.Context, parameters Parameters[SaveAccountMetadata]) error
@@ -865,7 +865,7 @@ func (ctrl *DefaultController) SaveAccountMetadata(ctx context.Context, paramete
 
 
 <a name="DefaultController.SaveTransactionMetadata"></a>
-### func \(\*DefaultController\) [SaveTransactionMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller_default.go#L343>)
+### func \(\*DefaultController\) [SaveTransactionMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller_default.go#L343>)
 
 ```go
 func (ctrl *DefaultController) SaveTransactionMetadata(ctx context.Context, parameters Parameters[SaveTransactionMetadata]) error
@@ -874,7 +874,7 @@ func (ctrl *DefaultController) SaveTransactionMetadata(ctx context.Context, para
 
 
 <a name="DefaultMachineAdapter"></a>
-## type [DefaultMachineAdapter](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine.go#L29-L32>)
+## type [DefaultMachineAdapter](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine.go#L29-L32>)
 
 
 
@@ -885,7 +885,7 @@ type DefaultMachineAdapter struct {
 ```
 
 <a name="NewDefaultMachine"></a>
-### func [NewDefaultMachine](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine.go#L82>)
+### func [NewDefaultMachine](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine.go#L82>)
 
 ```go
 func NewDefaultMachine(p program.Program) *DefaultMachineAdapter
@@ -894,7 +894,7 @@ func NewDefaultMachine(p program.Program) *DefaultMachineAdapter
 
 
 <a name="DefaultMachineAdapter.Execute"></a>
-### func \(\*DefaultMachineAdapter\) [Execute](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine.go#L34>)
+### func \(\*DefaultMachineAdapter\) [Execute](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine.go#L34>)
 
 ```go
 func (d *DefaultMachineAdapter) Execute(ctx context.Context, tx TX, vars map[string]string) (*MachineResult, error)
@@ -903,7 +903,7 @@ func (d *DefaultMachineAdapter) Execute(ctx context.Context, tx TX, vars map[str
 
 
 <a name="DefaultMachineFactory"></a>
-## type [DefaultMachineFactory](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine_factory.go#L11-L13>)
+## type [DefaultMachineFactory](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine_factory.go#L11-L13>)
 
 
 
@@ -914,7 +914,7 @@ type DefaultMachineFactory struct {
 ```
 
 <a name="NewDefaultMachineFactory"></a>
-### func [NewDefaultMachineFactory](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine_factory.go#L23>)
+### func [NewDefaultMachineFactory](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine_factory.go#L23>)
 
 ```go
 func NewDefaultMachineFactory(compiler Compiler) *DefaultMachineFactory
@@ -923,7 +923,7 @@ func NewDefaultMachineFactory(compiler Compiler) *DefaultMachineFactory
 
 
 <a name="DefaultMachineFactory.Make"></a>
-### func \(\*DefaultMachineFactory\) [Make](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine_factory.go#L15>)
+### func \(\*DefaultMachineFactory\) [Make](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine_factory.go#L15>)
 
 ```go
 func (d *DefaultMachineFactory) Make(script string) (Machine, error)
@@ -932,7 +932,7 @@ func (d *DefaultMachineFactory) Make(script string) (Machine, error)
 
 
 <a name="DeleteAccountMetadata"></a>
-## type [DeleteAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L98-L101>)
+## type [DeleteAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L98-L101>)
 
 
 
@@ -944,7 +944,7 @@ type DeleteAccountMetadata struct {
 ```
 
 <a name="DeleteTransactionMetadata"></a>
-## type [DeleteTransactionMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L93-L96>)
+## type [DeleteTransactionMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L93-L96>)
 
 
 
@@ -956,7 +956,7 @@ type DeleteTransactionMetadata struct {
 ```
 
 <a name="ErrAlreadyReverted"></a>
-## type [ErrAlreadyReverted](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L70-L72>)
+## type [ErrAlreadyReverted](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L70-L72>)
 
 
 
@@ -967,7 +967,7 @@ type ErrAlreadyReverted struct {
 ```
 
 <a name="ErrAlreadyReverted.Error"></a>
-### func \(ErrAlreadyReverted\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L74>)
+### func \(ErrAlreadyReverted\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L74>)
 
 ```go
 func (e ErrAlreadyReverted) Error() string
@@ -976,7 +976,7 @@ func (e ErrAlreadyReverted) Error() string
 
 
 <a name="ErrAlreadyReverted.Is"></a>
-### func \(ErrAlreadyReverted\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L78>)
+### func \(ErrAlreadyReverted\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L78>)
 
 ```go
 func (e ErrAlreadyReverted) Is(err error) bool
@@ -985,7 +985,7 @@ func (e ErrAlreadyReverted) Is(err error) bool
 
 
 <a name="ErrCompilationFailed"></a>
-## type [ErrCompilationFailed](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L170-L172>)
+## type [ErrCompilationFailed](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L170-L172>)
 
 ErrCompilationFailed is used for any errors returned by the numscript interpreter
 
@@ -996,7 +996,7 @@ type ErrCompilationFailed struct {
 ```
 
 <a name="ErrCompilationFailed.Error"></a>
-### func \(ErrCompilationFailed\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L174>)
+### func \(ErrCompilationFailed\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L174>)
 
 ```go
 func (e ErrCompilationFailed) Error() string
@@ -1005,7 +1005,7 @@ func (e ErrCompilationFailed) Error() string
 
 
 <a name="ErrCompilationFailed.Is"></a>
-### func \(ErrCompilationFailed\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L178>)
+### func \(ErrCompilationFailed\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L178>)
 
 ```go
 func (e ErrCompilationFailed) Is(err error) bool
@@ -1014,7 +1014,7 @@ func (e ErrCompilationFailed) Is(err error) bool
 
 
 <a name="ErrIdempotencyKeyConflict"></a>
-## type [ErrIdempotencyKeyConflict](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L129-L131>)
+## type [ErrIdempotencyKeyConflict](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L129-L131>)
 
 
 
@@ -1025,7 +1025,7 @@ type ErrIdempotencyKeyConflict struct {
 ```
 
 <a name="NewErrIdempotencyKeyConflict"></a>
-### func [NewErrIdempotencyKeyConflict](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L142>)
+### func [NewErrIdempotencyKeyConflict](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L142>)
 
 ```go
 func NewErrIdempotencyKeyConflict(ik string) ErrIdempotencyKeyConflict
@@ -1034,7 +1034,7 @@ func NewErrIdempotencyKeyConflict(ik string) ErrIdempotencyKeyConflict
 
 
 <a name="ErrIdempotencyKeyConflict.Error"></a>
-### func \(ErrIdempotencyKeyConflict\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L133>)
+### func \(ErrIdempotencyKeyConflict\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L133>)
 
 ```go
 func (e ErrIdempotencyKeyConflict) Error() string
@@ -1043,7 +1043,7 @@ func (e ErrIdempotencyKeyConflict) Error() string
 
 
 <a name="ErrIdempotencyKeyConflict.Is"></a>
-### func \(ErrIdempotencyKeyConflict\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L137>)
+### func \(ErrIdempotencyKeyConflict\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L137>)
 
 ```go
 func (e ErrIdempotencyKeyConflict) Is(err error) bool
@@ -1052,7 +1052,7 @@ func (e ErrIdempotencyKeyConflict) Is(err error) bool
 
 
 <a name="ErrImport"></a>
-## type [ErrImport](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L16-L18>)
+## type [ErrImport](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L16-L18>)
 
 
 
@@ -1063,7 +1063,7 @@ type ErrImport struct {
 ```
 
 <a name="ErrImport.Error"></a>
-### func \(ErrImport\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L20>)
+### func \(ErrImport\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L20>)
 
 ```go
 func (i ErrImport) Error() string
@@ -1072,7 +1072,7 @@ func (i ErrImport) Error() string
 
 
 <a name="ErrImport.Is"></a>
-### func \(ErrImport\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L24>)
+### func \(ErrImport\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L24>)
 
 ```go
 func (i ErrImport) Is(err error) bool
@@ -1081,7 +1081,7 @@ func (i ErrImport) Is(err error) bool
 
 
 <a name="ErrInsufficientFunds"></a>
-## type [ErrInsufficientFunds](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L66>)
+## type [ErrInsufficientFunds](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L66>)
 
 todo\(waiting\): need a more precise underlying error notes\(gfyrag\): Waiting new interpreter
 
@@ -1090,7 +1090,7 @@ type ErrInsufficientFunds = machine.ErrInsufficientFund
 ```
 
 <a name="ErrInvalidHash"></a>
-## type [ErrInvalidHash](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L39-L43>)
+## type [ErrInvalidHash](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L39-L43>)
 
 
 
@@ -1101,7 +1101,7 @@ type ErrInvalidHash struct {
 ```
 
 <a name="ErrInvalidHash.Error"></a>
-### func \(ErrInvalidHash\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L45>)
+### func \(ErrInvalidHash\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L45>)
 
 ```go
 func (i ErrInvalidHash) Error() string
@@ -1110,7 +1110,7 @@ func (i ErrInvalidHash) Error() string
 
 
 <a name="ErrInvalidIdempotencyInput"></a>
-## type [ErrInvalidIdempotencyInput](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L211-L215>)
+## type [ErrInvalidIdempotencyInput](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L211-L215>)
 
 ErrInvalidIdempotencyInput is used when a IK is used with an inputs different from the original one. For example, try to use the same IK with a different numscript script will result with that error.
 
@@ -1121,7 +1121,7 @@ type ErrInvalidIdempotencyInput struct {
 ```
 
 <a name="ErrInvalidIdempotencyInput.Error"></a>
-### func \(ErrInvalidIdempotencyInput\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L217>)
+### func \(ErrInvalidIdempotencyInput\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L217>)
 
 ```go
 func (e ErrInvalidIdempotencyInput) Error() string
@@ -1130,7 +1130,7 @@ func (e ErrInvalidIdempotencyInput) Error() string
 
 
 <a name="ErrInvalidIdempotencyInput.Is"></a>
-### func \(ErrInvalidIdempotencyInput\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L226>)
+### func \(ErrInvalidIdempotencyInput\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L226>)
 
 ```go
 func (e ErrInvalidIdempotencyInput) Is(err error) bool
@@ -1139,7 +1139,7 @@ func (e ErrInvalidIdempotencyInput) Is(err error) bool
 
 
 <a name="ErrInvalidQuery"></a>
-## type [ErrInvalidQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L91-L93>)
+## type [ErrInvalidQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L91-L93>)
 
 
 
@@ -1150,7 +1150,7 @@ type ErrInvalidQuery struct {
 ```
 
 <a name="NewErrInvalidQuery"></a>
-### func [NewErrInvalidQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L104>)
+### func [NewErrInvalidQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L104>)
 
 ```go
 func NewErrInvalidQuery(msg string, args ...any) ErrInvalidQuery
@@ -1159,7 +1159,7 @@ func NewErrInvalidQuery(msg string, args ...any) ErrInvalidQuery
 
 
 <a name="ErrInvalidQuery.Error"></a>
-### func \(ErrInvalidQuery\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L95>)
+### func \(ErrInvalidQuery\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L95>)
 
 ```go
 func (e ErrInvalidQuery) Error() string
@@ -1168,7 +1168,7 @@ func (e ErrInvalidQuery) Error() string
 
 
 <a name="ErrInvalidQuery.Is"></a>
-### func \(ErrInvalidQuery\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L99>)
+### func \(ErrInvalidQuery\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L99>)
 
 ```go
 func (e ErrInvalidQuery) Is(err error) bool
@@ -1177,7 +1177,7 @@ func (e ErrInvalidQuery) Is(err error) bool
 
 
 <a name="ErrInvalidVars"></a>
-## type [ErrInvalidVars](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L167>)
+## type [ErrInvalidVars](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L167>)
 
 
 
@@ -1186,7 +1186,7 @@ type ErrInvalidVars = machine.ErrInvalidVars
 ```
 
 <a name="ErrMetadataOverride"></a>
-## type [ErrMetadataOverride](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L190-L192>)
+## type [ErrMetadataOverride](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L190-L192>)
 
 ErrMetadataOverride is used when a metadata is defined at numscript level AND at the input level
 
@@ -1197,7 +1197,7 @@ type ErrMetadataOverride struct {
 ```
 
 <a name="ErrMetadataOverride.Error"></a>
-### func \(\*ErrMetadataOverride\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L194>)
+### func \(\*ErrMetadataOverride\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L194>)
 
 ```go
 func (e *ErrMetadataOverride) Error() string
@@ -1206,7 +1206,7 @@ func (e *ErrMetadataOverride) Error() string
 
 
 <a name="ErrMetadataOverride.Is"></a>
-### func \(\*ErrMetadataOverride\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L198>)
+### func \(\*ErrMetadataOverride\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L198>)
 
 ```go
 func (e *ErrMetadataOverride) Is(err error) bool
@@ -1215,7 +1215,7 @@ func (e *ErrMetadataOverride) Is(err error) bool
 
 
 <a name="ErrMissingFeature"></a>
-## type [ErrMissingFeature](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L110-L112>)
+## type [ErrMissingFeature](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L110-L112>)
 
 
 
@@ -1226,7 +1226,7 @@ type ErrMissingFeature struct {
 ```
 
 <a name="NewErrMissingFeature"></a>
-### func [NewErrMissingFeature](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L123>)
+### func [NewErrMissingFeature](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L123>)
 
 ```go
 func NewErrMissingFeature(feature string) ErrMissingFeature
@@ -1235,7 +1235,7 @@ func NewErrMissingFeature(feature string) ErrMissingFeature
 
 
 <a name="ErrMissingFeature.Error"></a>
-### func \(ErrMissingFeature\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L114>)
+### func \(ErrMissingFeature\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L114>)
 
 ```go
 func (e ErrMissingFeature) Error() string
@@ -1244,7 +1244,7 @@ func (e ErrMissingFeature) Error() string
 
 
 <a name="ErrMissingFeature.Is"></a>
-### func \(ErrMissingFeature\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L118>)
+### func \(ErrMissingFeature\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L118>)
 
 ```go
 func (e ErrMissingFeature) Is(err error) bool
@@ -1253,7 +1253,7 @@ func (e ErrMissingFeature) Is(err error) bool
 
 
 <a name="ErrTransactionReferenceConflict"></a>
-## type [ErrTransactionReferenceConflict](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L148-L150>)
+## type [ErrTransactionReferenceConflict](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L148-L150>)
 
 
 
@@ -1264,7 +1264,7 @@ type ErrTransactionReferenceConflict struct {
 ```
 
 <a name="NewErrTransactionReferenceConflict"></a>
-### func [NewErrTransactionReferenceConflict](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L161>)
+### func [NewErrTransactionReferenceConflict](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L161>)
 
 ```go
 func NewErrTransactionReferenceConflict(reference string) ErrTransactionReferenceConflict
@@ -1273,7 +1273,7 @@ func NewErrTransactionReferenceConflict(reference string) ErrTransactionReferenc
 
 
 <a name="ErrTransactionReferenceConflict.Error"></a>
-### func \(ErrTransactionReferenceConflict\) [Error](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L152>)
+### func \(ErrTransactionReferenceConflict\) [Error](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L152>)
 
 ```go
 func (e ErrTransactionReferenceConflict) Error() string
@@ -1282,7 +1282,7 @@ func (e ErrTransactionReferenceConflict) Error() string
 
 
 <a name="ErrTransactionReferenceConflict.Is"></a>
-### func \(ErrTransactionReferenceConflict\) [Is](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/errors.go#L156>)
+### func \(ErrTransactionReferenceConflict\) [Is](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/errors.go#L156>)
 
 ```go
 func (e ErrTransactionReferenceConflict) Is(err error) bool
@@ -1291,7 +1291,7 @@ func (e ErrTransactionReferenceConflict) Is(err error) bool
 
 
 <a name="ExportWriter"></a>
-## type [ExportWriter](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/export.go#L9-L11>)
+## type [ExportWriter](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/export.go#L9-L11>)
 
 
 
@@ -1302,7 +1302,7 @@ type ExportWriter interface {
 ```
 
 <a name="ExportWriterFn"></a>
-## type [ExportWriterFn](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/export.go#L13>)
+## type [ExportWriterFn](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/export.go#L13>)
 
 
 
@@ -1311,7 +1311,7 @@ type ExportWriterFn func(ctx context.Context, log ledger.Log) error
 ```
 
 <a name="ExportWriterFn.Write"></a>
-### func \(ExportWriterFn\) [Write](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/export.go#L15>)
+### func \(ExportWriterFn\) [Write](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/export.go#L15>)
 
 ```go
 func (fn ExportWriterFn) Write(ctx context.Context, log ledger.Log) error
@@ -1320,7 +1320,7 @@ func (fn ExportWriterFn) Write(ctx context.Context, log ledger.Log) error
 
 
 <a name="FiltersForVolumes"></a>
-## type [FiltersForVolumes](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L251-L255>)
+## type [FiltersForVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L251-L255>)
 
 
 
@@ -1333,7 +1333,7 @@ type FiltersForVolumes struct {
 ```
 
 <a name="GetAccountQuery"></a>
-## type [GetAccountQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L135-L138>)
+## type [GetAccountQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L135-L138>)
 
 
 
@@ -1345,7 +1345,7 @@ type GetAccountQuery struct {
 ```
 
 <a name="NewGetAccountQuery"></a>
-### func [NewGetAccountQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L158>)
+### func [NewGetAccountQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L158>)
 
 ```go
 func NewGetAccountQuery(addr string) GetAccountQuery
@@ -1354,7 +1354,7 @@ func NewGetAccountQuery(addr string) GetAccountQuery
 
 
 <a name="GetAccountQuery.WithExpandEffectiveVolumes"></a>
-### func \(GetAccountQuery\) [WithExpandEffectiveVolumes](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L152>)
+### func \(GetAccountQuery\) [WithExpandEffectiveVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L152>)
 
 ```go
 func (q GetAccountQuery) WithExpandEffectiveVolumes() GetAccountQuery
@@ -1363,7 +1363,7 @@ func (q GetAccountQuery) WithExpandEffectiveVolumes() GetAccountQuery
 
 
 <a name="GetAccountQuery.WithExpandVolumes"></a>
-### func \(GetAccountQuery\) [WithExpandVolumes](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L146>)
+### func \(GetAccountQuery\) [WithExpandVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L146>)
 
 ```go
 func (q GetAccountQuery) WithExpandVolumes() GetAccountQuery
@@ -1372,7 +1372,7 @@ func (q GetAccountQuery) WithExpandVolumes() GetAccountQuery
 
 
 <a name="GetAccountQuery.WithPIT"></a>
-### func \(GetAccountQuery\) [WithPIT](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L140>)
+### func \(GetAccountQuery\) [WithPIT](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L140>)
 
 ```go
 func (q GetAccountQuery) WithPIT(pit time.Time) GetAccountQuery
@@ -1381,7 +1381,7 @@ func (q GetAccountQuery) WithPIT(pit time.Time) GetAccountQuery
 
 
 <a name="GetAggregatedBalanceQuery"></a>
-## type [GetAggregatedBalanceQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L164-L168>)
+## type [GetAggregatedBalanceQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L164-L168>)
 
 
 
@@ -1394,7 +1394,7 @@ type GetAggregatedBalanceQuery struct {
 ```
 
 <a name="NewGetAggregatedBalancesQuery"></a>
-### func [NewGetAggregatedBalancesQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L170>)
+### func [NewGetAggregatedBalancesQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L170>)
 
 ```go
 func NewGetAggregatedBalancesQuery(filter PITFilter, qb query.Builder, useInsertionDate bool) GetAggregatedBalanceQuery
@@ -1403,7 +1403,7 @@ func NewGetAggregatedBalancesQuery(filter PITFilter, qb query.Builder, useInsert
 
 
 <a name="GetLogsQuery"></a>
-## type [GetLogsQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L257>)
+## type [GetLogsQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L257>)
 
 
 
@@ -1412,7 +1412,7 @@ type GetLogsQuery bunpaginate.ColumnPaginatedQuery[PaginatedQueryOptions[any]]
 ```
 
 <a name="NewListLogsQuery"></a>
-### func [NewListLogsQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L264>)
+### func [NewListLogsQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L264>)
 
 ```go
 func NewListLogsQuery(options PaginatedQueryOptions[any]) GetLogsQuery
@@ -1421,7 +1421,7 @@ func NewListLogsQuery(options PaginatedQueryOptions[any]) GetLogsQuery
 
 
 <a name="GetLogsQuery.WithOrder"></a>
-### func \(GetLogsQuery\) [WithOrder](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L259>)
+### func \(GetLogsQuery\) [WithOrder](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L259>)
 
 ```go
 func (q GetLogsQuery) WithOrder(order bunpaginate.Order) GetLogsQuery
@@ -1430,7 +1430,7 @@ func (q GetLogsQuery) WithOrder(order bunpaginate.Order) GetLogsQuery
 
 
 <a name="GetTransactionQuery"></a>
-## type [GetTransactionQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L89-L92>)
+## type [GetTransactionQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L89-L92>)
 
 
 
@@ -1442,7 +1442,7 @@ type GetTransactionQuery struct {
 ```
 
 <a name="NewGetTransactionQuery"></a>
-### func [NewGetTransactionQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L106>)
+### func [NewGetTransactionQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L106>)
 
 ```go
 func NewGetTransactionQuery(id int) GetTransactionQuery
@@ -1451,7 +1451,7 @@ func NewGetTransactionQuery(id int) GetTransactionQuery
 
 
 <a name="GetTransactionQuery.WithExpandEffectiveVolumes"></a>
-### func \(GetTransactionQuery\) [WithExpandEffectiveVolumes](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L100>)
+### func \(GetTransactionQuery\) [WithExpandEffectiveVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L100>)
 
 ```go
 func (q GetTransactionQuery) WithExpandEffectiveVolumes() GetTransactionQuery
@@ -1460,7 +1460,7 @@ func (q GetTransactionQuery) WithExpandEffectiveVolumes() GetTransactionQuery
 
 
 <a name="GetTransactionQuery.WithExpandVolumes"></a>
-### func \(GetTransactionQuery\) [WithExpandVolumes](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L94>)
+### func \(GetTransactionQuery\) [WithExpandVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L94>)
 
 ```go
 func (q GetTransactionQuery) WithExpandVolumes() GetTransactionQuery
@@ -1469,7 +1469,7 @@ func (q GetTransactionQuery) WithExpandVolumes() GetTransactionQuery
 
 
 <a name="GetVolumesWithBalancesQuery"></a>
-## type [GetVolumesWithBalancesQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L178>)
+## type [GetVolumesWithBalancesQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L178>)
 
 
 
@@ -1478,7 +1478,7 @@ type GetVolumesWithBalancesQuery bunpaginate.OffsetPaginatedQuery[PaginatedQuery
 ```
 
 <a name="NewGetVolumesWithBalancesQuery"></a>
-### func [NewGetVolumesWithBalancesQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L180>)
+### func [NewGetVolumesWithBalancesQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L180>)
 
 ```go
 func NewGetVolumesWithBalancesQuery(opts PaginatedQueryOptions[FiltersForVolumes]) GetVolumesWithBalancesQuery
@@ -1487,7 +1487,7 @@ func NewGetVolumesWithBalancesQuery(opts PaginatedQueryOptions[FiltersForVolumes
 
 
 <a name="ListAccountsQuery"></a>
-## type [ListAccountsQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L113>)
+## type [ListAccountsQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L113>)
 
 
 
@@ -1496,7 +1496,7 @@ type ListAccountsQuery bunpaginate.OffsetPaginatedQuery[PaginatedQueryOptions[PI
 ```
 
 <a name="NewListAccountsQuery"></a>
-### func [NewListAccountsQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L127>)
+### func [NewListAccountsQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L127>)
 
 ```go
 func NewListAccountsQuery(opts PaginatedQueryOptions[PITFilterWithVolumes]) ListAccountsQuery
@@ -1505,7 +1505,7 @@ func NewListAccountsQuery(opts PaginatedQueryOptions[PITFilterWithVolumes]) List
 
 
 <a name="ListAccountsQuery.WithExpandEffectiveVolumes"></a>
-### func \(ListAccountsQuery\) [WithExpandEffectiveVolumes](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L121>)
+### func \(ListAccountsQuery\) [WithExpandEffectiveVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L121>)
 
 ```go
 func (q ListAccountsQuery) WithExpandEffectiveVolumes() ListAccountsQuery
@@ -1514,7 +1514,7 @@ func (q ListAccountsQuery) WithExpandEffectiveVolumes() ListAccountsQuery
 
 
 <a name="ListAccountsQuery.WithExpandVolumes"></a>
-### func \(ListAccountsQuery\) [WithExpandVolumes](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L115>)
+### func \(ListAccountsQuery\) [WithExpandVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L115>)
 
 ```go
 func (q ListAccountsQuery) WithExpandVolumes() ListAccountsQuery
@@ -1523,7 +1523,7 @@ func (q ListAccountsQuery) WithExpandVolumes() ListAccountsQuery
 
 
 <a name="ListLedgersQuery"></a>
-## type [ListLedgersQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L293>)
+## type [ListLedgersQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L293>)
 
 
 
@@ -1532,7 +1532,7 @@ type ListLedgersQuery bunpaginate.OffsetPaginatedQuery[PaginatedQueryOptions[str
 ```
 
 <a name="NewListLedgersQuery"></a>
-### func [NewListLedgersQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L295>)
+### func [NewListLedgersQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L295>)
 
 ```go
 func NewListLedgersQuery(pageSize uint64) ListLedgersQuery
@@ -1541,7 +1541,7 @@ func NewListLedgersQuery(pageSize uint64) ListLedgersQuery
 
 
 <a name="ListTransactionsQuery"></a>
-## type [ListTransactionsQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L71>)
+## type [ListTransactionsQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L71>)
 
 
 
@@ -1550,7 +1550,7 @@ type ListTransactionsQuery bunpaginate.ColumnPaginatedQuery[PaginatedQueryOption
 ```
 
 <a name="NewListTransactionsQuery"></a>
-### func [NewListTransactionsQuery](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L80>)
+### func [NewListTransactionsQuery](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L80>)
 
 ```go
 func NewListTransactionsQuery(options PaginatedQueryOptions[PITFilterWithVolumes]) ListTransactionsQuery
@@ -1559,7 +1559,7 @@ func NewListTransactionsQuery(options PaginatedQueryOptions[PITFilterWithVolumes
 
 
 <a name="ListTransactionsQuery.WithColumn"></a>
-### func \(ListTransactionsQuery\) [WithColumn](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L73>)
+### func \(ListTransactionsQuery\) [WithColumn](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L73>)
 
 ```go
 func (q ListTransactionsQuery) WithColumn(column string) ListTransactionsQuery
@@ -1568,7 +1568,7 @@ func (q ListTransactionsQuery) WithColumn(column string) ListTransactionsQuery
 
 
 <a name="Listener"></a>
-## type [Listener](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/listener.go#L11-L16>)
+## type [Listener](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/listener.go#L11-L16>)
 
 
 
@@ -1582,7 +1582,7 @@ type Listener interface {
 ```
 
 <a name="Machine"></a>
-## type [Machine](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine.go#L25-L27>)
+## type [Machine](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine.go#L25-L27>)
 
 
 
@@ -1593,7 +1593,7 @@ type Machine interface {
 ```
 
 <a name="MachineFactory"></a>
-## type [MachineFactory](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine_factory.go#L5-L9>)
+## type [MachineFactory](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine_factory.go#L5-L9>)
 
 
 
@@ -1606,7 +1606,7 @@ type MachineFactory interface {
 ```
 
 <a name="MachineResult"></a>
-## type [MachineResult](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/machine.go#L18-L22>)
+## type [MachineResult](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/machine.go#L18-L22>)
 
 
 
@@ -1619,7 +1619,7 @@ type MachineResult struct {
 ```
 
 <a name="PITFilter"></a>
-## type [PITFilter](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L240-L243>)
+## type [PITFilter](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L240-L243>)
 
 
 
@@ -1631,7 +1631,7 @@ type PITFilter struct {
 ```
 
 <a name="PITFilterWithVolumes"></a>
-## type [PITFilterWithVolumes](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L245-L249>)
+## type [PITFilterWithVolumes](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L245-L249>)
 
 
 
@@ -1644,7 +1644,7 @@ type PITFilterWithVolumes struct {
 ```
 
 <a name="PaginatedQueryOptions"></a>
-## type [PaginatedQueryOptions](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L188-L192>)
+## type [PaginatedQueryOptions](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L188-L192>)
 
 
 
@@ -1657,7 +1657,7 @@ type PaginatedQueryOptions[T any] struct {
 ```
 
 <a name="NewPaginatedQueryOptions"></a>
-### func [NewPaginatedQueryOptions](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L233>)
+### func [NewPaginatedQueryOptions](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L233>)
 
 ```go
 func NewPaginatedQueryOptions[T any](options T) PaginatedQueryOptions[T]
@@ -1666,7 +1666,7 @@ func NewPaginatedQueryOptions[T any](options T) PaginatedQueryOptions[T]
 
 
 <a name="PaginatedQueryOptions[T].UnmarshalJSON"></a>
-### func \(\*PaginatedQueryOptions\[T\]\) [UnmarshalJSON](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L194>)
+### func \(\*PaginatedQueryOptions\[T\]\) [UnmarshalJSON](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L194>)
 
 ```go
 func (opts *PaginatedQueryOptions[T]) UnmarshalJSON(data []byte) error
@@ -1675,7 +1675,7 @@ func (opts *PaginatedQueryOptions[T]) UnmarshalJSON(data []byte) error
 
 
 <a name="PaginatedQueryOptions[T].WithPageSize"></a>
-### func \(PaginatedQueryOptions\[T\]\) [WithPageSize](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L227>)
+### func \(PaginatedQueryOptions\[T\]\) [WithPageSize](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L227>)
 
 ```go
 func (opts PaginatedQueryOptions[T]) WithPageSize(pageSize uint64) PaginatedQueryOptions[T]
@@ -1684,7 +1684,7 @@ func (opts PaginatedQueryOptions[T]) WithPageSize(pageSize uint64) PaginatedQuer
 
 
 <a name="PaginatedQueryOptions[T].WithQueryBuilder"></a>
-### func \(PaginatedQueryOptions\[T\]\) [WithQueryBuilder](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L221>)
+### func \(PaginatedQueryOptions\[T\]\) [WithQueryBuilder](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L221>)
 
 ```go
 func (opts PaginatedQueryOptions[T]) WithQueryBuilder(qb query.Builder) PaginatedQueryOptions[T]
@@ -1693,7 +1693,7 @@ func (opts PaginatedQueryOptions[T]) WithQueryBuilder(qb query.Builder) Paginate
 
 
 <a name="Parameters"></a>
-## type [Parameters](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/parameters.go#L3-L7>)
+## type [Parameters](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/parameters.go#L3-L7>)
 
 
 
@@ -1706,7 +1706,7 @@ type Parameters[INPUT any] struct {
 ```
 
 <a name="RevertTransaction"></a>
-## type [RevertTransaction](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L77-L81>)
+## type [RevertTransaction](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L77-L81>)
 
 
 
@@ -1719,7 +1719,7 @@ type RevertTransaction struct {
 ```
 
 <a name="RunScript"></a>
-## type [RunScript](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L73>)
+## type [RunScript](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L73>)
 
 
 
@@ -1728,7 +1728,7 @@ type RunScript = vm.RunScript
 ```
 
 <a name="SaveAccountMetadata"></a>
-## type [SaveAccountMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L88-L91>)
+## type [SaveAccountMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L88-L91>)
 
 
 
@@ -1740,7 +1740,7 @@ type SaveAccountMetadata struct {
 ```
 
 <a name="SaveTransactionMetadata"></a>
-## type [SaveTransactionMetadata](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L83-L86>)
+## type [SaveTransactionMetadata](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L83-L86>)
 
 
 
@@ -1752,7 +1752,7 @@ type SaveTransactionMetadata struct {
 ```
 
 <a name="Script"></a>
-## type [Script](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L74>)
+## type [Script](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L74>)
 
 
 
@@ -1761,7 +1761,7 @@ type Script = vm.Script
 ```
 
 <a name="ScriptV1"></a>
-## type [ScriptV1](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/controller.go#L75>)
+## type [ScriptV1](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/controller.go#L75>)
 
 
 
@@ -1770,7 +1770,7 @@ type ScriptV1 = vm.ScriptV1
 ```
 
 <a name="State"></a>
-## type [State](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/state_registry.go#L9-L12>)
+## type [State](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/state_registry.go#L9-L12>)
 
 
 
@@ -1781,7 +1781,7 @@ type State struct {
 ```
 
 <a name="StateRegistry"></a>
-## type [StateRegistry](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/state_registry.go#L14-L17>)
+## type [StateRegistry](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/state_registry.go#L14-L17>)
 
 
 
@@ -1792,7 +1792,7 @@ type StateRegistry struct {
 ```
 
 <a name="NewStateRegistry"></a>
-### func [NewStateRegistry](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/state_registry.go#L51>)
+### func [NewStateRegistry](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/state_registry.go#L51>)
 
 ```go
 func NewStateRegistry() *StateRegistry
@@ -1801,7 +1801,7 @@ func NewStateRegistry() *StateRegistry
 
 
 <a name="StateRegistry.IsUpToDate"></a>
-### func \(\*StateRegistry\) [IsUpToDate](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/state_registry.go#L39>)
+### func \(\*StateRegistry\) [IsUpToDate](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/state_registry.go#L39>)
 
 ```go
 func (r *StateRegistry) IsUpToDate(name string) bool
@@ -1810,7 +1810,7 @@ func (r *StateRegistry) IsUpToDate(name string) bool
 
 
 <a name="StateRegistry.SetUpToDate"></a>
-### func \(\*StateRegistry\) [SetUpToDate](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/state_registry.go#L32>)
+### func \(\*StateRegistry\) [SetUpToDate](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/state_registry.go#L32>)
 
 ```go
 func (r *StateRegistry) SetUpToDate(name string)
@@ -1819,7 +1819,7 @@ func (r *StateRegistry) SetUpToDate(name string)
 
 
 <a name="StateRegistry.Upsert"></a>
-### func \(\*StateRegistry\) [Upsert](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/state_registry.go#L19>)
+### func \(\*StateRegistry\) [Upsert](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/state_registry.go#L19>)
 
 ```go
 func (r *StateRegistry) Upsert(l ledger.Ledger) bool
@@ -1828,7 +1828,7 @@ func (r *StateRegistry) Upsert(l ledger.Ledger) bool
 
 
 <a name="Stats"></a>
-## type [Stats](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/stats.go#L8-L11>)
+## type [Stats](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/stats.go#L8-L11>)
 
 
 
@@ -1840,7 +1840,7 @@ type Stats struct {
 ```
 
 <a name="Store"></a>
-## type [Store](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L53-L69>)
+## type [Store](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L53-L69>)
 
 
 
@@ -1865,7 +1865,7 @@ type Store interface {
 ```
 
 <a name="TX"></a>
-## type [TX](<https://github.com/formancehq/ledger/blob/main/internal/controller/ledger/store.go#L30-L51>)
+## type [TX](<https://github.com/hanzo-fi/ledger/blob/main/internal/controller/ledger/store.go#L30-L51>)
 
 
 

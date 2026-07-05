@@ -3,7 +3,7 @@ package ledger
 import (
 	"context"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 type ExportWriter interface {

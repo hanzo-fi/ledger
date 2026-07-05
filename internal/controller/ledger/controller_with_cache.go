@@ -8,7 +8,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 type ControllerWithCache struct {

@@ -18,9 +18,9 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
 	. "github.com/formancehq/go-libs/v5/pkg/testing/utils"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/bucket"
-	systemstore "github.com/formancehq/ledger/internal/storage/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 func TestBucketCleanupRunner(t *testing.T) {

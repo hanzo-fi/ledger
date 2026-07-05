@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 	gomock "go.uber.org/mock/gomock"
 )
 

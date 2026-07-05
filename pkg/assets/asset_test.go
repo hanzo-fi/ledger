@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/formancehq/ledger/pkg/assets"
+	"github.com/hanzo-fi/ledger/pkg/assets"
 )
 
 func TestValidAssets(t *testing.T) {

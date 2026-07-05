@@ -8,8 +8,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	"github.com/formancehq/ledger/internal/api/common"
-	systemcontroller "github.com/formancehq/ledger/internal/controller/system"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	systemcontroller "github.com/hanzo-fi/ledger/internal/controller/system"
 )
 
 func updateLedgerMetadata(systemController systemcontroller.Controller) http.HandlerFunc {

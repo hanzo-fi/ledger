@@ -13,8 +13,8 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/pkg/features"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
 // stateless version (+1 regarding directory name, as migrations start from 1 in the lib)

@@ -17,8 +17,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/testing/migrations"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/pkg/features"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
 func TestMigrations(t *testing.T) {

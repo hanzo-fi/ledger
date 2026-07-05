@@ -7,8 +7,8 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/transport/api"
 
-	"github.com/formancehq/ledger/internal/api/common"
-	"github.com/formancehq/ledger/internal/controller/system"
+	"github.com/hanzo-fi/ledger/internal/api/common"
+	"github.com/hanzo-fi/ledger/internal/controller/system"
 )
 
 // restoreBucket returns an HTTP handler that restores the bucket identified by the URL parameter "bucket".

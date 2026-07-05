@@ -9,10 +9,10 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 	"github.com/formancehq/numscript"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/machine"
-	"github.com/formancehq/ledger/internal/machine/vm"
-	"github.com/formancehq/ledger/internal/machine/vm/program"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/machine"
+	"github.com/hanzo-fi/ledger/internal/machine/vm"
+	"github.com/hanzo-fi/ledger/internal/machine/vm/program"
 )
 
 type NumscriptExecutionResult struct {

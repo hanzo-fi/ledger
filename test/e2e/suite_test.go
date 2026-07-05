@@ -28,9 +28,9 @@ import (
 	. "github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
 	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/storage/bucket"
-	"github.com/formancehq/ledger/internal/storage/system"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
 func Test(t *testing.T) {

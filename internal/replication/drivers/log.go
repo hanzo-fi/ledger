@@ -1,7 +1,7 @@
 package drivers
 
 import (
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 type LogWithLedger struct {

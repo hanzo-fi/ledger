@@ -6,7 +6,7 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 // BalanceQuery is a map of account/asset

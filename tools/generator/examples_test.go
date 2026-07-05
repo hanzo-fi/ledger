@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/formancehq/ledger/pkg/generate"
+	"github.com/hanzo-fi/ledger/pkg/generate"
 )
 
 //go:embed examples

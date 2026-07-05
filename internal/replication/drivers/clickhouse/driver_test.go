@@ -17,8 +17,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/internal/replication/drivers"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/replication/drivers"
 )
 
 func TestClickhouseDriver(t *testing.T) {

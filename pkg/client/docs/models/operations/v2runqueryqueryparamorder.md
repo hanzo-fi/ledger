@@ -6,7 +6,7 @@ Deprecated: Use sort param
 
 ```go
 import (
-	"github.com/formancehq/ledger/pkg/client/models/operations"
+	"github.com/hanzo-fi/ledger/pkg/client/models/operations"
 )
 
 value := operations.V2RunQueryQueryParamOrderEffective

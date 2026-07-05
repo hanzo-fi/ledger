@@ -9,7 +9,7 @@ import (
 
 	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 
-	ledger "github.com/formancehq/ledger/internal"
+	ledger "github.com/hanzo-fi/ledger/internal"
 )
 
 //go:generate mockgen -write_source_comment=false -write_package_comment=false -source bucket.go -destination bucket_generated_test.go -package bucket . Bucket

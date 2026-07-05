@@ -10,7 +10,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	"github.com/formancehq/ledger/pkg/features"
+	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
 const (

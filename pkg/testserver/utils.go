@@ -5,8 +5,8 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
 	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
-	ledger "github.com/formancehq/ledger/internal"
-	"github.com/formancehq/ledger/pkg/client/models/components"
+	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 )
 
 func ConvertSDKTxToCoreTX(tx *components.V2Transaction) ledger.Transaction {
