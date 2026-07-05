@@ -1449,7 +1449,7 @@ const file_internal_replication_grpc_replication_service_proto_rawDesc = "" +
 	"\x0eDeletePipeline\x12\".replication.DeletePipelineRequest\x1a#.replication.DeletePipelineResponse\x12V\n" +
 	"\rStartPipeline\x12!.replication.StartPipelineRequest\x1a\".replication.StartPipelineResponse\x12S\n" +
 	"\fStopPipeline\x12 .replication.StopPipelineRequest\x1a!.replication.StopPipelineResponse\x12V\n" +
-	"\rResetPipeline\x12!.replication.ResetPipelineRequest\x1a\".replication.ResetPipelineResponseB8Z6github.com/hanzo-fi/ledger/internal/replication/grpcb\x06proto3"
+	"\rResetPipeline\x12!.replication.ResetPipelineRequest\x1a\".replication.ResetPipelineResponseB6Z4github.com/hanzo-fi/ledger/internal/replication/grpcb\x06proto3"
 
 var (
 	file_internal_replication_grpc_replication_service_proto_rawDescOnce sync.Once
