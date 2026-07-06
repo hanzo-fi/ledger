@@ -21,6 +21,15 @@ import (
 // append a chained NEW_TRANSACTION log. tx is mutated in place (ID, InsertedAt,
 // PostCommitVolumes).
 func (s *Store) CommitTransaction(ctx context.Context, tx *ledger.Transaction, accountMetadata ledger.AccountMetadata) error {
+	return s.commit(ctx, tx, accountMetadata, "")
+}
+
+// commit is the shared insert spine used by CommitTransaction and Post: allocate
+// the transaction id, upsert involved accounts, derive each move's running
+// post-commit volumes, persist the transaction, and append a chained
+// NEW_TRANSACTION log carrying idempotencyKey (empty when none). tx is mutated in
+// place (ID, InsertedAt, PostCommitVolumes).
+func (s *Store) commit(ctx context.Context, tx *ledger.Transaction, accountMetadata ledger.AccountMetadata, idempotencyKey string) error {
 	now := time.Now()
 	if tx.Timestamp.IsZero() {
 		tx.Timestamp = now
@@ -51,7 +60,7 @@ func (s *Store) CommitTransaction(ctx context.Context, tx *ledger.Transaction, a
 	return s.appendLog(ctx, ledger.CreatedTransaction{
 		Transaction:     *tx,
 		AccountMetadata: accountMetadata,
-	}, tx.Timestamp)
+	}, tx.Timestamp, idempotencyKey)
 }
 
 // RevertTransaction marks transaction id reverted and posts a mirror transaction
@@ -112,7 +121,7 @@ func (s *Store) RevertTransaction(ctx context.Context, id uint64, at time.Time) 
 	if err := s.appendLog(ctx, ledger.RevertedTransaction{
 		RevertedTransaction: *original,
 		RevertTransaction:   reversal,
-	}, at); err != nil {
+	}, at, ""); err != nil {
 		return nil, err
 	}
 
@@ -254,13 +263,16 @@ func (s *Store) insertTransactionRow(ctx context.Context, tx *ledger.Transaction
 
 // appendLog chains payload onto the ledger's log head and persists it. The hash
 // is computed by the canonical ledger.Log.ChainLog (identical Go on both
-// dialects), so the hash chain is byte-identical on SQLite and Postgres.
-func (s *Store) appendLog(ctx context.Context, payload ledger.LogPayload, date time.Time) error {
+// dialects), so the hash chain is byte-identical on SQLite and Postgres. The
+// idempotencyKey (empty when none) is set BEFORE chaining so it participates in
+// the hash exactly as Formance's compute_hash includes it, and is enforced unique
+// per ledger by the logs_ledger_ik partial index.
+func (s *Store) appendLog(ctx context.Context, payload ledger.LogPayload, date time.Time, idempotencyKey string) error {
 	prev, err := s.lastLog(ctx)
 	if err != nil {
 		return err
 	}
-	chained := ledger.NewLog(payload).WithDate(date).ChainLog(prev)
+	chained := ledger.NewLog(payload).WithDate(date).WithIdempotencyKey(idempotencyKey).ChainLog(prev)
 
 	dataJSON, err := json.Marshal(chained.Data)
 	if err != nil {
@@ -274,13 +286,14 @@ func (s *Store) appendLog(ctx context.Context, payload ledger.LogPayload, date t
 	}
 
 	row := &logRow{
-		Ledger:  s.ledger,
-		ID:      *chained.ID,
-		Type:    chained.Type.String(),
-		Hash:    chained.Hash,
-		Date:    chained.Date,
-		Data:    string(dataJSON),
-		Memento: memento,
+		Ledger:         s.ledger,
+		ID:             *chained.ID,
+		Type:           chained.Type.String(),
+		Hash:           chained.Hash,
+		Date:           chained.Date,
+		Data:           string(dataJSON),
+		Memento:        memento,
+		IdempotencyKey: idempotencyKey,
 	}
 	if _, err := s.db.NewInsert().Model(row).Exec(ctx); err != nil {
 		return fmt.Errorf("inserting log %d: %w", *chained.ID, err)
