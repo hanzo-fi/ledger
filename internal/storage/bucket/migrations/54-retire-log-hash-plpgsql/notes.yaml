@@ -1,0 +1,1 @@
+name: Retire the plpgsql log hash path (set_log_hash trigger + set_log_hash/compute_hash functions); the hash chain is now computed in Go by Store.InsertLog via the canonical ledger.Log.ComputeHash
