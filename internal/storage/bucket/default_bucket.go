@@ -213,19 +213,8 @@ var ledgerSetups = []ledgerSetup{
 		), 1)::bigint, false);
 		`,
 	},
-	{
-		requireFeatures: features.FeatureSet{
-			features.FeatureHashLogs: "SYNC",
-		},
-		script: `
-		create trigger "set_log_hash_{{.ID}}"
-		before insert
-		on "{{.Bucket}}"."logs"
-		for each row
-		when (
-			new.ledger = '{{.Name}}'
-		)
-		execute procedure "{{.Bucket}}".set_log_hash();
-		`,
-	},
+	// The log hash chain (FeatureHashLogs=SYNC) is now computed in Go by
+	// Store.InsertLog via the canonical ledger.Log.ComputeHash, so no per-ledger
+	// set_log_hash trigger is created. See migration 54-retire-log-hash-plpgsql,
+	// which drops the trigger + set_log_hash/compute_hash functions.
 }
