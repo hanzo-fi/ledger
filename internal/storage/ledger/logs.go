@@ -59,6 +59,29 @@ func (store *Store) InsertLog(ctx context.Context, log *ledger.Log) error {
 				if err != nil {
 					return postgres.ResolveError(err)
 				}
+
+				// The date defaults to transaction_date() — the per-transaction
+				// statement timestamp shared by the moves/accounts written in the same
+				// db transaction. Resolve it in Go (priming/reading the same cached
+				// value) so the hash covers the exact date that will be stored.
+				if log.Date.IsZero() {
+					if err := store.db.NewRaw(
+						"select " + store.GetPrefixedRelationName("transaction_date()"),
+					).Scan(ctx, &log.Date); err != nil {
+						return postgres.ResolveError(err)
+					}
+				}
+
+				// Chain the log hash in Go via the canonical ledger.Log.ComputeHash —
+				// the same hashing ledgercore uses — instead of the retired set_log_hash
+				// plpgsql trigger. Under the advisory lock the head is stable, and the
+				// result is byte-identical to the plpgsql hash by construction (the
+				// plpgsql was written to match ComputeHash).
+				previous, err := store.readLogHead(ctx)
+				if err != nil {
+					return err
+				}
+				log.ComputeHash(previous)
 			}
 
 			payloadData, err := json.Marshal(log.Data)
@@ -109,6 +132,29 @@ func (store *Store) InsertLog(ctx context.Context, log *ledger.Log) error {
 	)
 
 	return err
+}
+
+// readLogHead returns the ledger's current log head (only its hash is needed to
+// chain the next log), or nil if the ledger has no logs yet. Callers must hold
+// the per-ledger advisory lock so the head is stable until the chained log is
+// inserted.
+func (store *Store) readLogHead(ctx context.Context) (*ledger.Log, error) {
+	var hash []byte
+	err := store.db.NewSelect().
+		ColumnExpr("hash").
+		TableExpr(store.GetPrefixedRelationName("logs")).
+		Where("ledger = ?", store.ledger.Name).
+		Order("id DESC").
+		Limit(1).
+		Scan(ctx, &hash)
+	if err != nil {
+		err = postgres.ResolveError(err)
+		if postgres.IsNotFoundError(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &ledger.Log{Hash: hash}, nil
 }
 
 func (store *Store) ReadLogWithIdempotencyKey(ctx context.Context, key string) (*ledger.Log, error) {
