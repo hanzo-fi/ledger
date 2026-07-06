@@ -36,7 +36,7 @@ func TestDoubleEntryRoundTrip(t *testing.T) {
 	heads := map[string][]byte{}
 
 	t.Run("sqlite", func(t *testing.T) {
-		db, err := OpenLedgerFile(t.TempDir(), "acme")
+		db, err := openLedgerFile(t.TempDir(), "acme")
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = db.Close() })
 
