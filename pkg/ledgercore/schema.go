@@ -101,16 +101,25 @@ func Migrate(ctx context.Context, db bun.IDB) error {
 		model   any
 		unique  bool
 		columns []string
+		where   string
 	}{
-		{"accounts_ledger_address", (*accountRow)(nil), true, []string{"ledger", "address"}},
-		{"transactions_ledger_id", (*transactionRow)(nil), true, []string{"ledger", "id"}},
-		{"logs_ledger_id", (*logRow)(nil), true, []string{"ledger", "id"}},
-		{"moves_balance", (*moveRow)(nil), false, []string{"ledger", "account_address", "asset", "seq"}},
+		{"accounts_ledger_address", (*accountRow)(nil), true, []string{"ledger", "address"}, ""},
+		{"transactions_ledger_id", (*transactionRow)(nil), true, []string{"ledger", "id"}, ""},
+		{"logs_ledger_id", (*logRow)(nil), true, []string{"ledger", "id"}, ""},
+		{"moves_balance", (*moveRow)(nil), false, []string{"ledger", "account_address", "asset", "seq"}, ""},
+		// Idempotency: a (ledger, idempotency_key) is unique among the logs that
+		// carry one. A PARTIAL index (only where a key is set) lets the many
+		// key-less logs coexist while a repeated key collides — the same guard
+		// Formance enforces with logs_idempotency_key, valid on both dialects.
+		{"logs_ledger_ik", (*logRow)(nil), true, []string{"ledger", "idempotency_key"}, "idempotency_key <> ''"},
 	}
 	for _, ix := range indexes {
 		q := db.NewCreateIndex().Model(ix.model).IfNotExists().Index(ix.name).Column(ix.columns...)
 		if ix.unique {
 			q = q.Unique()
+		}
+		if ix.where != "" {
+			q = q.Where(ix.where)
 		}
 		if _, err := q.Exec(ctx); err != nil {
 			return fmt.Errorf("creating index %s: %w", ix.name, err)
