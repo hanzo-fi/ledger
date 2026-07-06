@@ -1,4 +1,7 @@
-// Package ledgercore is the dialect-agnostic double-entry spine of the ledger.
+// Package ledgercore is the dialect-agnostic double-entry spine of the ledger —
+// the ONE double-entry engine, importable by any Hanzo service that needs a
+// balanced, hash-chained journal (the ledger's own production store, and the
+// cloud treasury's reserve fund).
 //
 // Formance braided the double-entry business rules INTO the storage engine as
 // ~38 plpgsql functions + 6 triggers (see internal/storage/bucket/migrations).
@@ -11,22 +14,25 @@
 // were written to match it, so reusing it guarantees byte-identical results on
 // both dialects by construction.
 //
+// The engine is DRIVER-FREE: New takes a caller-provided bun.IDB, so the caller
+// owns which SQLite/Postgres driver is registered. This keeps the package free of
+// any database/sql.Register("sqlite", …) side effect, so importing it never
+// collides with a host binary's own SQLite driver (e.g. the cloud's encrypted
+// hanzoai/sqlite). A per-tenant SQLite-file opener lives in the test helper, not
+// here, precisely so importers do not inherit a driver.
+//
 // Scope: the core write path (postings -> moves -> balances + chained log),
-// revert, and the balance/volume read path. Effective-volume back-dating,
-// metadata history, and async hash blocks remain plpgsql-only for now (see the
-// package README / task report for the honest remaining list).
+// revert, idempotency-key dedup, a transactional scope, and the balance/volume
+// read path. Effective-volume back-dating, metadata history, and async hash
+// blocks remain plpgsql-only for now (see the package README / task report for
+// the honest remaining list).
 package ledgercore
 
 import (
 	"context"
 	"fmt"
-	"os"
-	"path/filepath"
-	"regexp"
 
 	"github.com/uptrace/bun"
-
-	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
 )
 
 // Store is a dialect-agnostic ledger store scoped to a single ledger (tenant).
@@ -36,7 +42,9 @@ type Store struct {
 	ledger string
 }
 
-// New returns a Store scoped to ledgerName over the given bun handle.
+// New returns a Store scoped to ledgerName over the given bun handle. The caller
+// owns the connection (and thus the registered SQL driver); Migrate builds the
+// schema on it.
 func New(db bun.IDB, ledgerName string) *Store {
 	return &Store{db: db, ledger: ledgerName}
 }
@@ -44,28 +52,23 @@ func New(db bun.IDB, ledgerName string) *Store {
 // Ledger returns the ledger (tenant) name this store is scoped to.
 func (s *Store) Ledger() string { return s.ledger }
 
-// slugPattern guards per-tenant file names: a slug maps 1:1 to a file on disk,
-// so it must not contain path separators or traversal.
-var slugPattern = regexp.MustCompile(`^[a-z0-9][a-z0-9_-]{0,63}$`)
-
-// OpenLedgerFile opens (creating the directory if needed) a per-tenant SQLite
-// file at dir/{slug}.db. This is the Base HIP-0105 per-tenant-file model:
-// Formance's schema-per-bucket becomes one SQLite file per bucket/ledger.
-// Single-writer-per-file (SetMaxOpenConns(1) in bunconnect) serializes writes,
-// so advisory locks are unneeded on this path.
-func OpenLedgerFile(dir, slug string) (*bun.DB, error) {
-	if !slugPattern.MatchString(slug) {
-		return nil, fmt.Errorf("invalid ledger slug %q: want %s", slug, slugPattern.String())
+// WithTx runs fn against a Store bound to a single database transaction,
+// committing on nil and rolling back on error. It is the atomicity seam for a
+// read-then-write guard (e.g. "balance >= amount THEN post") — the balance read
+// and the resulting post commit or roll back together, so two concurrent debits
+// can never both pass the guard. When the Store is already tx-scoped, fn reuses
+// that transaction (the single-writer-per-tenant-file model needs no savepoint).
+func (s *Store) WithTx(ctx context.Context, fn func(*Store) error) error {
+	switch db := s.db.(type) {
+	case *bun.DB:
+		return db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+			return fn(&Store{db: tx, ledger: s.ledger})
+		})
+	case bun.Tx:
+		return fn(s)
+	default:
+		return fmt.Errorf("ledgercore: WithTx requires *bun.DB or bun.Tx, got %T", s.db)
 	}
-	if err := os.MkdirAll(dir, 0o750); err != nil {
-		return nil, fmt.Errorf("creating data dir %q: %w", dir, err)
-	}
-	path := filepath.Join(dir, slug+".db")
-	dsn := fmt.Sprintf(
-		"file:%s?_pragma=busy_timeout(5000)&_pragma=journal_mode(WAL)&_pragma=foreign_keys(1)",
-		path,
-	)
-	return bunconnect.OpenSQLiteDB(dsn)
 }
 
 // nextID atomically allocates the next per-ledger sequence value for name

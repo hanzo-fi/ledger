@@ -76,7 +76,7 @@ func (s *Store) VerifyHashChain(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("hydrating log %d: %w", r.ID, err)
 		}
-		recomputed := ledger.NewLog(payload).WithDate(r.Date).ChainLog(prev)
+		recomputed := ledger.NewLog(payload).WithDate(r.Date).WithIdempotencyKey(r.IdempotencyKey).ChainLog(prev)
 		if !bytes.Equal(recomputed.Hash, r.Hash) {
 			return fmt.Errorf("hash chain broken at log %d: recomputed %x != stored %x", r.ID, recomputed.Hash, r.Hash)
 		}
