@@ -111,66 +111,12 @@ var ledgerSetups = []ledgerSetup{
 		), 1)::bigint, false);
 		`,
 	},
-	{
-		requireFeatures: features.FeatureSet{
-			features.FeatureTransactionMetadataHistory: "SYNC",
-		},
-		script: `
-		create trigger "update_transaction_metadata_history_{{.ID}}"
-		after update
-		on "{{.Bucket}}"."transactions"
-		for each row
-		when (
-			new.ledger = '{{.Name}}'
-		)
-		execute procedure "{{.Bucket}}".update_transaction_metadata_history();
-		`,
-	},
-	{
-		requireFeatures: features.FeatureSet{
-			features.FeatureTransactionMetadataHistory: "SYNC",
-		},
-		script: `
-		create trigger "insert_transaction_metadata_history_{{.ID}}"
-		after insert
-		on "{{.Bucket}}"."transactions"
-		for each row
-		when (
-			new.ledger = '{{.Name}}'
-		)
-		execute procedure "{{.Bucket}}".insert_transaction_metadata_history();
-		`,
-	},
-	{
-		requireFeatures: features.FeatureSet{
-			features.FeatureAccountMetadataHistory: "SYNC",
-		},
-		script: `
-		create trigger "update_account_metadata_history_{{.ID}}"
-		after update
-		on "{{.Bucket}}"."accounts"
-		for each row
-		when (
-			new.ledger = '{{.Name}}'
-		)
-		execute procedure "{{.Bucket}}".update_account_metadata_history();
-		`,
-	},
-	{
-		requireFeatures: features.FeatureSet{
-			features.FeatureAccountMetadataHistory: "SYNC",
-		},
-		script: `
-		create trigger "insert_account_metadata_history_{{.ID}}"
-		after insert
-		on "{{.Bucket}}"."accounts"
-		for each row
-		when (
-			new.ledger = '{{.Name}}'
-		)
-		execute procedure "{{.Bucket}}".insert_account_metadata_history();
-		`,
-	},
+	// Metadata history (Feature{Transaction,Account}MetadataHistory=SYNC) is now
+	// appended in Go by the Store's metadata write paths (InsertTransaction,
+	// updateTxWithRetrieve, UpdateAccountsMetadata, DeleteAccountMetadata,
+	// UpsertAccounts), so no per-ledger {insert,update}_{transaction,account}_metadata_history
+	// triggers are created. See migration 56-retire-metadata-history-plpgsql, which
+	// drops the triggers + trigger functions on existing ledgers.
 	{
 		requireFeatures: features.FeatureSet{
 			features.FeatureMovesHistoryPostCommitEffectiveVolumes: "SYNC",

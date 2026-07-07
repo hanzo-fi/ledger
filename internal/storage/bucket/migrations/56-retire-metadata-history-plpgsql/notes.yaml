@@ -1,0 +1,1 @@
+name: Retire the plpgsql metadata-history path ({insert,update}_{transaction,account}_metadata_history triggers + functions); revisions are now appended in Go by the Store's metadata write paths, the metadata counterpart of the migration-54/55 log-hash ports
