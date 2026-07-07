@@ -1,0 +1,1 @@
+name: Retire the plpgsql async block-hash path (create_blocks procedure + create_block function); log blocks are now hashed in Go by the AsyncBlockRunner via crypto/sha256, the async counterpart of the migration-54 sync log-hash port
