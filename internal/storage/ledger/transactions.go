@@ -137,6 +137,13 @@ func (store *Store) InsertTransaction(ctx context.Context, tx *ledger.Transactio
 				}
 			}
 
+			// Append the initial metadata-history revision, replacing the retired
+			// insert_transaction_metadata_history plpgsql trigger (revision 1 dated at
+			// the transaction timestamp).
+			if err := store.appendTransactionMetadataHistory(ctx, *tx.ID, tx.Timestamp, tx.Metadata); err != nil {
+				return nil, err
+			}
+
 			return tx, nil
 		},
 		func(ctx context.Context, tx *ledger.Transaction) {
@@ -176,8 +183,54 @@ func (store *Store) updateTxWithRetrieve(ctx context.Context, id uint64, query *
 		ColumnExpr("*").
 		Limit(1).
 		Scan(ctx)
+	if err != nil {
+		return &me.Transaction, me.Modified, postgres.ResolveError(err)
+	}
 
-	return &me.Transaction, me.Modified, postgres.ResolveError(err)
+	// Every update that actually modified the row would have fired the retired
+	// update_transaction_metadata_history plpgsql trigger (created `after update`,
+	// so metadata updates, deletes and reverts alike). Mirror it in Go: append a
+	// new revision dated at the row's updated_at with its resulting metadata.
+	if me.Modified {
+		if err := store.appendTransactionMetadataHistory(ctx, id, me.Transaction.UpdatedAt, me.Transaction.Metadata); err != nil {
+			return &me.Transaction, me.Modified, err
+		}
+	}
+
+	return &me.Transaction, me.Modified, nil
+}
+
+// appendTransactionMetadataHistory writes one transactions_metadata row mirroring
+// the retired {insert,update}_transaction_metadata_history plpgsql triggers: the
+// revision is max(revision)+1 for the (ledger, transaction) or 1 when none exists,
+// computed inline in SQL so it stays atomic under the transaction row lock the
+// caller already holds. No-op unless the feature is SYNC, matching the condition
+// under which the triggers were created.
+func (store *Store) appendTransactionMetadataHistory(ctx context.Context, id uint64, at time.Time, m metadata.Metadata) error {
+	if !store.ledger.HasFeature(features.FeatureTransactionMetadataHistory, "SYNC") {
+		return nil
+	}
+	if m == nil {
+		m = metadata.Metadata{}
+	}
+	data, err := json.Marshal(m)
+	if err != nil {
+		return err
+	}
+	// A zero date maps to NULL, matching the `nullzero` date columns the triggers
+	// copied from (new.timestamp / new.updated_at) — the PIT reads filter on
+	// `date <= ?`, so NULL must stay NULL.
+	var date any
+	if !at.IsZero() {
+		date = at
+	}
+	table := store.GetPrefixedRelationName("transactions_metadata")
+	_, err = store.db.NewRaw(
+		"insert into "+table+" (ledger, transactions_id, revision, date, metadata) "+
+			"values (?, ?, coalesce((select max(revision) + 1 from "+table+" where transactions_id = ? and ledger = ?), 1), ?, ?::jsonb)",
+		store.ledger.Name, id, id, store.ledger.Name, date, string(data),
+	).Exec(ctx)
+	return postgres.ResolveError(err)
 }
 
 func (store *Store) RevertTransaction(ctx context.Context, id uint64, at time.Time) (tx *ledger.Transaction, modified bool, err error) {
