@@ -2,6 +2,7 @@ package ledger
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"strings"
@@ -17,6 +18,7 @@ import (
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/tracing"
+	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
 var (
@@ -55,7 +57,14 @@ func (store *Store) UpdateAccountsMetadata(ctx context.Context, m map[string]met
 				})
 			}
 
-			ret, err := store.db.NewInsert().
+			type affectedAccount struct {
+				Address   string            `bun:"address"`
+				UpdatedAt *time.Time        `bun:"updated_at"`
+				Metadata  metadata.Metadata `bun:"metadata,type:jsonb"`
+			}
+			affected := make([]affectedAccount, 0, len(accounts))
+
+			_, err := store.db.NewInsert().
 				Model(&accounts).
 				ModelTableExpr(store.GetPrefixedRelationName("accounts")).
 				On("conflict (ledger, address) do update").
@@ -63,17 +72,29 @@ func (store *Store) UpdateAccountsMetadata(ctx context.Context, m map[string]met
 				Set("updated_at = excluded.updated_at").
 				Set("first_usage = case when excluded.first_usage < accounts.first_usage then excluded.first_usage else accounts.first_usage end").
 				Where("not accounts.metadata @> excluded.metadata").
-				Exec(ctx)
+				Returning("address, updated_at, metadata").
+				Exec(ctx, &affected)
 			if err != nil {
 				return postgres.ResolveError(err)
 			}
 
-			rowsAffected, err := ret.RowsAffected()
-			if err != nil {
-				return err
+			// Every inserted or updated account would have fired the retired
+			// {insert,update}_account_metadata_history plpgsql triggers. Mirror them in
+			// Go with the effective stored date: when `at` is zero the accounts.updated_at
+			// / insertion_date columns default to transaction_date() (identical values in
+			// one statement), so the returned updated_at is exactly the date the triggers
+			// copied — not the zero `at`.
+			for _, a := range affected {
+				var date time.Time
+				if a.UpdatedAt != nil {
+					date = *a.UpdatedAt
+				}
+				if err := store.appendAccountMetadataHistory(ctx, a.Address, date, a.Metadata); err != nil {
+					return err
+				}
 			}
 
-			span.SetAttributes(attribute.Int("upserted", int(rowsAffected)))
+			span.SetAttributes(attribute.Int("upserted", len(affected)))
 
 			return nil
 		}),
@@ -88,16 +109,75 @@ func (store *Store) DeleteAccountMetadata(ctx context.Context, account, key stri
 		store.tracer,
 		store.deleteAccountMetadataHistogram,
 		tracing.NoResult(func(ctx context.Context) error {
+			type affectedAccount struct {
+				UpdatedAt *time.Time        `bun:"updated_at"`
+				Metadata  metadata.Metadata `bun:"metadata,type:jsonb"`
+			}
+			affected := make([]affectedAccount, 0, 1)
+
 			_, err := store.db.NewUpdate().
 				ModelTableExpr(store.GetPrefixedRelationName("accounts")).
 				Set("metadata = metadata - ?", key).
 				Where("address = ?", account).
 				Where("ledger = ?", store.ledger.Name).
-				Exec(ctx)
-			return postgres.ResolveError(err)
+				Returning("updated_at, metadata").
+				Exec(ctx, &affected)
+			if err != nil {
+				return postgres.ResolveError(err)
+			}
+
+			// This update does not touch updated_at, so the retired
+			// update_account_metadata_history trigger dated the new revision at the
+			// account's existing updated_at (which may be NULL) — reproduce that from
+			// the returned row.
+			for _, a := range affected {
+				var at time.Time
+				if a.UpdatedAt != nil {
+					at = *a.UpdatedAt
+				}
+				if err := store.appendAccountMetadataHistory(ctx, account, at, a.Metadata); err != nil {
+					return err
+				}
+			}
+
+			return nil
 		}),
 	)
 	return err
+}
+
+// appendAccountMetadataHistory writes one accounts_metadata row mirroring the
+// retired {insert,update}_account_metadata_history plpgsql triggers: the revision
+// is max(revision)+1 for the (ledger, account) or 1 when none exists (matching the
+// insert trigger's hardcoded 1 for a fresh account), computed inline in SQL so it
+// stays atomic under the transaction row lock the caller already holds. No-op
+// unless the feature is SYNC, matching the condition under which the triggers were
+// created.
+func (store *Store) appendAccountMetadataHistory(ctx context.Context, address string, at time.Time, m metadata.Metadata) error {
+	if !store.ledger.HasFeature(features.FeatureAccountMetadataHistory, "SYNC") {
+		return nil
+	}
+	if m == nil {
+		m = metadata.Metadata{}
+	}
+	data, err := json.Marshal(m)
+	if err != nil {
+		return err
+	}
+	// A zero date maps to NULL, matching the `nullzero` date columns the triggers
+	// copied from (new.insertion_date / new.updated_at) — the PIT reads filter on
+	// `date <= ?`, so NULL must stay NULL.
+	var date any
+	if !at.IsZero() {
+		date = at
+	}
+	table := store.GetPrefixedRelationName("accounts_metadata")
+	_, err = store.db.NewRaw(
+		"insert into "+table+" (ledger, accounts_address, revision, date, metadata) "+
+			"values (?, ?, coalesce((select max(revision) + 1 from "+table+" where accounts_address = ? and ledger = ?), 1), ?, ?::jsonb)",
+		store.ledger.Name, address, address, store.ledger.Name, date, string(data),
+	).Exec(ctx)
+	return postgres.ResolveError(err)
 }
 
 func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.AccountWithDefaultMetadata) error {
@@ -137,6 +217,33 @@ func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.Accou
 				}
 			})
 
+			// Reproduce the retired {insert,update}_account_metadata_history triggers in
+			// the same statement as the upsert. Postgres runs data-modifying CTEs exactly
+			// once even when unreferenced, so these append the history rows atomically:
+			// inserted accounts get revision 1 dated at insertion_date, updated accounts
+			// get max(revision)+1 dated at updated_at — byte-identical to the trigger rows.
+			// Emitted only when the feature is SYNC, matching when the triggers existed.
+			accountMetadataHistoryCTEs := ""
+			if store.ledger.HasFeature(features.FeatureAccountMetadataHistory, "SYNC") {
+				accountMetadataHistoryCTEs = `,
+					inserted_history AS (
+						INSERT INTO ?1.accounts_metadata (ledger, accounts_address, revision, date, metadata)
+						SELECT ?2, ir.address, 1, ir.insertion_date, ir.metadata
+						FROM inserted_rows ir
+					),
+					updated_history AS (
+						INSERT INTO ?1.accounts_metadata (ledger, accounts_address, revision, date, metadata)
+						SELECT ?2, ur.address,
+							COALESCE((
+								SELECT max(revision) + 1
+								FROM ?1.accounts_metadata am
+								WHERE am.accounts_address = ur.address AND am.ledger = ?2
+							), 1),
+							ur.updated_at, ur.metadata
+						FROM updated_rows ur
+					)`
+			}
+
 			var returnedRows []account
 			err := store.db.NewRaw(`
 				WITH
@@ -175,7 +282,7 @@ func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.Accou
 						WHERE d.address NOT IN (SELECT address FROM existing_accounts)
 						RETURNING address, metadata, first_usage, updated_at, insertion_date,
 							(SELECT batch_index FROM data_batch WHERE address = ?1.accounts.address)
-					)
+					)`+accountMetadataHistoryCTEs+`
 				SELECT * FROM updated_rows
 				UNION ALL SELECT * FROM inserted_rows`,
 				store.db.NewValues(&rows),
