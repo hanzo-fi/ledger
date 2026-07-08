@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/spf13/pflag"
+
+	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
 )
 
 // TestSQLiteRoundTrip proves the sqlite dialect+driver seam is functional:
@@ -75,5 +77,24 @@ func TestFromFlagsDefaultsAndValidation(t *testing.T) {
 	_ = fs2.Set(StorageDriverFlag, "mysql")
 	if _, _, err := FromFlags(fs2); err == nil {
 		t.Fatalf("expected error for invalid driver")
+	}
+
+	// --postgres-uri alone (driver left at default) opts into Postgres.
+	fs3 := pflag.NewFlagSet("fs3", pflag.ContinueOnError)
+	AddFlags(fs3)
+	connect.AddFlags(fs3)
+	_ = fs3.Set(connect.PostgresURIFlag, "postgres://localhost/ledger")
+	if d, _, err := FromFlags(fs3); err != nil || d != DriverPostgres {
+		t.Fatalf("postgres-uri opt-in: got (%q,%v)", d, err)
+	}
+
+	// Explicit --storage-driver=sqlite wins over a --postgres-uri.
+	fs4 := pflag.NewFlagSet("fs4", pflag.ContinueOnError)
+	AddFlags(fs4)
+	connect.AddFlags(fs4)
+	_ = fs4.Set(StorageDriverFlag, "sqlite")
+	_ = fs4.Set(connect.PostgresURIFlag, "postgres://localhost/ledger")
+	if d, _, err := FromFlags(fs4); err != nil || d != DriverSQLite {
+		t.Fatalf("explicit sqlite wins: got (%q,%v)", d, err)
 	}
 }
