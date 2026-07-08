@@ -21,7 +21,7 @@ type Move struct {
 	InsertionDate              time.Time        `bun:"insertion_date,type:timestamp,nullzero"`
 	EffectiveDate              time.Time        `bun:"effective_date,type:timestamp,nullzero"`
 	PostCommitVolumes          *Volumes         `bun:"post_commit_volumes,type:jsonb"`
-	PostCommitEffectiveVolumes *Volumes         `bun:"post_commit_effective_volumes,type:jsonb,scanonly"`
+	PostCommitEffectiveVolumes *Volumes         `bun:"post_commit_effective_volumes,type:jsonb"`
 }
 
 type Moves []*Move
