@@ -53,23 +53,19 @@ func (store *Store) InsertLog(ctx context.Context, log *ledger.Log) error {
 		store.insertLogHistogram,
 		tracing.NoResult(func(ctx context.Context) error {
 
+			// date previously defaulted to transaction_date(); stamp the shared per-tx
+			// date in Go now that the default is retired, so the log carries the same
+			// instant as the transaction/accounts/moves written in this db transaction
+			// (and, under FeatureHashLogs, so the hash covers the exact stored date).
+			if log.Date.IsZero() {
+				log.Date = store.transactionDate()
+			}
+
 			// We lock logs table as we need than the last log does not change until the transaction commit
 			if store.ledger.HasFeature(features.FeatureHashLogs, "SYNC") {
 				_, err := store.db.NewRaw(`select pg_advisory_xact_lock(?)`, store.ledger.ID).Exec(ctx)
 				if err != nil {
 					return postgres.ResolveError(err)
-				}
-
-				// The date defaults to transaction_date() — the per-transaction
-				// statement timestamp shared by the moves/accounts written in the same
-				// db transaction. Resolve it in Go (priming/reading the same cached
-				// value) so the hash covers the exact date that will be stored.
-				if log.Date.IsZero() {
-					if err := store.db.NewRaw(
-						"select " + store.GetPrefixedRelationName("transaction_date()"),
-					).Scan(ctx, &log.Date); err != nil {
-						return postgres.ResolveError(err)
-					}
 				}
 
 				// Chain the log hash in Go via the canonical ledger.Log.ComputeHash —

@@ -36,6 +36,14 @@ func (store *Store) UpdateAccountsMetadata(ctx context.Context, m map[string]met
 			span := trace.SpanFromContext(ctx)
 			span.SetAttributes(attribute.StringSlice("accounts", Keys(m)))
 
+			// first_usage/insertion_date/updated_at previously defaulted to
+			// transaction_date() when the caller passed a zero time; stamp the shared
+			// per-tx date in Go now that the default is retired, so both the insert and
+			// the `updated_at = excluded.updated_at` conflict path store that instant.
+			if at.IsZero() {
+				at = store.transactionDate()
+			}
+
 			type AccountWithLedger struct {
 				ledger.Account `bun:",extend"`
 				Ledger         string   `bun:"ledger,type:varchar"`
@@ -80,10 +88,8 @@ func (store *Store) UpdateAccountsMetadata(ctx context.Context, m map[string]met
 
 			// Every inserted or updated account would have fired the retired
 			// {insert,update}_account_metadata_history plpgsql triggers. Mirror them in
-			// Go with the effective stored date: when `at` is zero the accounts.updated_at
-			// / insertion_date columns default to transaction_date() (identical values in
-			// one statement), so the returned updated_at is exactly the date the triggers
-			// copied — not the zero `at`.
+			// Go with the effective stored date: the returned updated_at (the per-tx date
+			// stamped above when `at` was zero) is exactly the date the triggers copied.
 			for _, a := range affected {
 				var date time.Time
 				if a.UpdatedAt != nil {
@@ -262,7 +268,7 @@ func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.Accou
 						SET
 							metadata = a.metadata || d.metadata,
 							first_usage = LEAST(d.first_usage, a.first_usage),
-							updated_at = COALESCE(d.updated_at, ?1.transaction_date())
+							updated_at = COALESCE(d.updated_at, ?3::timestamp)
 						FROM data_batch d
 						WHERE a.address = d.address and ledger = ?2 and (d.first_usage < a.first_usage or not a.metadata @> d.metadata)
 						RETURNING a.address, a.metadata, a.first_usage, a.updated_at, a.insertion_date, d.batch_index
@@ -273,9 +279,9 @@ func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.Accou
 						SELECT
 							d.address,
 							d.default_metadata || d.metadata,
-							COALESCE(d.first_usage, ?1.transaction_date()),
-							COALESCE(d.updated_at, ?1.transaction_date()),
-							COALESCE(d.insertion_date, ?1.transaction_date()),
+							COALESCE(d.first_usage, ?3::timestamp),
+							COALESCE(d.updated_at, ?3::timestamp),
+							COALESCE(d.insertion_date, ?3::timestamp),
 							?2,
 							d.address_array
 						FROM data_batch d
@@ -288,6 +294,7 @@ func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.Accou
 				store.db.NewValues(&rows),
 				bun.Ident(store.ledger.Bucket),
 				store.ledger.Name,
+				store.transactionDate(),
 			).Scan(ctx, &returnedRows)
 			if err != nil {
 				return fmt.Errorf("upserting accounts: %w", postgres.ResolveError(err))

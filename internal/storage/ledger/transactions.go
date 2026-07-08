@@ -90,6 +90,22 @@ func (store *Store) InsertTransaction(ctx context.Context, tx *ledger.Transactio
 		store.tracer,
 		store.insertTransactionHistogram,
 		func(ctx context.Context) (*ledger.Transaction, error) {
+			// Stamp the date columns that previously defaulted to transaction_date()
+			// (timestamp, inserted_at) and the updated_at the set_transaction_updated_at
+			// trigger copied from inserted_at. A caller-provided value wins, exactly as
+			// the plpgsql defaults/trigger only fired `when null`; the shared per-tx
+			// date keeps the moves (InsertionDate/EffectiveDate, derived below) aligned.
+			d := store.transactionDate()
+			if tx.Timestamp.IsZero() {
+				tx.Timestamp = d
+			}
+			if tx.InsertedAt.IsZero() {
+				tx.InsertedAt = d
+			}
+			if tx.UpdatedAt.IsZero() {
+				tx.UpdatedAt = tx.InsertedAt
+			}
+
 			type transaction struct {
 				*ledger.Transaction `bun:",extend"`
 				Sources             []string         `bun:"sources,notnull"`
@@ -248,14 +264,11 @@ func (store *Store) RevertTransaction(ctx context.Context, id uint64, at time.Ti
 				Where("ledger = ?", store.ledger.Name).
 				Returning("*")
 			if at.IsZero() {
-				query = query.
-					Set("reverted_at = " + store.GetPrefixedRelationName("transaction_date") + "()").
-					Set("updated_at = " + store.GetPrefixedRelationName("transaction_date") + "()")
-			} else {
-				query = query.
-					Set("reverted_at = ?", at).
-					Set("updated_at = ?", at)
+				at = store.transactionDate()
 			}
+			query = query.
+				Set("reverted_at = ?", at).
+				Set("updated_at = ?", at)
 
 			tx, modified, err = store.updateTxWithRetrieve(ctx, id, query)
 			return nil, err
@@ -281,10 +294,9 @@ func (store *Store) UpdateTransactionMetadata(ctx context.Context, id uint64, m 
 				Where("not (metadata @> ?)", m).
 				Returning("*")
 			if at.IsZero() {
-				updateQuery = updateQuery.Set("updated_at = " + store.GetPrefixedRelationName("transaction_date") + "()")
-			} else {
-				updateQuery = updateQuery.Set("updated_at = ?", at)
+				at = store.transactionDate()
 			}
+			updateQuery = updateQuery.Set("updated_at = ?", at)
 
 			tx, modified, err = store.updateTxWithRetrieve(ctx, id, updateQuery)
 
@@ -310,10 +322,9 @@ func (store *Store) DeleteTransactionMetadata(ctx context.Context, id uint64, ke
 				Where("metadata -> ? is not null", key).
 				Returning("*")
 			if at.IsZero() {
-				updateQuery = updateQuery.Set("updated_at = " + store.GetPrefixedRelationName("transaction_date") + "()")
-			} else {
-				updateQuery = updateQuery.Set("updated_at = ?", at)
+				at = store.transactionDate()
 			}
+			updateQuery = updateQuery.Set("updated_at = ?", at)
 
 			tx, modified, err = store.updateTxWithRetrieve(ctx, id, updateQuery)
 			return nil, postgres.ResolveError(err)
