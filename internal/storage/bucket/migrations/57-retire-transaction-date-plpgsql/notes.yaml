@@ -1,0 +1,1 @@
+name: Retire the transaction_date() plpgsql function (temp-table statement_timestamp cache), its 8 column DEFAULTs and the set_transaction_updated_at trigger; the Store now threads one Go-computed per-db-transaction timestamp through the transactions/accounts/moves/logs write paths
