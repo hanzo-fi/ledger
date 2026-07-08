@@ -65,6 +65,17 @@ func FromFlags(flags *pflag.FlagSet) (Driver, string, error) {
 	}
 	raw, _ := flags.GetString(StorageDriverFlag)
 	dsn, _ := flags.GetString(SQLiteDSNFlag)
+
+	// A --postgres-uri opts into Postgres without also requiring
+	// --storage-driver=postgres, unless the driver was set explicitly (explicit
+	// wins). Without this, a server started with only --postgres-uri would silently
+	// boot the default SQLite backend.
+	if !flags.Changed(StorageDriverFlag) && flags.Lookup(connect.PostgresURIFlag) != nil {
+		if uri, _ := flags.GetString(connect.PostgresURIFlag); uri != "" {
+			return DriverPostgres, dsn, nil
+		}
+	}
+
 	d := Driver(raw)
 	switch d {
 	case DriverSQLite, DriverPostgres:
