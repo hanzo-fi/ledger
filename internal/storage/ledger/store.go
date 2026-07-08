@@ -16,6 +16,7 @@ import (
 	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
 	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
+	"github.com/formancehq/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
@@ -38,6 +39,15 @@ type Store struct {
 	// emit the `ledger = ?` predicate, ignoring the aloneInBucket hint. It is a
 	// kill switch for the alone-in-bucket optimization (see newScopedSelect).
 	disableScopedSelectOptimization bool
+
+	// now is the single stable timestamp for the current db transaction, captured
+	// lazily on the first transactionDate() call (see there) and reset in WithDB.
+	// It replaces the retired transaction_date() plpgsql function (a temp-table
+	// cache of statement_timestamp()): threading one Go-computed instant through the
+	// transactions/accounts/moves/logs write paths stamps every row of a logical
+	// transaction at the same UTC microsecond, byte-identical to what the
+	// per-db-transaction temp table produced.
+	now time.Time
 
 	tracer                             trace.Tracer
 	meter                              metric.Meter
@@ -114,10 +124,31 @@ func (store *Store) BeginTX(ctx context.Context, options *sql.TxOptions) (*Store
 	if err != nil {
 		return nil, nil, postgres.ResolveError(err)
 	}
-	cp := *store
-	cp.db = tx
+	return store.WithDB(tx), &tx, nil
+}
 
-	return &cp, &tx, nil
+// transactionDate returns the date to stamp on the write paths that previously
+// relied on the transaction_date() plpgsql column default / call. It decomplects
+// the two behaviours transaction_date() braided together via its `on commit delete
+// rows` temp table:
+//   - Inside a transaction (store.db is a bun.Tx): the date is captured lazily on
+//     the first call and cached for the rest of the transaction, so the
+//     transaction, its accounts, its moves and its log all share the exact same
+//     instant — the cross-statement invariant the temp table gave. Capturing on
+//     first use (the first write) rather than at BeginTX mirrors transaction_date()
+//     seeding its cache from the first calling statement's statement_timestamp(),
+//     keeping the date aligned with the id the same statement draws from nextval().
+//   - Autocommit (store.db is the pool): a fresh instant per call, since each
+//     statement is its own implicit transaction, exactly as transaction_date()
+//     returned a fresh statement_timestamp() per implicit tx.
+func (store *Store) transactionDate() time.Time {
+	if _, inTx := store.db.(bun.Tx); !inTx {
+		return time.Now()
+	}
+	if store.now.IsZero() {
+		store.now = time.Now()
+	}
+	return store.now
 }
 
 func (store *Store) Commit(ctx context.Context) error {
@@ -336,6 +367,9 @@ func (store *Store) GetMigrationsInfo(ctx context.Context) ([]migrations.Info, e
 func (store *Store) WithDB(db bun.IDB) *Store {
 	ret := *store
 	ret.db = db
+	// Reset the lazily-captured transaction date: this store is (re)bound to a
+	// different db handle, so its date must be captured afresh on first use.
+	ret.now = time.Time{}
 
 	return &ret
 }
