@@ -1,0 +1,1 @@
+name: Retire the plpgsql effective-volumes path (set_effective_volumes / update_effective_volumes triggers + trigger functions); post_commit_effective_volumes is now computed in Go by Store.InsertMoves

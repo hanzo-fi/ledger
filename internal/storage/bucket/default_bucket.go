@@ -117,36 +117,11 @@ var ledgerSetups = []ledgerSetup{
 	// UpsertAccounts), so no per-ledger {insert,update}_{transaction,account}_metadata_history
 	// triggers are created. See migration 56-retire-metadata-history-plpgsql, which
 	// drops the triggers + trigger functions on existing ledgers.
-	{
-		requireFeatures: features.FeatureSet{
-			features.FeatureMovesHistoryPostCommitEffectiveVolumes: "SYNC",
-		},
-		script: `
-		create trigger "set_effective_volumes_{{.ID}}"
-		before insert
-		on "{{.Bucket}}"."moves"
-		for each row
-		when (
-			new.ledger = '{{.Name}}'
-		)
-		execute procedure "{{.Bucket}}".set_effective_volumes();
-		`,
-	},
-	{
-		requireFeatures: features.FeatureSet{
-			features.FeatureMovesHistoryPostCommitEffectiveVolumes: "SYNC",
-		},
-		script: `
-		create trigger "update_effective_volumes_{{.ID}}"
-		after insert
-		on "{{.Bucket}}"."moves"
-		for each row
-		when (
-			new.ledger = '{{.Name}}'
-		)
-		execute procedure "{{.Bucket}}".update_effective_volumes();
-		`,
-	},
+	// The effective-volume chain (FeatureMovesHistoryPostCommitEffectiveVolumes=SYNC)
+	// is now computed in Go by Store.InsertMoves, so no per-ledger
+	// set_effective_volumes/update_effective_volumes triggers are created. See
+	// migration 58-retire-effective-volumes-plpgsql, which drops the triggers +
+	// trigger functions on existing ledgers.
 	{
 		script: `
 		-- create a sequence for logs by ledger instead of a sequence of the table as we want to have contiguous ids
