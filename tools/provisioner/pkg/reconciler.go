@@ -8,8 +8,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 
-	. "github.com/formancehq/go-libs/v5/pkg/types/collections"
-	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
 	"github.com/hanzo-fi/ledger/pkg/client"
 	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 	"github.com/hanzo-fi/ledger/pkg/client/models/operations"

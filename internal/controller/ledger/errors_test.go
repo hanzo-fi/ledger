@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/formancehq/numscript"
+	"github.com/hanzo-fi/numscript"
 
 	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )

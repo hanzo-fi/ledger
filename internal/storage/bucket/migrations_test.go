@@ -14,11 +14,11 @@ import (
 	debug "github.com/uptrace/bun/extra/bundebug"
 	"go.opentelemetry.io/otel/trace/noop"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
-	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/migrations"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"

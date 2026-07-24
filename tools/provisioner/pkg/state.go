@@ -1,6 +1,6 @@
 package provisionner
 
-import . "github.com/formancehq/go-libs/v5/pkg/types/collections"
+import . "github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
 
 type ExporterState struct {
 	ID     string         `yaml:"id"`

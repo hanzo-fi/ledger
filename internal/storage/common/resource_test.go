@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	libtime "github.com/formancehq/go-libs/v5/pkg/types/time"
+	libtime "github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	"github.com/hanzo-fi/ledger/internal/storage/common"
 )

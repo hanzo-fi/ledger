@@ -5,7 +5,7 @@ package env
 import (
 	"sort"
 
-	. "github.com/formancehq/go-libs/v5/pkg/types/collections"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
 
 	"github.com/hanzo-fi/ledger/pkg/features"
 )

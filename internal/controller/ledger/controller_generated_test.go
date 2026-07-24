@@ -12,8 +12,8 @@ import (
 	sql "database/sql"
 	reflect "reflect"
 
-	paginate "github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	migrations "github.com/formancehq/go-libs/v5/pkg/storage/migrations"
+	paginate "github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	migrations "github.com/hanzo-fi/go-libs/v5/pkg/storage/migrations"
 	ledger "github.com/hanzo-fi/ledger/internal"
 	queries "github.com/hanzo-fi/ledger/internal/queries"
 	common "github.com/hanzo-fi/ledger/internal/storage/common"

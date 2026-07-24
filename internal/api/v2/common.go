@@ -9,10 +9,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/iancoleman/strcase"
 
-	"github.com/formancehq/go-libs/v5/pkg/query"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	. "github.com/formancehq/go-libs/v5/pkg/types/collections"
-	"github.com/formancehq/go-libs/v5/pkg/types/time"
+	"github.com/hanzo-fi/go-libs/v5/pkg/query"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
 )

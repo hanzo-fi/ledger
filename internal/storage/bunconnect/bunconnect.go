@@ -22,9 +22,9 @@ import (
 	"go.uber.org/fx"
 	_ "modernc.org/sqlite" // pure-Go, CGO-free SQLite driver, registered as "sqlite"
 
-	"github.com/formancehq/go-libs/v5/pkg/fx/storagefx"
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
+	"github.com/hanzo-fi/go-libs/v5/pkg/fx/storagefx"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
 )
 
 // Driver selects the storage backend.

@@ -7,9 +7,9 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/fx"
 
-	"github.com/formancehq/go-libs/v5/pkg/fx/servicefx"
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/service/health"
+	"github.com/hanzo-fi/go-libs/v5/pkg/fx/servicefx"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/service/health"
 
 	"github.com/hanzo-fi/ledger/internal/storage/driver"
 	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"

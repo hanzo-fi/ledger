@@ -3,8 +3,8 @@ package ledger
 import (
 	"context"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
-	"github.com/formancehq/go-libs/v5/pkg/types/collections"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/tracing"

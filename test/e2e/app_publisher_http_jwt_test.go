@@ -6,10 +6,10 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
-	. "github.com/formancehq/go-libs/v5/pkg/testing/deferred/ginkgo"
-	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
-	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/testing/deferred/ginkgo"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/platform/pgtesting"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/testservice"
 
 	. "github.com/hanzo-fi/ledger/pkg/testserver/ginkgo"
 )

@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/pflag"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
 )
 
 // TestSQLiteRoundTrip proves the sqlite dialect+driver seam is functional:

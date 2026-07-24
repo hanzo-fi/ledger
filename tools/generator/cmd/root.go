@@ -14,8 +14,8 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/service"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/service"
 	ledgerclient "github.com/hanzo-fi/ledger/pkg/client"
 	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 	"github.com/hanzo-fi/ledger/pkg/client/models/operations"

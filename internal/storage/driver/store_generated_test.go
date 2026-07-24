@@ -11,8 +11,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	migrations "github.com/formancehq/go-libs/v5/pkg/storage/migrations"
-	metadata "github.com/formancehq/go-libs/v5/pkg/types/metadata"
+	migrations "github.com/hanzo-fi/go-libs/v5/pkg/storage/migrations"
+	metadata "github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
 	ledger "github.com/hanzo-fi/ledger/internal"
 	gomock "go.uber.org/mock/gomock"
 )

@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/formancehq/go-libs/v5/pkg/types/collections"
-	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
-	"github.com/formancehq/numscript"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
+	"github.com/hanzo-fi/numscript"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/machine"

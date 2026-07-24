@@ -6,7 +6,7 @@ import (
 
 	"github.com/bluele/gcache"
 
-	"github.com/formancehq/numscript"
+	"github.com/hanzo-fi/numscript"
 
 	"github.com/hanzo-fi/ledger/internal/machine/script/compiler"
 )
