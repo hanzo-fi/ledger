@@ -5,9 +5,9 @@ import (
 
 	"github.com/ThreeDotsLabs/watermill/message"
 
-	"github.com/formancehq/go-libs/v5/pkg/messaging/publish"
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
+	"github.com/hanzo-fi/go-libs/v5/pkg/messaging/publish"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"

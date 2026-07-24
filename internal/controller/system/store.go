@@ -3,7 +3,7 @@ package system
 import (
 	"context"
 
-	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"

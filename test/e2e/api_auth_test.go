@@ -11,11 +11,11 @@ import (
 	. "github.com/onsi/gomega"
 	"golang.org/x/oauth2"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/testing/deferred"
-	. "github.com/formancehq/go-libs/v5/pkg/testing/deferred/ginkgo"
-	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
-	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/deferred"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/testing/deferred/ginkgo"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/platform/pgtesting"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/testservice"
 
 	"github.com/hanzo-fi/ledger/pkg/client"
 	"github.com/hanzo-fi/ledger/pkg/client/models/components"

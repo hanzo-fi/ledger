@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	"github.com/formancehq/go-libs/v5/pkg/authn/jwt"
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
+	"github.com/hanzo-fi/go-libs/v5/pkg/authn/jwt"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 )

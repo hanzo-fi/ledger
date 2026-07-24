@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
 )
 
 //go:generate mockgen -source factory.go -destination factory_generated.go -package drivers . Factory

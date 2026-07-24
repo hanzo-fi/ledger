@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace/noop"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/debug"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/debug"
 
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
 	"github.com/hanzo-fi/ledger/internal/storage/system"

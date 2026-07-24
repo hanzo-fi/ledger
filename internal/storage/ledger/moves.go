@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"math/big"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/tracing"

@@ -7,7 +7,7 @@ import (
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
 
 	"github.com/hanzo-fi/ledger/internal/controller/system"
 	"github.com/hanzo-fi/ledger/internal/replication/drivers"

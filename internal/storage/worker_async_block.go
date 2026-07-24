@@ -16,10 +16,10 @@ import (
 	"go.opentelemetry.io/otel/trace/noop"
 	"go.uber.org/fx"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/query"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/query"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"

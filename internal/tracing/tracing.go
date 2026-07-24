@@ -7,8 +7,8 @@ import (
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/formancehq/go-libs/v5/pkg/observe"
-	"github.com/formancehq/go-libs/v5/pkg/types/time"
+	"github.com/hanzo-fi/go-libs/v5/pkg/observe"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 )
 
 func LegacyMetricsName(operationName string) string {

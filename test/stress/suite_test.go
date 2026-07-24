@@ -10,10 +10,10 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/testing/deferred"
-	"github.com/formancehq/go-libs/v5/pkg/testing/docker"
-	. "github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/deferred"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/docker"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/testing/platform/pgtesting"
 )
 
 func Test(t *testing.T) {

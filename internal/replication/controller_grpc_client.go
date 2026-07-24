@@ -6,9 +6,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	. "github.com/formancehq/go-libs/v5/pkg/types/collections"
-	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/controller/system"

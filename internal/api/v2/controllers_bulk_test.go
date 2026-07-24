@@ -15,12 +15,12 @@ import (
 	"github.com/uptrace/bun"
 	"go.uber.org/mock/gomock"
 
-	"github.com/formancehq/go-libs/v5/pkg/authn/jwt"
-	"github.com/formancehq/go-libs/v5/pkg/transport/api"
-	"github.com/formancehq/go-libs/v5/pkg/types/collections"
-	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
-	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
-	"github.com/formancehq/go-libs/v5/pkg/types/time"
+	"github.com/hanzo-fi/go-libs/v5/pkg/authn/jwt"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/api/bulking"

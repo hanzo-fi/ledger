@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/formancehq/go-libs/v5/pkg/transport/api"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	"github.com/hanzo-fi/ledger/internal/api/common"
 	"github.com/hanzo-fi/ledger/internal/controller/ledger"

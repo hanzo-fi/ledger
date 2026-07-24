@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/postgres"
-	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/tracing"

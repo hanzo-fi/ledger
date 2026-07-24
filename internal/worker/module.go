@@ -8,9 +8,9 @@ import (
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 
-	"github.com/formancehq/go-libs/v5/pkg/fx/transportfx"
-	"github.com/formancehq/go-libs/v5/pkg/transport/grpcserver"
-	"github.com/formancehq/go-libs/v5/pkg/transport/serverport"
+	"github.com/hanzo-fi/go-libs/v5/pkg/fx/transportfx"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/grpcserver"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/serverport"
 
 	"github.com/hanzo-fi/ledger/internal/replication"
 	innergrpc "github.com/hanzo-fi/ledger/internal/replication/grpc"

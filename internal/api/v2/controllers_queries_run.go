@@ -8,8 +8,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	_ "github.com/pkg/errors"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	"github.com/formancehq/go-libs/v5/pkg/transport/api"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/api/common"

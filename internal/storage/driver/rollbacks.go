@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/migrations"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/migrations"
 )
 
 func detectDowngrades(migrator *migrations.Migrator, ctx context.Context) error {

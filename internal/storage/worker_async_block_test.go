@@ -10,11 +10,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/debug"
-	"github.com/formancehq/go-libs/v5/pkg/testing/docker"
-	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/debug"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/docker"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"

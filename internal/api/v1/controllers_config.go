@@ -4,9 +4,9 @@ import (
 	_ "embed"
 	"net/http"
 
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/paginate"
-	"github.com/formancehq/go-libs/v5/pkg/transport/api"
-	"github.com/formancehq/go-libs/v5/pkg/types/collections"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/api/common"

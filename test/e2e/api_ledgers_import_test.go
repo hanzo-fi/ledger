@@ -10,12 +10,12 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/uptrace/bun"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	. "github.com/formancehq/go-libs/v5/pkg/testing/api"
-	. "github.com/formancehq/go-libs/v5/pkg/testing/deferred/ginkgo"
-	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
-	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
-	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/testing/api"
+	. "github.com/hanzo-fi/go-libs/v5/pkg/testing/deferred/ginkgo"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/platform/pgtesting"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/testservice"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
 
 	"github.com/hanzo-fi/ledger/pkg/client/models/components"
 	"github.com/hanzo-fi/ledger/pkg/client/models/operations"

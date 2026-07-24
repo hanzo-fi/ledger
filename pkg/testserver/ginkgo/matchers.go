@@ -15,10 +15,10 @@ import (
 	"github.com/onsi/gomega/types"
 	"github.com/xeipuuv/gojsonschema"
 
-	"github.com/formancehq/go-libs/v5/pkg/messaging/publish"
-	"github.com/formancehq/go-libs/v5/pkg/testing/deferred"
-	"github.com/formancehq/go-libs/v5/pkg/testing/testservice"
-	"github.com/formancehq/go-libs/v5/pkg/types/pointer"
+	"github.com/hanzo-fi/go-libs/v5/pkg/messaging/publish"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/deferred"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/testservice"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
 
 	"github.com/hanzo-fi/ledger/pkg/client/models/operations"
 	"github.com/hanzo-fi/ledger/pkg/testserver"

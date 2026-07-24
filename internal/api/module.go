@@ -9,9 +9,9 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/fx"
 
-	"github.com/formancehq/go-libs/v5/pkg/audit/httpaudit"
-	"github.com/formancehq/go-libs/v5/pkg/authn/jwt"
-	"github.com/formancehq/go-libs/v5/pkg/fx/servicefx"
+	"github.com/hanzo-fi/go-libs/v5/pkg/audit/httpaudit"
+	"github.com/hanzo-fi/go-libs/v5/pkg/authn/jwt"
+	"github.com/hanzo-fi/go-libs/v5/pkg/fx/servicefx"
 
 	"github.com/hanzo-fi/ledger/internal/api/bulking"
 	"github.com/hanzo-fi/ledger/internal/controller/system"

@@ -5,8 +5,8 @@ import (
 
 	"github.com/uptrace/bun"
 
-	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
-	"github.com/formancehq/go-libs/v5/pkg/types/time"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 )
 
 const (

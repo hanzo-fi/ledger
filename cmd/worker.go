@@ -10,10 +10,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/formancehq/go-libs/v5/pkg/observe/metrics"
-	"github.com/formancehq/go-libs/v5/pkg/observe/traces"
-	"github.com/formancehq/go-libs/v5/pkg/service"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/connect"
+	"github.com/hanzo-fi/go-libs/v5/pkg/observe/metrics"
+	"github.com/hanzo-fi/go-libs/v5/pkg/observe/traces"
+	"github.com/hanzo-fi/go-libs/v5/pkg/service"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
 
 	"github.com/hanzo-fi/ledger/internal/replication"
 	"github.com/hanzo-fi/ledger/internal/replication/drivers"

@@ -4,10 +4,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/uptrace/bun"
 
-	"github.com/formancehq/go-libs/v5/pkg/observe"
-	"github.com/formancehq/go-libs/v5/pkg/observe/traces"
-	"github.com/formancehq/go-libs/v5/pkg/service"
-	"github.com/formancehq/go-libs/v5/pkg/storage/bun/migrate"
+	"github.com/hanzo-fi/go-libs/v5/pkg/observe"
+	"github.com/hanzo-fi/go-libs/v5/pkg/observe/traces"
+	"github.com/hanzo-fi/go-libs/v5/pkg/service"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/migrate"
 
 	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
 	"github.com/hanzo-fi/ledger/internal/storage/driver"

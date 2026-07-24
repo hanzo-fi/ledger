@@ -11,8 +11,8 @@ import (
 	nooptracer "go.opentelemetry.io/otel/trace/noop"
 	"go.uber.org/mock/gomock"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/transport/api"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 )

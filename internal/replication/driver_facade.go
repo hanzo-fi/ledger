@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
 
 	"github.com/hanzo-fi/ledger/internal/replication/drivers"
 )

@@ -13,9 +13,9 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 
-	logging "github.com/formancehq/go-libs/v5/pkg/observe/log"
-	"github.com/formancehq/go-libs/v5/pkg/testing/docker"
-	"github.com/formancehq/go-libs/v5/pkg/testing/platform/pgtesting"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/docker"
+	"github.com/hanzo-fi/go-libs/v5/pkg/testing/platform/pgtesting"
 )
 
 // TestPostIdempotencyAndReads exercises the caller-facing engine surface — the

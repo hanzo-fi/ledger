@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/formancehq/go-libs/v5/pkg/query"
+	"github.com/hanzo-fi/go-libs/v5/pkg/query"
 )
 
 func TestFilterTemplateValidation(t *testing.T) {

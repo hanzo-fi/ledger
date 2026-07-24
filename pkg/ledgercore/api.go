@@ -9,8 +9,8 @@ import (
 	"math/big"
 	stdtime "time"
 
-	"github.com/formancehq/go-libs/v5/pkg/types/metadata"
-	ledgertime "github.com/formancehq/go-libs/v5/pkg/types/time"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
+	ledgertime "github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 )
