@@ -1,6 +1,6 @@
 module github.com/hanzo-fi/ledger/pkg/client
 
-go 1.22
+go 1.26.5
 
 require (
 	github.com/stretchr/testify v1.11.1
