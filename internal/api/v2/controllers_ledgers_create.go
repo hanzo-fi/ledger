@@ -6,8 +6,6 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
@@ -31,7 +29,7 @@ func createLedger(systemController systemcontroller.Controller) http.HandlerFunc
 			}
 		}
 
-		if err := systemController.CreateLedger(r.Context(), chi.URLParam(r, "ledger"), configuration); err != nil {
+		if err := systemController.CreateLedger(r.Context(), common.URLParam(r, "ledger"), configuration); err != nil {
 			switch {
 			case errors.Is(err, systemcontroller.ErrInvalidLedgerConfiguration{}) ||
 				errors.Is(err, ledger.ErrInvalidLedgerName{}) ||

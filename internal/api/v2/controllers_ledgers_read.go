@@ -3,8 +3,6 @@ package v2
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
@@ -14,7 +12,7 @@ import (
 
 func readLedger(b system.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ledger, err := b.GetLedger(r.Context(), chi.URLParam(r, "ledger"))
+		ledger, err := b.GetLedger(r.Context(), common.URLParam(r, "ledger"))
 		if err != nil {
 			switch {
 			case postgres.IsNotFoundError(err):

@@ -3,8 +3,6 @@ package v2
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	"github.com/hanzo-fi/ledger/internal/api/common"
@@ -13,7 +11,7 @@ import (
 
 func deleteLedgerMetadata(b system.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if err := b.DeleteLedgerMetadata(r.Context(), chi.URLParam(r, "ledger"), chi.URLParam(r, "key")); err != nil {
+		if err := b.DeleteLedgerMetadata(r.Context(), common.URLParam(r, "ledger"), common.URLParam(r, "key")); err != nil {
 			common.HandleCommonWriteErrors(w, r, err)
 			return
 		}

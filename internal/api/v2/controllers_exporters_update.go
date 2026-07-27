@@ -4,8 +4,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
@@ -15,7 +13,7 @@ import (
 
 func updateExporter(systemController systemcontroller.Controller) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		exporterID := chi.URLParam(r, "exporterID")
+		exporterID := common.URLParam(r, "exporterID")
 		common.WithBody[ledger.ExporterConfiguration](w, r, func(req ledger.ExporterConfiguration) {
 			err := systemController.UpdateExporter(r.Context(), exporterID, req)
 			if err != nil {

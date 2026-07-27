@@ -5,21 +5,21 @@ import (
 	"net/http"
 
 	"github.com/ThreeDotsLabs/watermill/message"
-	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/hanzo-fi/go-libs/v5/pkg/audit/httpaudit"
+	"github.com/hanzo-fi/go-libs/v5/pkg/authn/jwt"
+	"github.com/hanzo-fi/go-libs/v5/pkg/observe"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
+	"github.com/hanzo-fi/go-libs/v5/pkg/transport/httpserver"
 	otelchimetric "github.com/riandyrn/otelchi/metric"
+	"github.com/zap-proto/zip"
 	"go.opentelemetry.io/otel/metric"
 	noopmetrics "go.opentelemetry.io/otel/metric/noop"
 	"go.opentelemetry.io/otel/trace"
 	nooptracer "go.opentelemetry.io/otel/trace/noop"
-
-	"github.com/hanzo-fi/go-libs/v5/pkg/audit/httpaudit"
-	"github.com/hanzo-fi/go-libs/v5/pkg/authn/jwt"
-	"github.com/hanzo-fi/go-libs/v5/pkg/observe"
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
-	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
-	"github.com/hanzo-fi/go-libs/v5/pkg/transport/httpserver"
 
 	"github.com/hanzo-fi/ledger/internal/api/bulking"
 	"github.com/hanzo-fi/ledger/internal/api/common"
@@ -29,15 +29,37 @@ import (
 	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
+// ServiceMiddleware is what every route the ledger serves — API and operational
+// alike — runs inside: a JSON content-type default and the service logger,
+// staged before anything else so a handler can override both.
+func ServiceMiddleware(logger logging.Logger) common.Chain {
+	return common.Chain{
+		func(handler http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+
+				handler.ServeHTTP(w, r.WithContext(logging.ContextWithLogger(r.Context(), logger)))
+			})
+		},
+	}
+}
+
 // todo: refine textual errors
+
+// NewRouter returns the app the ledger's API is routed by. Routing is zip's;
+// the handlers and the observability stack around them are net/http, and each
+// route is registered as the whole chain applied to its handler — so the chain
+// still runs outside the handler, sees the response the handler wrote, and
+// reads the route the router matched.
 func NewRouter(
+	logger logging.Logger,
 	systemController system.Controller,
 	authenticator jwt.Authenticator,
 	publisher message.Publisher,
 	version string,
 	debug bool,
 	opts ...RouterOption,
-) chi.Router {
+) *zip.App {
 
 	routerOptions := routerOptions{}
 	for _, opt := range append(defaultRouterOptions, opts...) {
@@ -49,8 +71,8 @@ func NewRouter(
 		otelchimetric.WithMeterProvider(routerOptions.meterProvider),
 	)
 
-	mux := chi.NewRouter()
-	mux.Use(
+	app := common.NewApp()
+	base := ServiceMiddleware(logger).With(
 		cors.New(cors.Options{
 			AllowOriginFunc: func(r *http.Request, origin string) bool {
 				return true
@@ -93,7 +115,10 @@ func NewRouter(
 		},
 	)
 
-	v2Router := v2.NewRouter(
+	v2.Register(
+		app.Group("/v2"),
+		"/v2",
+		base,
 		systemController,
 		authenticator,
 		version,
@@ -104,20 +129,22 @@ func NewRouter(
 		v2.WithExporters(routerOptions.exporters),
 		v2.WithExperimentalFeatures(routerOptions.experimentalFeatures),
 	)
-	mux.Handle("/v2*", http.StripPrefix("/v2", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		chi.RouteContext(r.Context()).Reset()
-		v2Router.ServeHTTP(w, r)
-	})))
-	mux.Handle("/*", v1.NewRouter(
+	v1.Register(
+		app.Group(""),
+		base,
 		systemController,
 		authenticator,
 		version,
 		debug,
 		v1.WithTracer(routerOptions.tracer),
 		v1.WithExperimentalFeatures(routerOptions.experimentalFeatures),
-	))
+	)
 
-	return mux
+	// A path matching neither version 404s without authenticating, as it did
+	// when v1 was the mounted fallback and had no route for it either.
+	app.All("/*", base.Adapt(http.NotFound))
+
+	return app
 }
 
 type routerOptions struct {

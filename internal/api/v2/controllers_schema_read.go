@@ -3,8 +3,6 @@ package v2
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
@@ -14,7 +12,7 @@ import (
 func readSchema(w http.ResponseWriter, r *http.Request) {
 	l := common.LedgerFromContext(r.Context())
 
-	version := chi.URLParam(r, "version")
+	version := common.URLParam(r, "version")
 	schema, err := l.GetSchema(r.Context(), version)
 	if err != nil {
 		switch {

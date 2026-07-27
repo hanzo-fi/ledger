@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	"github.com/hanzo-fi/ledger/internal/api/common"
@@ -15,13 +13,13 @@ import (
 func deleteTransactionMetadata(w http.ResponseWriter, r *http.Request) {
 	l := common.LedgerFromContext(r.Context())
 
-	txID, err := strconv.ParseUint(chi.URLParam(r, "id"), 10, 64)
+	txID, err := strconv.ParseUint(common.URLParam(r, "id"), 10, 64)
 	if err != nil {
 		api.BadRequest(w, common.ErrValidation, err)
 		return
 	}
 
-	metadataKey := chi.URLParam(r, "key")
+	metadataKey := common.URLParam(r, "key")
 
 	_, idempotencyHit, err := l.DeleteTransactionMetadata(r.Context(), getCommandParameters(r, ledgercontroller.DeleteTransactionMetadata{
 		TransactionID: txID,

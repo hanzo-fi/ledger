@@ -5,13 +5,13 @@ import (
 	_ "embed"
 
 	"github.com/ThreeDotsLabs/watermill/message"
-	"github.com/go-chi/chi/v5"
-	"go.opentelemetry.io/otel/trace"
-	"go.uber.org/fx"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/audit/httpaudit"
 	"github.com/hanzo-fi/go-libs/v5/pkg/authn/jwt"
 	"github.com/hanzo-fi/go-libs/v5/pkg/fx/servicefx"
+	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
+	"github.com/zap-proto/zip"
+	"go.opentelemetry.io/otel/trace"
+	"go.uber.org/fx"
 
 	"github.com/hanzo-fi/ledger/internal/api/bulking"
 	"github.com/hanzo-fi/ledger/internal/controller/system"
@@ -58,7 +58,8 @@ func Module(cfg Config) fx.Option {
 			authenticator jwt.Authenticator,
 			publisher message.Publisher,
 			tracerProvider trace.TracerProvider,
-		) chi.Router {
+			logger logging.Logger,
+		) *zip.App {
 			auditOptions := []httpaudit.HTTPOption{
 				httpaudit.WithEnabled(cfg.Audit.Enabled),
 			}
@@ -88,6 +89,7 @@ func Module(cfg Config) fx.Option {
 			}
 
 			return NewRouter(
+				logger,
 				backend,
 				authenticator,
 				publisher,

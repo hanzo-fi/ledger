@@ -3,8 +3,6 @@ package v2
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	"github.com/hanzo-fi/ledger/internal/api/common"
@@ -15,7 +13,7 @@ import (
 // The handler invokes systemController.DeleteBucket with the request context; if deletion fails it responds with an internal server error, otherwise it responds with 204 No Content.
 func deleteBucket(systemController system.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		bucket := chi.URLParam(r, "bucket")
+		bucket := common.URLParam(r, "bucket")
 
 		err := systemController.DeleteBucket(r.Context(), bucket)
 		if err != nil {

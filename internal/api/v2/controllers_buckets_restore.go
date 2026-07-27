@@ -3,8 +3,6 @@ package v2
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	"github.com/hanzo-fi/ledger/internal/api/common"
@@ -16,7 +14,7 @@ import (
 // On success it responds with HTTP 204 No Content; on failure it writes an internal server error response.
 func restoreBucket(systemController system.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		bucket := chi.URLParam(r, "bucket")
+		bucket := common.URLParam(r, "bucket")
 
 		err := systemController.RestoreBucket(r.Context(), bucket)
 		if err != nil {

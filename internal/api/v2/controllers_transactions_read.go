@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/query"
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
@@ -17,7 +15,7 @@ import (
 func readTransaction(w http.ResponseWriter, r *http.Request) {
 	l := common.LedgerFromContext(r.Context())
 
-	txId, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+	txId, err := strconv.ParseInt(common.URLParam(r, "id"), 10, 64)
 	if err != nil {
 		api.BadRequest(w, common.ErrValidation, err)
 		return

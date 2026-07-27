@@ -6,14 +6,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/iancoleman/strcase"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/query"
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
 	. "github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
+	"github.com/iancoleman/strcase"
 
+	"github.com/hanzo-fi/ledger/internal/api/common"
 	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
 )
 
@@ -41,11 +40,11 @@ func getOOT(r *http.Request) (*time.Time, error) {
 }
 
 func getPipelineID(r *http.Request) string {
-	return chi.URLParam(r, "pipelineID")
+	return common.URLParam(r, "pipelineID")
 }
 
 func getExporterID(r *http.Request) string {
-	return chi.URLParam(r, "exporterID")
+	return common.URLParam(r, "exporterID")
 }
 
 func getQueryBuilder(r *http.Request) (query.Builder, error) {

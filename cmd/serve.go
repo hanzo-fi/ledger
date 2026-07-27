@@ -7,8 +7,8 @@ import (
 	"net/http/pprof"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/spf13/cobra"
+	"github.com/zap-proto/zip"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
@@ -33,6 +33,7 @@ import (
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/httpserver"
 
 	"github.com/hanzo-fi/ledger/internal/api"
+	"github.com/hanzo-fi/ledger/internal/api/common"
 	"github.com/hanzo-fi/ledger/internal/bus"
 	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 	systemcontroller "github.com/hanzo-fi/ledger/internal/controller/system"
@@ -163,28 +164,28 @@ func NewServeCommand() *cobra.Command {
 						AsyncWorkerCount:   cfg.AuditAsyncWorkerCount,
 					},
 				}),
-				fx.Decorate(func(
+				fx.Provide(func(
 					params struct {
 						fx.In
 
-						Handler          chi.Router
+						App              *zip.App
 						HealthController *health.HealthController
 						Logger           logging.Logger
 
 						MeterProvider *metric.MeterProvider     `optional:"true"`
 						Exporter      *metrics.InMemoryExporter `optional:"true"`
 					},
-				) chi.Router {
+				) http.Handler {
 					return assembleFinalRouter(
 						service.IsDebug(cmd),
 						params.MeterProvider,
 						params.Exporter,
 						params.HealthController,
 						params.Logger,
-						params.Handler,
+						params.App,
 					)
 				}),
-				fx.Invoke(func(lc fx.Lifecycle, h chi.Router) {
+				fx.Invoke(func(lc fx.Lifecycle, h http.Handler) {
 					lc.Append(transportfx.FXHook(httpserver.NewHook(h, httpserver.WithAddress(cfg.Bind))))
 				}),
 			}
@@ -243,51 +244,48 @@ func NewServeCommand() *cobra.Command {
 	return cmd
 }
 
+// assembleFinalRouter adds the operational endpoints to the API's router and
+// returns the whole thing as the handler the server serves. One router answers
+// both: an /_ path is answered here and never falls through to the API, where a
+// leading segment is read as a ledger name.
 func assembleFinalRouter(
 	exportPProf bool,
 	meterProvider *metric.MeterProvider,
 	exporter *metrics.InMemoryExporter,
 	healthController *health.HealthController,
 	logger logging.Logger,
-	handler http.Handler,
-) *chi.Mux {
-	wrappedRouter := chi.NewRouter()
-	wrappedRouter.Use(func(handler http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
-			r = r.WithContext(logging.ContextWithLogger(r.Context(), logger))
+	app *zip.App,
+) http.Handler {
+	base := api.ServiceMiddleware(logger)
 
-			handler.ServeHTTP(w, r)
+	ops := app.Group("/_")
+	if exporter != nil {
+		ops.All("/metrics", base.Adapt(metrics.NewInMemoryExporterHandler(
+			meterProvider,
+			exporter,
+		).ServeHTTP))
+	}
+	if exportPProf {
+		ops.All("/debug/pprof/*", base.Adapt(http.StripPrefix(
+			"/_",
+			http.HandlerFunc(pprof.Index),
+		).ServeHTTP))
+	}
+	ops.All("/healthcheck", base.Adapt(healthController.Check))
+	ops.Get("/info", base.Adapt(func(w http.ResponseWriter, r *http.Request) {
+		apilib.RawOk(w, struct {
+			Server  string `json:"server"`
+			Version string `json:"version"`
+		}{
+			Server:  "ledger",
+			Version: Version,
 		})
-	})
-	wrappedRouter.Route("/_/", func(r chi.Router) {
-		if exporter != nil {
-			r.Handle("/metrics", metrics.NewInMemoryExporterHandler(
-				meterProvider,
-				exporter,
-			))
-		}
-		if exportPProf {
-			r.Handle("/debug/pprof/*", http.StripPrefix(
-				"/_",
-				http.HandlerFunc(pprof.Index),
-			))
-		}
-		r.Handle("/healthcheck", http.HandlerFunc(healthController.Check))
-		r.Get("/info", func(w http.ResponseWriter, r *http.Request) {
-			apilib.RawOk(w, struct {
-				Server  string `json:"server"`
-				Version string `json:"version"`
-			}{
-				Server:  "ledger",
-				Version: Version,
-			})
-		})
-	})
-	wrappedRouter.Get("/_healthcheck", healthController.Check)
-	wrappedRouter.Mount("/", handler)
+	}))
+	ops.All("/*", base.Adapt(http.NotFound))
 
-	return wrappedRouter
+	app.Get("/_healthcheck", base.Adapt(healthController.Check))
+
+	return common.Handler(app)
 }
 
 func ballastModule(sizeInBytes uint) fx.Option {

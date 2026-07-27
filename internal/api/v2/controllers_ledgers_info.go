@@ -3,8 +3,6 @@ package v2
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/migrations"
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
@@ -25,7 +23,7 @@ func getLedgerInfo(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	res := Info{
-		Name:    chi.URLParam(r, "ledger"),
+		Name:    common.URLParam(r, "ledger"),
 		Storage: StorageInfo{},
 	}
 	res.Storage.Migrations, err = ledger.GetMigrationsInfo(r.Context())

@@ -3,8 +3,6 @@ package v2
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
 
@@ -15,7 +13,7 @@ import (
 func updateLedgerMetadata(systemController systemcontroller.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		common.WithBody(w, r, func(m metadata.Metadata) {
-			if err := systemController.UpdateLedgerMetadata(r.Context(), chi.URLParam(r, "ledger"), m); err != nil {
+			if err := systemController.UpdateLedgerMetadata(r.Context(), common.URLParam(r, "ledger"), m); err != nil {
 				common.HandleCommonWriteErrors(w, r, err)
 				return
 			}

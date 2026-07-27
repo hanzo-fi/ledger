@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/query"
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
@@ -17,7 +15,7 @@ import (
 func readAccount(w http.ResponseWriter, r *http.Request) {
 	l := common.LedgerFromContext(r.Context())
 
-	param, err := url.PathUnescape(chi.URLParam(r, "address"))
+	param, err := url.PathUnescape(common.URLParam(r, "address"))
 	if err != nil {
 		api.BadRequestWithDetails(w, common.ErrValidation, err, err.Error())
 		return

@@ -4,11 +4,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"go.opentelemetry.io/otel/trace"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
+	"go.opentelemetry.io/otel/trace"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/api/common"
@@ -22,7 +20,7 @@ func autoCreateMiddleware(backend system.Controller, tracer trace.Tracer) func(h
 			ctx, span := tracer.Start(r.Context(), "AutomaticLedgerCreate")
 			defer span.End()
 
-			ledgerName := chi.URLParam(r, "ledger")
+			ledgerName := common.URLParam(r, "ledger")
 			if _, err := backend.GetLedger(ctx, ledgerName); err != nil {
 				if !postgres.IsNotFoundError(err) {
 					common.InternalServerError(w, r, err)

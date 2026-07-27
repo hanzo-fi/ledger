@@ -5,11 +5,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	_ "github.com/pkg/errors"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
+	_ "github.com/pkg/errors"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/api/common"
@@ -24,7 +22,7 @@ func runQuery(paginationConfig storage.PaginationConfig) http.HandlerFunc {
 			l := common.LedgerFromContext(r.Context())
 
 			schemaVersion := r.URL.Query().Get("schemaVersion")
-			queryId := chi.URLParam(r, "id")
+			queryId := common.URLParam(r, "id")
 
 			resource, cursor, err := l.RunQuery(r.Context(), schemaVersion, queryId, payload, paginationConfig)
 			if err != nil {

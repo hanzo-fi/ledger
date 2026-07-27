@@ -5,8 +5,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
@@ -24,7 +22,7 @@ func insertSchema(w http.ResponseWriter, r *http.Request) {
 	l := common.LedgerFromContext(r.Context())
 	_, _, idempotencyHit, err := l.InsertSchema(r.Context(), getCommandParameters(r, ledgercontroller.InsertSchema{
 		Data:    data,
-		Version: chi.URLParam(r, "version"),
+		Version: common.URLParam(r, "version"),
 	}))
 	if err != nil {
 		switch {
