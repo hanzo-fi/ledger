@@ -2,8 +2,9 @@ package ledger
 
 import (
 	"context"
-	"encoding/json"
+	"errors"
 	"fmt"
+	"maps"
 	"regexp"
 	"strings"
 
@@ -11,12 +12,12 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	. "github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/tracing"
 	"github.com/hanzo-fi/ledger/pkg/features"
 )
@@ -68,22 +69,25 @@ func (store *Store) UpdateAccountsMetadata(ctx context.Context, m map[string]met
 			type affectedAccount struct {
 				Address   string            `bun:"address"`
 				UpdatedAt *time.Time        `bun:"updated_at"`
-				Metadata  metadata.Metadata `bun:"metadata,type:jsonb"`
+				Metadata  metadata.Metadata `bun:"metadata"`
 			}
 			affected := make([]affectedAccount, 0, len(accounts))
 
+			merged := store.dialect.Merge("accounts.metadata", "excluded.metadata")
 			_, err := store.db.NewInsert().
 				Model(&accounts).
 				ModelTableExpr(store.GetPrefixedRelationName("accounts")).
 				On("conflict (ledger, address) do update").
-				Set("metadata = accounts.metadata || excluded.metadata").
+				Set("metadata = "+merged).
 				Set("updated_at = excluded.updated_at").
 				Set("first_usage = case when excluded.first_usage < accounts.first_usage then excluded.first_usage else accounts.first_usage end").
-				Where("not accounts.metadata @> excluded.metadata").
+				// The merge changes nothing when the new metadata is already
+				// held, which is when the trigger did not fire either.
+				Where(merged+" <> "+store.dialect.Canonical("accounts.metadata")).
 				Returning("address, updated_at, metadata").
 				Exec(ctx, &affected)
 			if err != nil {
-				return postgres.ResolveError(err)
+				return store.dialect.ResolveError(err)
 			}
 
 			// Every inserted or updated account would have fired the retired
@@ -117,19 +121,20 @@ func (store *Store) DeleteAccountMetadata(ctx context.Context, account, key stri
 		tracing.NoResult(func(ctx context.Context) error {
 			type affectedAccount struct {
 				UpdatedAt *time.Time        `bun:"updated_at"`
-				Metadata  metadata.Metadata `bun:"metadata,type:jsonb"`
+				Metadata  metadata.Metadata `bun:"metadata"`
 			}
 			affected := make([]affectedAccount, 0, 1)
 
+			remove := store.dialect.Remove("metadata", key)
 			_, err := store.db.NewUpdate().
 				ModelTableExpr(store.GetPrefixedRelationName("accounts")).
-				Set("metadata = metadata - ?", key).
+				Set("metadata = "+remove.SQL, remove.Args...).
 				Where("address = ?", account).
 				Where("ledger = ?", store.ledger.Name).
 				Returning("updated_at, metadata").
 				Exec(ctx, &affected)
 			if err != nil {
-				return postgres.ResolveError(err)
+				return store.dialect.ResolveError(err)
 			}
 
 			// This update does not touch updated_at, so the retired
@@ -166,10 +171,6 @@ func (store *Store) appendAccountMetadataHistory(ctx context.Context, address st
 	if m == nil {
 		m = metadata.Metadata{}
 	}
-	data, err := json.Marshal(m)
-	if err != nil {
-		return err
-	}
 	// A zero date maps to NULL, matching the `nullzero` date columns the triggers
 	// copied from (new.insertion_date / new.updated_at) — the PIT reads filter on
 	// `date <= ?`, so NULL must stay NULL.
@@ -178,12 +179,12 @@ func (store *Store) appendAccountMetadataHistory(ctx context.Context, address st
 		date = at
 	}
 	table := store.GetPrefixedRelationName("accounts_metadata")
-	_, err = store.db.NewRaw(
+	_, err := store.db.NewRaw(
 		"insert into "+table+" (ledger, accounts_address, revision, date, metadata) "+
-			"values (?, ?, coalesce((select max(revision) + 1 from "+table+" where accounts_address = ? and ledger = ?), 1), ?, ?::jsonb)",
-		store.ledger.Name, address, address, store.ledger.Name, date, string(data),
+			"values (?, ?, coalesce((select max(revision) + 1 from "+table+" where accounts_address = ? and ledger = ?), 1), ?, ?)",
+		store.ledger.Name, address, address, store.ledger.Name, date, m,
 	).Exec(ctx)
-	return postgres.ResolveError(err)
+	return store.dialect.ResolveError(err)
 }
 
 func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.AccountWithDefaultMetadata) error {
@@ -198,118 +199,143 @@ func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.Accou
 				return a.Account.Address
 			})))
 
-			type account struct {
+			type row struct {
 				*ledger.Account `bun:",extend"`
-				AddressArray    []string          `bun:"address_array,type:jsonb"`
-				DefaultMetadata metadata.Metadata `bun:"default_metadata,type:jsonb"`
-				Index           int               `bun:"batch_index,type:jsonb"`
+				Ledger          string   `bun:"ledger,type:varchar"`
+				AddressArray    []string `bun:"address_array,type:jsonb"`
 			}
 
-			batchIdx := 0
-			rows := Map(accounts, func(from ledger.AccountWithDefaultMetadata) account {
-				idx := batchIdx
-				batchIdx += 1
-				if from.Metadata == nil {
-					from.Metadata = metadata.Metadata{}
+			// The default metadata is what an account starts with; explicit
+			// metadata wins over it. Merging here keeps the statement one
+			// upsert on either engine.
+			at := store.transactionDate()
+			rows := Map(accounts, func(from ledger.AccountWithDefaultMetadata) row {
+				merged := metadata.Metadata{}
+				for k, v := range from.DefaultMetadata {
+					merged[k] = v
 				}
-				if from.DefaultMetadata == nil {
-					from.DefaultMetadata = metadata.Metadata{}
+				for k, v := range from.Metadata {
+					merged[k] = v
 				}
-				return account{
-					Account:         from.Account,
-					AddressArray:    strings.Split(from.Address, ":"),
-					DefaultMetadata: from.DefaultMetadata,
-					Index:           idx,
+				account := *from.Account
+				account.Metadata = merged
+				// The three instants a row carries default to the shared
+				// per-transaction date, which the retired triggers took from
+				// transaction_date(); the columns are not null.
+				if account.FirstUsage.IsZero() {
+					account.FirstUsage = at
+				}
+				if account.InsertionDate.IsZero() {
+					account.InsertionDate = at
+				}
+				if account.UpdatedAt.IsZero() {
+					account.UpdatedAt = at
+				}
+				return row{
+					Account:      &account,
+					Ledger:       store.ledger.Name,
+					AddressArray: strings.Split(from.Address, ":"),
 				}
 			})
 
-			// Reproduce the retired {insert,update}_account_metadata_history triggers in
-			// the same statement as the upsert. Postgres runs data-modifying CTEs exactly
-			// once even when unreferenced, so these append the history rows atomically:
-			// inserted accounts get revision 1 dated at insertion_date, updated accounts
-			// get max(revision)+1 dated at updated_at — byte-identical to the trigger rows.
-			// Emitted only when the feature is SYNC, matching when the triggers existed.
-			accountMetadataHistoryCTEs := ""
-			if store.ledger.HasFeature(features.FeatureAccountMetadataHistory, "SYNC") {
-				accountMetadataHistoryCTEs = `,
-					inserted_history AS (
-						INSERT INTO ?1.accounts_metadata (ledger, accounts_address, revision, date, metadata)
-						SELECT ?2, ir.address, 1, ir.insertion_date, ir.metadata
-						FROM inserted_rows ir
-					),
-					updated_history AS (
-						INSERT INTO ?1.accounts_metadata (ledger, accounts_address, revision, date, metadata)
-						SELECT ?2, ur.address,
-							COALESCE((
-								SELECT max(revision) + 1
-								FROM ?1.accounts_metadata am
-								WHERE am.accounts_address = ur.address AND am.ledger = ?2
-							), 1),
-							ur.updated_at, ur.metadata
-						FROM updated_rows ur
-					)`
-			}
-
-			var returnedRows []account
-			err := store.db.NewRaw(`
-				WITH
-					data_batch (address, metadata, first_usage, insertion_date, updated_at, address_array, default_metadata, batch_index)
-						AS (?0),
-					existing_accounts AS (
-						SELECT a.address
-						FROM ?1.accounts a
-						JOIN data_batch d
-							ON a.address = d.address
-							AND a.ledger = ?2
-					),
-					updated_rows AS (
-						-- If present: update
-						UPDATE ?1.accounts a
-						SET
-							metadata = a.metadata || d.metadata,
-							first_usage = LEAST(d.first_usage, a.first_usage),
-							updated_at = COALESCE(d.updated_at, ?3::timestamp)
-						FROM data_batch d
-						WHERE a.address = d.address and ledger = ?2 and (d.first_usage < a.first_usage or not a.metadata @> d.metadata)
-						RETURNING a.address, a.metadata, a.first_usage, a.updated_at, a.insertion_date, d.batch_index
-					),
-					inserted_rows AS (
-						-- If not present: insert
-						INSERT INTO ?1.accounts (address, metadata, first_usage, updated_at, insertion_date, ledger, address_array)
-						SELECT
-							d.address,
-							d.default_metadata || d.metadata,
-							COALESCE(d.first_usage, ?3::timestamp),
-							COALESCE(d.updated_at, ?3::timestamp),
-							COALESCE(d.insertion_date, ?3::timestamp),
-							?2,
-							d.address_array
-						FROM data_batch d
-						WHERE d.address NOT IN (SELECT address FROM existing_accounts)
-						RETURNING address, metadata, first_usage, updated_at, insertion_date,
-							(SELECT batch_index FROM data_batch WHERE address = ?1.accounts.address)
-					)`+accountMetadataHistoryCTEs+`
-				SELECT * FROM updated_rows
-				UNION ALL SELECT * FROM inserted_rows`,
-				store.db.NewValues(&rows),
-				bun.Ident(store.ledger.Bucket),
-				store.ledger.Name,
-				store.transactionDate(),
-			).Scan(ctx, &returnedRows)
+			// The metadata history the retired {insert,update}_account_metadata_history
+			// triggers kept is appended in Go, so it needs the rows as they stood
+			// before the upsert: a new account opens its history, and an existing one
+			// extends it only when the upsert actually moved it.
+			prior, err := store.accountsBefore(ctx, Map(rows, func(r row) string { return r.Address }))
 			if err != nil {
-				return fmt.Errorf("upserting accounts: %w", postgres.ResolveError(err))
+				return err
 			}
 
-			for _, row := range returnedRows {
-				rows[row.Index].Metadata = row.Metadata
-				rows[row.Index].FirstUsage = row.FirstUsage
-				rows[row.Index].InsertionDate = row.InsertionDate
-				rows[row.Index].UpdatedAt = row.UpdatedAt
+			merged := store.dialect.Merge("accounts.metadata", "excluded.metadata")
+			earlier := "excluded.first_usage < accounts.first_usage"
+			// Nothing observable changed when the merge is a no-op and the
+			// first usage did not move back, so updated_at holds still.
+			unchanged := "(" + merged + " = " + store.dialect.Canonical("accounts.metadata") + " and not (" + earlier + "))"
+
+			returned := make([]row, 0, len(rows))
+			err = store.db.NewInsert().
+				Model(&rows).
+				ModelTableExpr(store.GetPrefixedRelationName("accounts")).
+				On("conflict (ledger, address) do update").
+				Set("metadata = "+merged).
+				Set("first_usage = case when "+earlier+" then excluded.first_usage else accounts.first_usage end").
+				Set("updated_at = case when "+unchanged+" then accounts.updated_at else excluded.updated_at end").
+				Returning("address, metadata, first_usage, insertion_date, updated_at").
+				Scan(ctx, &returned)
+			if err != nil {
+				return fmt.Errorf("upserting accounts: %w", store.dialect.ResolveError(err))
 			}
 
-			span.SetAttributes(attribute.Int("upserted", len(returnedRows)))
+			stored := make(map[string]row, len(returned))
+			for _, r := range returned {
+				stored[r.Address] = r
+			}
+			for _, account := range accounts {
+				r, ok := stored[account.Address]
+				if !ok {
+					continue
+				}
+				account.Account.Metadata = r.Metadata
+				account.Account.FirstUsage = r.FirstUsage
+				account.Account.InsertionDate = r.InsertionDate
+				account.Account.UpdatedAt = r.UpdatedAt
+			}
+
+			for _, r := range returned {
+				before, existed := prior[r.Address]
+				switch {
+				case !existed:
+					// insert_account_metadata_history: revision 1, dated at insertion.
+					if err := store.appendAccountMetadataHistory(ctx, r.Address, r.InsertionDate, r.Metadata); err != nil {
+						return err
+					}
+				case moved(before, *r.Account):
+					// update_account_metadata_history: the next revision, dated at update.
+					if err := store.appendAccountMetadataHistory(ctx, r.Address, r.UpdatedAt, r.Metadata); err != nil {
+						return err
+					}
+				}
+			}
+
+			span.SetAttributes(attribute.Int("upserted", len(returned)))
 
 			return nil
 		}),
 	))
+}
+
+// accountsBefore reads the named accounts as they stand before an upsert, which
+// is what says whether the upsert went on to move them.
+func (store *Store) accountsBefore(ctx context.Context, addresses []string) (map[string]ledger.Account, error) {
+	before := make(map[string]ledger.Account, len(addresses))
+	if len(addresses) == 0 || !store.ledger.HasFeature(features.FeatureAccountMetadataHistory, "SYNC") {
+		return before, nil
+	}
+
+	standing := make([]ledger.Account, 0, len(addresses))
+	err := store.db.NewSelect().
+		Model(&standing).
+		ModelTableExpr(store.GetPrefixedRelationName("accounts")+" as account").
+		Column("address", "metadata", "first_usage").
+		Where("ledger = ?", store.ledger.Name).
+		Where("address in (?)", bun.In(addresses)).
+		Scan(ctx)
+	if err != nil && !errors.Is(store.dialect.ResolveError(err), dialect.ErrNotFound) {
+		return nil, fmt.Errorf("reading accounts: %w", store.dialect.ResolveError(err))
+	}
+	for _, account := range standing {
+		before[account.Address] = account
+	}
+
+	return before, nil
+}
+
+// moved reports whether an upsert changed an account. The stored metadata is the
+// merge of what was there with what arrived, and the stored first usage the
+// earlier of the two, so either differing from what stood before is exactly the
+// condition on which the retired update trigger fired.
+func moved(before, after ledger.Account) bool {
+	return !maps.Equal(before.Metadata, after.Metadata) ||
+		!before.FirstUsage.Equal(after.FirstUsage)
 }

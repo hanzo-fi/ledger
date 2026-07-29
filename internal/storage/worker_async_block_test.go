@@ -4,6 +4,7 @@ package storage
 
 import (
 	"fmt"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"math/big"
 	"testing"
 
@@ -36,13 +37,14 @@ func newAsyncBlockLedger(t docker.T) (*ledgerstore.Store, *bun.DB, ledger.Ledger
 	db, err := connect.OpenSQLDB(ctx, pgDatabase.ConnectionOptions(), debugHook)
 	require.NoError(t, err)
 
-	require.NoError(t, systemstore.New(db).Migrate(ctx))
+	require.NoError(t, systemstore.New(db, dialect.SQL{}).Migrate(ctx))
 
 	d := driver.New(
 		db,
-		ledgerstore.NewFactory(db),
+		dialect.SQL{},
+		ledgerstore.NewFactory(db, dialect.SQL{}),
 		bucket.NewDefaultFactory(),
-		systemstore.NewStoreFactory(),
+		systemstore.NewStoreFactory(dialect.SQL{}),
 	)
 
 	l, err := ledger.New("blocks", ledger.Configuration{
@@ -79,7 +81,7 @@ func TestAsyncBlockRunnerHash(t *testing.T) {
 		require.NoError(t, store.InsertLog(ctx, &log))
 	}
 
-	runner := NewAsyncBlockRunner(logging.Testing(), db, AsyncBlockRunnerConfig{MaxBlockSize: blockSize})
+	runner := NewAsyncBlockRunner(logging.Testing(), db, dialect.SQL{}, AsyncBlockRunnerConfig{MaxBlockSize: blockSize})
 	require.NoError(t, runner.processLedger(ctx, l))
 
 	// Read every block in chain order (previous asc == from_id asc).

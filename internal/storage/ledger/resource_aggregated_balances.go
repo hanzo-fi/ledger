@@ -1,6 +1,8 @@
 package ledger
 
 import (
+	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/uptrace/bun"
@@ -35,7 +37,7 @@ func (h aggregatedBalancesResourceRepositoryHandler) BuildDataset(query common.R
 			}
 
 			ret = ret.
-				ColumnExpr("first_value(post_commit_volumes) over (partition by (accounts_address, asset) order by seq desc) as volumes").
+				ColumnExpr("first_value(post_commit_volumes) over (partition by accounts_address, asset order by seq desc) as volumes").
 				Where("insertion_date <= ?", query.PIT)
 		} else {
 			if !h.store.ledger.HasFeature(features.FeatureMovesHistoryPostCommitEffectiveVolumes, "SYNC") {
@@ -43,7 +45,7 @@ func (h aggregatedBalancesResourceRepositoryHandler) BuildDataset(query common.R
 			}
 
 			ret = ret.
-				ColumnExpr("first_value(post_commit_effective_volumes) over (partition by (accounts_address, asset) order by effective_date desc, seq desc) as volumes").
+				ColumnExpr("first_value(post_commit_effective_volumes) over (partition by accounts_address, asset order by effective_date desc, seq desc) as volumes").
 				Where("effective_date <= ?", query.PIT)
 		}
 
@@ -89,7 +91,7 @@ func (h aggregatedBalancesResourceRepositoryHandler) BuildDataset(query common.R
 		ret := h.store.newScopedSelect().
 			ModelTableExpr(h.store.GetPrefixedRelationName("accounts_volumes")).
 			Column("asset", "accounts_address").
-			ColumnExpr("(input, output)::" + h.store.GetPrefixedRelationName("volumes") + " as volumes")
+			ColumnExpr(h.store.dialect.Pair(h.store.ledger.Bucket, "input", "output") + " as volumes")
 
 		if query.UseFilter("metadata") || needAddressSegments {
 			subQuery := h.store.newScopedSelect().
@@ -115,7 +117,7 @@ func (h aggregatedBalancesResourceRepositoryHandler) BuildDataset(query common.R
 	}
 }
 
-func (h aggregatedBalancesResourceRepositoryHandler) ResolveFilter(_ common.ResourceQuery[ledger.GetAggregatedVolumesOptions], operator, property string, value any) (string, []any, error) {
+func (h aggregatedBalancesResourceRepositoryHandler) ResolveFilter(_ context.Context, _ common.ResourceQuery[ledger.GetAggregatedVolumesOptions], operator, property string, value any) (string, []any, error) {
 	switch {
 	case property == "address":
 		switch operator {
@@ -131,13 +133,13 @@ func (h aggregatedBalancesResourceRepositoryHandler) ResolveFilter(_ common.Reso
 		}
 	case common.MetadataRegex.Match([]byte(property)) || property == "metadata":
 		if property == "metadata" {
-			return "metadata -> ? is not null", []any{value}, nil
+			has := h.store.dialect.Has("metadata", value.(string))
+			return has.SQL, has.Args, nil
 		} else {
 			match := common.MetadataRegex.FindAllStringSubmatch(property, 3)
 
-			return "metadata @> ?", []any{map[string]any{
-				match[0][1]: value,
-			}}, nil
+			holds := h.store.dialect.Holds("metadata", map[string]any{match[0][1]: value})
+			return holds.SQL, holds.Args, nil
 		}
 	default:
 		return "", nil, common.NewErrInvalidQuery("unknown key '%s' when building query", property)
@@ -148,19 +150,46 @@ func (h aggregatedBalancesResourceRepositoryHandler) Expand(_ common.ResourceQue
 	return nil, nil, errors.New("no expand available for aggregated balances")
 }
 
+// Project yields the rows to be totalled: an asset and the pair standing
+// against it. The total is not asked of the engine - see totalVolumes.
 func (h aggregatedBalancesResourceRepositoryHandler) Project(
 	_ common.ResourceQuery[ledger.GetAggregatedVolumesOptions],
 	selectQuery *bun.SelectQuery,
 ) (*bun.SelectQuery, error) {
-	sumVolumesForAsset := h.store.db.NewSelect().
-		TableExpr("(?) values", selectQuery).
-		Group("asset").
-		Column("asset").
-		ColumnExpr("json_build_object('input', sum(((volumes).inputs)::numeric), 'output', sum(((volumes).outputs)::numeric)) as volumes")
+	return selectQuery.Column("asset", "volumes"), nil
+}
 
-	return h.store.db.NewSelect().
-		TableExpr("(?) values", sumVolumesForAsset).
-		ColumnExpr("public.aggregate_objects(json_build_object(asset, volumes)::jsonb) as aggregated"), nil
+// totalVolumes adds the rows up, one pair per asset.
+//
+// A ledger's volumes are arbitrary precision integers and no engine adds those:
+// one holds 64 bit integers and saturates, the other holds a numeric. So the
+// addition is Go's, over big.Int, and a total reads back the same whichever
+// engine the ledger is stored on. A row with no pair adds nothing, as an
+// aggregate over a null does.
+func totalVolumes(rows *sql.Rows) (ledger.AggregatedVolumes, error) {
+	total := ledger.VolumesByAssets{}
+	for rows.Next() {
+		var (
+			asset   string
+			volumes sql.Null[ledger.Volumes]
+		)
+		if err := rows.Scan(&asset, &volumes); err != nil {
+			return ledger.AggregatedVolumes{}, err
+		}
+		if !volumes.Valid {
+			continue
+		}
+
+		sum, held := total[asset]
+		if !held {
+			sum = ledger.NewEmptyVolumes()
+		}
+		sum.Input.Add(sum.Input, volumes.V.Input)
+		sum.Output.Add(sum.Output, volumes.V.Output)
+		total[asset] = sum
+	}
+
+	return ledger.AggregatedVolumes{Aggregated: total}, nil
 }
 
 var _ common.RepositoryHandler[ledger.GetAggregatedVolumesOptions] = aggregatedBalancesResourceRepositoryHandler{}

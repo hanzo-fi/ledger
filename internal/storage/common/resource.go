@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"slices"
@@ -108,7 +109,11 @@ func (ctx RepositoryHandlerBuildContext[Opts]) UseFilter(v string, matchers ...f
 type RepositoryHandler[Opts any] interface {
 	Schema() queries.EntitySchema
 	BuildDataset(query RepositoryHandlerBuildContext[Opts]) (*bun.SelectQuery, error)
-	ResolveFilter(query ResourceQuery[Opts], operator, property string, value any) (string, []any, error)
+	// ResolveFilter states one leaf of a filter as a predicate the statement
+	// carries. It takes a context because a filter the engine cannot state
+	// exactly is answered by a read and a fold in Go, and the predicate is then
+	// what that fold selected.
+	ResolveFilter(ctx context.Context, query ResourceQuery[Opts], operator, property string, value any) (string, []any, error)
 	Project(query ResourceQuery[Opts], selectQuery *bun.SelectQuery) (*bun.SelectQuery, error)
 	Expand(query ResourceQuery[Opts], property string) (*bun.SelectQuery, *JoinCondition, error)
 }
@@ -155,7 +160,7 @@ func (r *ResourceRepository[ResourceType, OptionsType]) validateFilters(builder 
 	return ret, nil
 }
 
-func (r *ResourceRepository[ResourceType, OptionsType]) buildFilteredDataset(q ResourceQuery[OptionsType]) (*bun.SelectQuery, error) {
+func (r *ResourceRepository[ResourceType, OptionsType]) buildFilteredDataset(ctx context.Context, q ResourceQuery[OptionsType]) (*bun.SelectQuery, error) {
 
 	filters, err := r.validateFilters(q.Builder)
 	if err != nil {
@@ -176,7 +181,7 @@ func (r *ResourceRepository[ResourceType, OptionsType]) buildFilteredDataset(q R
 	if q.Builder != nil {
 		// Convert filters to where clause
 		where, args, err := q.Builder.Build(query.ContextFn(func(key, operator string, value any) (string, []any, error) {
-			return r.resourceHandler.ResolveFilter(q, operator, key, value)
+			return r.resourceHandler.ResolveFilter(ctx, q, operator, key, value)
 		}))
 		if err != nil {
 			return nil, err
@@ -228,7 +233,7 @@ func (r *ResourceRepository[ResourceType, OptionsType]) expand(dataset *bun.Sele
 
 func (r *ResourceRepository[ResourceType, OptionsType]) GetOne(ctx context.Context, query ResourceQuery[OptionsType]) (*ResourceType, error) {
 
-	finalQuery, err := r.buildFilteredDataset(query)
+	finalQuery, err := r.buildFilteredDataset(ctx, query)
 	if err != nil {
 		return nil, err
 	}
@@ -254,7 +259,7 @@ func (r *ResourceRepository[ResourceType, OptionsType]) GetOne(ctx context.Conte
 
 func (r *ResourceRepository[ResourceType, OptionsType]) Count(ctx context.Context, query ResourceQuery[OptionsType]) (int, error) {
 
-	finalQuery, err := r.buildFilteredDataset(query)
+	finalQuery, err := r.buildFilteredDataset(ctx, query)
 	if err != nil {
 		return 0, err
 	}
@@ -268,6 +273,65 @@ func NewResourceRepository[ResourceType, OptionsType any](
 ) *ResourceRepository[ResourceType, OptionsType] {
 	return &ResourceRepository[ResourceType, OptionsType]{
 		resourceHandler: handler,
+	}
+}
+
+// FoldRepository answers with a reduction of the rows a read matched rather
+// than with one of them.
+//
+// The reduction runs in Go. That is what a read does when no engine can state
+// its answer: a statement carries the filtering, which every engine does the
+// same, and the fold carries the arithmetic, which they do not.
+type FoldRepository[ResourceType, OptionsType any] struct {
+	*ResourceRepository[ResourceType, OptionsType]
+	fold func(*sql.Rows) (ResourceType, error)
+}
+
+func (r *FoldRepository[ResourceType, OptionsType]) GetOne(
+	ctx context.Context,
+	query ResourceQuery[OptionsType],
+) (*ResourceType, error) {
+
+	dataset, err := r.buildFilteredDataset(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	// A folded read answers with one value rather than with rows, so there is
+	// nothing to expand onto. The handler says which properties it would have
+	// expanded, and says so for none of them.
+	for _, expand := range query.Expand {
+		if _, _, err := r.resourceHandler.Expand(query, expand); err != nil {
+			return nil, err
+		}
+	}
+
+	rows, err := dataset.Rows(ctx)
+	if err != nil {
+		return nil, postgres.ResolveError(err)
+	}
+	defer func() {
+		_ = rows.Close()
+	}()
+
+	folded, err := r.fold(rows)
+	if err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, postgres.ResolveError(err)
+	}
+
+	return &folded, nil
+}
+
+func NewFoldRepository[ResourceType, OptionsType any](
+	handler RepositoryHandler[OptionsType],
+	fold func(*sql.Rows) (ResourceType, error),
+) *FoldRepository[ResourceType, OptionsType] {
+	return &FoldRepository[ResourceType, OptionsType]{
+		ResourceRepository: NewResourceRepository[ResourceType, OptionsType](handler),
+		fold:               fold,
 	}
 }
 
@@ -344,7 +408,7 @@ func (r *PaginatedResourceRepository[ResourceType, OptionsType]) Paginate(
 		panic("should not happen")
 	}
 
-	finalQuery, err := r.buildFilteredDataset(resourceQuery)
+	finalQuery, err := r.buildFilteredDataset(ctx, resourceQuery)
 	if err != nil {
 		return nil, fmt.Errorf("building filtered dataset: %w", err)
 	}

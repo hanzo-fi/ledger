@@ -13,13 +13,12 @@ import (
 	"github.com/hanzo-fi/go-libs/v5/pkg/observe/metrics"
 	"github.com/hanzo-fi/go-libs/v5/pkg/observe/traces"
 	"github.com/hanzo-fi/go-libs/v5/pkg/service"
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
 
 	"github.com/hanzo-fi/ledger/internal/replication"
 	"github.com/hanzo-fi/ledger/internal/replication/drivers"
 	"github.com/hanzo-fi/ledger/internal/replication/drivers/alldrivers"
 	"github.com/hanzo-fi/ledger/internal/storage"
-	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/worker"
 )
 
@@ -86,23 +85,13 @@ func addWorkerFlags(cmd *cobra.Command) {
 }
 
 // NewWorkerCommand constructs the "worker" Cobra command which initializes and runs the worker service using loaded configuration and composed FX modules.
-// The command registers worker-specific flags via addWorkerFlags and common service, bunconnect, and OTLP flags, and exposes the --worker-grpc-address flag (default ":8081").
+// The command registers worker-specific flags via addWorkerFlags and common service, storage, and OTLP flags, and exposes the --worker-grpc-address flag (default ":8081").
 // When executed it loads configuration and starts the service with the configured modules and a gRPC server.
 func NewWorkerCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:          "worker",
 		SilenceUsage: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			connectionOptions, err := connect.ConnectionOptionsFromFlags(cmd.Flags(), cmd.Context())
-			if err != nil {
-				return err
-			}
-
-			storageDriver, sqliteDSN, err := bunconnect.FromFlags(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			cfg, err := LoadConfig[WorkerCommandConfiguration](cmd)
 			if err != nil {
 				return fmt.Errorf("loading config: %w", err)
@@ -115,7 +104,7 @@ func NewWorkerCommand() *cobra.Command {
 			return service.New(cmd.OutOrStdout(),
 				fx.NopLogger,
 				otlpModule(cmd, cfg.commonConfig),
-				bunconnect.Module(storageDriver, *connectionOptions, sqliteDSN, service.IsDebug(cmd)),
+				dialect.NewFXModule(dialect.ConfigFromFlags(cmd.Flags()), service.IsDebug(cmd)),
 				storage.NewFXModule(storage.ModuleConfig{}),
 				drivers.NewFXModule(),
 				fx.Invoke(alldrivers.Register),
@@ -134,8 +123,7 @@ func NewWorkerCommand() *cobra.Command {
 
 	addWorkerFlags(cmd)
 	service.AddFlags(cmd.Flags())
-	connect.AddFlags(cmd.Flags())
-	bunconnect.AddFlags(cmd.Flags())
+	dialect.AddFlags(cmd.Flags())
 	metrics.AddFlags(cmd.Flags())
 	traces.AddFlags(cmd.Flags())
 
