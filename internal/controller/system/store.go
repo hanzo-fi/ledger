@@ -8,6 +8,7 @@ import (
 	ledger "github.com/hanzo-fi/ledger/internal"
 	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
 	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
@@ -24,4 +25,7 @@ type Driver interface {
 	OpenLedger(context.Context, string) (ledgercontroller.Store, *ledger.Ledger, error)
 	CreateLedger(context.Context, *ledger.Ledger) error
 	GetSystemStore() Store
+
+	// Dialect is the engine the whole store speaks to.
+	Dialect() dialect.Dialect
 }

@@ -25,6 +25,7 @@ import (
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 )
 
 func TestLedgersCreate(t *testing.T) {
@@ -317,7 +318,7 @@ func newStore(t docker.T) *DefaultStore {
 	db, err := connect.OpenSQLDB(ctx, pgDatabase.ConnectionOptions(), hooks...)
 	require.NoError(t, err)
 
-	ret := New(db)
+	ret := New(db, dialect.Postgres{})
 	require.NoError(t, ret.Migrate(ctx))
 
 	return ret

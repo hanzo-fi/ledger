@@ -23,6 +23,7 @@ import (
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 	"github.com/hanzo-fi/ledger/pkg/features"
 )
@@ -36,6 +37,7 @@ type AsyncBlockRunner struct {
 	stopChannel chan chan struct{}
 	logger      logging.Logger
 	db          *bun.DB
+	dialect     dialect.Dialect
 	cfg         AsyncBlockRunnerConfig
 	tracer      trace.Tracer
 }
@@ -90,7 +92,7 @@ func (r *AsyncBlockRunner) run(ctx context.Context) error {
 			Builder: query.Match(fmt.Sprintf("features[%s]", features.FeatureHashLogs), "ASYNC"),
 		},
 	}
-	systemStore := systemstore.New(r.db)
+	systemStore := systemstore.New(r.db, r.dialect)
 	return storagecommon.Iterate(
 		ctx,
 		initialQuery,
@@ -175,7 +177,7 @@ func (r *AsyncBlockRunner) readPreviousBlock(ctx context.Context, tx bun.IDB, l 
 // block and inserts one logs_blocks row, returning the new block; it returns the
 // zero block when no logs remain. The hash is byte-identical to the retired
 // create_block plpgsql: sha256 over `\x`+hex(previous.hash) followed by the
-// per-log parts — Postgres renders `coalesce(previous.hash,'') || string_agg(...)`
+// per-log parts — Postgres renders `coalesce(previous.hash,”) || string_agg(...)`
 // as exactly that text, which pgcrypto's digest() hashed.
 func (r *AsyncBlockRunner) createBlock(ctx context.Context, tx bun.IDB, l ledger.Ledger, previous logBlock) (logBlock, error) {
 	rows := make([]blockLogRow, 0, r.cfg.MaxBlockSize)
@@ -218,11 +220,12 @@ func (r *AsyncBlockRunner) createBlock(ctx context.Context, tx bun.IDB, l ledger
 	return block, nil
 }
 
-func NewAsyncBlockRunner(logger logging.Logger, db *bun.DB, cfg AsyncBlockRunnerConfig, opts ...Option) *AsyncBlockRunner {
+func NewAsyncBlockRunner(logger logging.Logger, db *bun.DB, d dialect.Dialect, cfg AsyncBlockRunnerConfig, opts ...Option) *AsyncBlockRunner {
 	ret := &AsyncBlockRunner{
 		stopChannel: make(chan chan struct{}),
 		logger:      logger,
 		db:          db,
+		dialect:     d,
 		cfg:         cfg,
 	}
 
@@ -247,8 +250,8 @@ var defaultOptions = []Option{
 
 func NewAsyncBlockRunnerModule(cfg AsyncBlockRunnerConfig) fx.Option {
 	return fx.Options(
-		fx.Provide(func(logger logging.Logger, db *bun.DB) (*AsyncBlockRunner, error) {
-			return NewAsyncBlockRunner(logger, db, cfg), nil
+		fx.Provide(func(logger logging.Logger, db *bun.DB, d dialect.Dialect) (*AsyncBlockRunner, error) {
+			return NewAsyncBlockRunner(logger, db, d, cfg), nil
 		}),
 		fx.Invoke(func(lc fx.Lifecycle, asyncBlockRunner *AsyncBlockRunner) {
 			lc.Append(fx.Hook{

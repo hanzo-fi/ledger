@@ -101,14 +101,14 @@ func (h accountsResourceHandler) ResolveFilter(opts common.ResourceQuery[any], o
 			ColumnExpr(fmt.Sprintf("balance %s ?", common.ConvertOperatorToSQL(operator)), value).
 			String(), nil, nil
 	case property == "metadata":
-		return "metadata -> ? is not null", []any{value}, nil
+		has := h.store.dialect.Has("metadata", value.(string))
+		return has.SQL, has.Args, nil
 
 	case common.MetadataRegex.Match([]byte(property)):
 		match := common.MetadataRegex.FindAllStringSubmatch(property, 3)
 
-		return "metadata @> ?", []any{map[string]any{
-			match[0][1]: value,
-		}}, nil
+		holds := h.store.dialect.Holds("metadata", map[string]any{match[0][1]: value})
+		return holds.SQL, holds.Args, nil
 	default:
 		return "", nil, common.NewErrInvalidQuery("invalid filter property %s", property)
 	}
@@ -119,6 +119,7 @@ func (h accountsResourceHandler) Project(_ common.ResourceQuery[any], selectQuer
 }
 
 func (h accountsResourceHandler) Expand(opts common.ResourceQuery[any], property string) (*bun.SelectQuery, *common.JoinCondition, error) {
+	d := h.store.dialect
 	switch property {
 	case "volumes":
 		if !h.store.ledger.HasFeature(features.FeatureMovesHistory, "ON") {
@@ -139,25 +140,28 @@ func (h accountsResourceHandler) Expand(opts common.ResourceQuery[any], property
 			Column("accounts_address", "asset")
 		if property == "volumes" {
 			selectRowsQuery = selectRowsQuery.
-				ColumnExpr("first_value(post_commit_volumes) over (partition by (accounts_address, asset) order by seq desc) as volumes").
+				ColumnExpr("first_value(post_commit_volumes) over (partition by accounts_address, asset order by seq desc) as volumes").
 				Where("insertion_date <= ?", opts.PIT)
 		} else {
 			selectRowsQuery = selectRowsQuery.
-				ColumnExpr("first_value(post_commit_effective_volumes) over (partition by (accounts_address, asset) order by effective_date desc, seq desc) as volumes").
+				ColumnExpr("first_value(post_commit_effective_volumes) over (partition by accounts_address, asset order by effective_date desc, seq desc) as volumes").
 				Where("effective_date <= ?", opts.PIT)
 		}
 	} else {
 		selectRowsQuery = selectRowsQuery.
 			ModelTableExpr(h.store.GetPrefixedRelationName("accounts_volumes")).
 			Column("asset", "accounts_address").
-			ColumnExpr("(input, output)::" + h.store.GetPrefixedRelationName("volumes") + " as volumes")
+			ColumnExpr(d.Pair(h.store.ledger.Bucket, "input", "output") + " as volumes")
 	}
 
 	return h.store.db.NewSelect().
 			With("rows", selectRowsQuery).
 			ModelTableExpr("rows").
 			Column("accounts_address").
-			ColumnExpr("public.aggregate_objects(json_build_object(asset, json_build_object('input', (volumes).inputs, 'output', (volumes).outputs))::jsonb) as " + strcase.SnakeCase(property)).
+			ColumnExpr(d.Gather("asset", d.Object(
+				"'input'", d.Volumes("volumes", "inputs"),
+				"'output'", d.Volumes("volumes", "outputs"),
+			)) + " as " + strcase.SnakeCase(property)).
 			Group("accounts_address"), &common.JoinCondition{
 			Left:  "address",
 			Right: "accounts_address",

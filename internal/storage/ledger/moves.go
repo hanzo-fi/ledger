@@ -2,12 +2,15 @@ package ledger
 
 import (
 	"context"
-	"database/sql"
+	"errors"
+	"fmt"
 	"math/big"
 
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
+	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
+	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/tracing"
 	"github.com/hanzo-fi/ledger/pkg/features"
 )
@@ -28,96 +31,158 @@ func (store *Store) InsertMoves(ctx context.Context, moves ...*ledger.Move) erro
 					Returning("post_commit_volumes, post_commit_effective_volumes").
 					Exec(ctx)
 
-				return postgres.ResolveError(err)
+				return store.dialect.ResolveError(err)
 			}
 
-			// FeatureMovesHistoryPostCommitEffectiveVolumes=SYNC: post_commit_effective_volumes
-			// is computed here in Go — the port of the retired set_effective_volumes (before
-			// insert) / update_effective_volumes (after insert) triggers. Moves are chained one
-			// row at a time, in slice (seq) order, so each row sees the rows inserted before it
-			// exactly as the per-row triggers did. Amounts are exact integers, so the Go add is
-			// byte-identical to the plpgsql numeric arithmetic.
-			for _, move := range moves {
-				if err := store.insertMoveWithEffectiveVolumes(ctx, move); err != nil {
-					return err
-				}
-			}
-			return nil
+			return store.insertMovesDeriving(ctx, moves...)
 		}),
 	)
 
 	return err
 }
 
-// insertMoveWithEffectiveVolumes inserts a single move with its
-// post_commit_effective_volumes and back-dates every later-effective move for the
-// same account+asset, replacing the set_effective_volumes/update_effective_volumes
-// triggers. The delta is +amount on outputs when is_source, else +amount on inputs.
-func (store *Store) insertMoveWithEffectiveVolumes(ctx context.Context, move *ledger.Move) error {
-	moves := store.GetPrefixedRelationName("moves")
+// move is a moves row as this engine writes it: every column stated, including
+// the two the Postgres triggers would have filled.
+type move struct {
+	Ledger                     string           `bun:"ledger"`
+	TransactionID              uint64           `bun:"transactions_id"`
+	IsSource                   bool             `bun:"is_source"`
+	Account                    string           `bun:"accounts_address"`
+	Asset                      string           `bun:"asset"`
+	Amount                     *paginate.BigInt `bun:"amount"`
+	InsertionDate              time.Time        `bun:"insertion_date,nullzero"`
+	EffectiveDate              time.Time        `bun:"effective_date,nullzero"`
+	PostCommitVolumes          *ledger.Volumes  `bun:"post_commit_volumes"`
+	PostCommitEffectiveVolumes *ledger.Volumes  `bun:"post_commit_effective_volumes"`
+}
 
-	amount := (*big.Int)(move.Amount)
-	inputDelta, outputDelta := big.NewInt(0), big.NewInt(0)
-	if move.IsSource {
-		outputDelta = amount
-	} else {
-		inputDelta = amount
+// insertMovesDeriving carries out what the Postgres triggers do, in Go and at
+// full precision: a move takes the effective volumes of the last move standing
+// before it on the same account and asset, and every move that follows it in
+// effective time shifts by the same delta.
+//
+// The engine that needs this admits one writer at a time, so reading the
+// preceding move and inserting after it cannot interleave with another writer.
+func (store *Store) insertMovesDeriving(ctx context.Context, moves ...*ledger.Move) error {
+	for _, m := range moves {
+		input, output := delta(m)
+
+		standing, err := store.effectiveVolumesBefore(ctx, m)
+		if err != nil {
+			return err
+		}
+		m.PostCommitEffectiveVolumes = &ledger.Volumes{
+			Input:  new(big.Int).Add(standing.Input, input),
+			Output: new(big.Int).Add(standing.Output, output),
+		}
+
+		if _, err := store.db.NewInsert().
+			Model(&move{
+				Ledger:                     store.ledger.Name,
+				TransactionID:              m.TransactionID,
+				IsSource:                   m.IsSource,
+				Account:                    m.Account,
+				Asset:                      m.Asset,
+				Amount:                     m.Amount,
+				InsertionDate:              m.InsertionDate,
+				EffectiveDate:              m.EffectiveDate,
+				PostCommitVolumes:          m.PostCommitVolumes,
+				PostCommitEffectiveVolumes: m.PostCommitEffectiveVolumes,
+			}).
+			ModelTableExpr(store.GetPrefixedRelationName("moves")).
+			Exec(ctx); err != nil {
+			return store.dialect.ResolveError(err)
+		}
+
+		if err := store.shiftEffectiveVolumes(ctx, m, input, output); err != nil {
+			return err
+		}
 	}
 
-	// set_effective_volumes: the running effective volume is the most recent move
-	// (effective_date desc, seq desc) at or before this one. The row is not yet
-	// inserted, so every candidate has seq < this move's seq, which collapses the
-	// trigger's `effective_date < d or (effective_date = d and seq < new.seq)` to
-	// `effective_date <= d`. Missing (first move for the account/asset) means a zero base.
-	prior := ledger.NewEmptyVolumes()
-	var raw sql.NullString
+	return nil
+}
+
+// effectiveVolumesBefore reads the effective volumes standing immediately
+// before a move. A move opening an account and asset stands on zero.
+func (store *Store) effectiveVolumesBefore(ctx context.Context, m *ledger.Move) (ledger.Volumes, error) {
+	standing := make([]string, 0, 1)
 	err := store.db.NewSelect().
-		ColumnExpr("post_commit_effective_volumes::text").
-		ModelTableExpr(moves).
-		Where("accounts_address = ?", move.Account).
-		Where("asset = ?", move.Asset).
+		TableExpr(store.GetPrefixedRelationName("moves")).
+		ColumnExpr("post_commit_effective_volumes").
 		Where("ledger = ?", store.ledger.Name).
-		Where("effective_date <= ?", move.EffectiveDate).
-		OrderExpr("effective_date desc, seq desc").
+		Where("accounts_address = ?", m.Account).
+		Where("asset = ?", m.Asset).
+		Where("effective_date <= ?", m.EffectiveDate).
+		Where("post_commit_effective_volumes is not null").
+		Order("effective_date desc", "seq desc").
 		Limit(1).
-		Scan(ctx, &raw)
-	if err != nil {
-		err = postgres.ResolveError(err)
-		if !postgres.IsNotFoundError(err) {
+		Scan(ctx, &standing)
+	if err != nil && !errors.Is(store.dialect.ResolveError(err), dialect.ErrNotFound) {
+		return ledger.Volumes{}, fmt.Errorf("reading effective volumes: %w", store.dialect.ResolveError(err))
+	}
+	if len(standing) == 0 {
+		return ledger.NewEmptyVolumes(), nil
+	}
+
+	return readVolumes(standing[0])
+}
+
+// readVolumes parses the stored form of a volumes pair.
+func readVolumes(raw string) (ledger.Volumes, error) {
+	volumes := ledger.Volumes{}
+	if err := volumes.Scan(raw); err != nil {
+		return ledger.Volumes{}, fmt.Errorf("reading volumes %q: %w", raw, err)
+	}
+	return volumes, nil
+}
+
+// shiftEffectiveVolumes moves every later move by this move's delta, so a
+// backdated transaction leaves the ones after it consistent.
+func (store *Store) shiftEffectiveVolumes(ctx context.Context, m *ledger.Move, input, output *big.Int) error {
+	var (
+		sequences []int64
+		volumes   []string
+	)
+	err := store.db.NewSelect().
+		TableExpr(store.GetPrefixedRelationName("moves")).
+		ColumnExpr("seq").
+		ColumnExpr("post_commit_effective_volumes").
+		Where("ledger = ?", store.ledger.Name).
+		Where("accounts_address = ?", m.Account).
+		Where("asset = ?", m.Asset).
+		Where("effective_date > ?", m.EffectiveDate).
+		Where("post_commit_effective_volumes is not null").
+		Scan(ctx, &sequences, &volumes)
+	if err != nil && !errors.Is(store.dialect.ResolveError(err), dialect.ErrNotFound) {
+		return fmt.Errorf("reading later moves: %w", store.dialect.ResolveError(err))
+	}
+
+	for i, seq := range sequences {
+		standing, err := readVolumes(volumes[i])
+		if err != nil {
 			return err
 		}
-	} else if raw.Valid {
-		if err := prior.Scan(raw.String); err != nil {
-			return err
+		shifted := &ledger.Volumes{
+			Input:  new(big.Int).Add(standing.Input, input),
+			Output: new(big.Int).Add(standing.Output, output),
+		}
+		if _, err := store.db.NewUpdate().
+			TableExpr(store.GetPrefixedRelationName("moves")).
+			Set("post_commit_effective_volumes = ?", shifted).
+			Where("seq = ?", seq).
+			Exec(ctx); err != nil {
+			return fmt.Errorf("shifting effective volumes: %w", store.dialect.ResolveError(err))
 		}
 	}
 
-	move.PostCommitEffectiveVolumes = &ledger.Volumes{
-		Input:  new(big.Int).Add(prior.Input, inputDelta),
-		Output: new(big.Int).Add(prior.Output, outputDelta),
+	return nil
+}
+
+// delta is what a move adds to the running volumes of its account and asset.
+func delta(m *ledger.Move) (input, output *big.Int) {
+	amount := (*big.Int)(m.Amount)
+	if m.IsSource {
+		return new(big.Int), new(big.Int).Set(amount)
 	}
-
-	// Write the move; post_commit_effective_volumes is stored the same way
-	// post_commit_volumes is (Volumes.Value renders the composite text).
-	if _, err := store.db.NewInsert().
-		Model(move).
-		Value("ledger", "?", store.ledger.Name).
-		ModelTableExpr(moves).
-		Exec(ctx); err != nil {
-		return postgres.ResolveError(err)
-	}
-
-	// update_effective_volumes: back-date every later-effective move by this delta
-	// (the exact plpgsql arithmetic, keeping amount as its proven numeric param type).
-	_, err = store.db.NewRaw(`update `+moves+`
-		set post_commit_effective_volumes = (
-			(post_commit_effective_volumes).inputs + case when ? then 0 else ? end,
-			(post_commit_effective_volumes).outputs + case when ? then ? else 0 end
-		)
-		where accounts_address = ? and asset = ? and ledger = ? and effective_date > ?`,
-		move.IsSource, move.Amount, move.IsSource, move.Amount,
-		move.Account, move.Asset, store.ledger.Name, move.EffectiveDate,
-	).Exec(ctx)
-
-	return postgres.ResolveError(err)
+	return new(big.Int).Set(amount), new(big.Int)
 }

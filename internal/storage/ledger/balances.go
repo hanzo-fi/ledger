@@ -6,8 +6,6 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
-
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/tracing"
 )
@@ -63,27 +61,28 @@ func (store *Store) GetBalances(ctx context.Context, query BalanceQuery) (ledger
 				}
 			})
 
+			// Give every queried account and asset a row before reading, so an
+			// account standing at zero locks like any other. A rolled back
+			// transaction takes these rows with it.
+			if _, err := store.db.NewInsert().
+				Model(&accountsVolumes).
+				ModelTableExpr(store.GetPrefixedRelationName("accounts_volumes")).
+				On("conflict do nothing").
+				Exec(ctx); err != nil {
+				return nil, store.dialect.ResolveError(err)
+			}
+
 			err := store.db.NewSelect().
-				With(
-					"ins",
-					// Try to insert volumes with 0 values.
-					// This way, if the account has a 0 balance at this point, it will be locked as any other accounts.
-					// It the complete sql transaction fail, the account volumes will not be inserted.
-					store.db.NewInsert().
-						Model(&accountsVolumes).
-						ModelTableExpr(store.GetPrefixedRelationName("accounts_volumes")).
-						On("conflict do nothing"),
-				).
 				Model(&accountsVolumes).
 				ModelTableExpr(store.GetPrefixedRelationName("accounts_volumes")).
 				Column("accounts_address", "asset", "input", "output").
 				Where("("+strings.Join(conditions, ") OR (")+")", args...).
-				For("update").
+				Apply(store.dialect.LockRows).
 				// notes(gfyrag): Keep order, it ensures consistent locking order and limit deadlocks
 				Order("accounts_address", "asset").
 				Scan(ctx)
 			if err != nil {
-				return nil, postgres.ResolveError(err)
+				return nil, store.dialect.ResolveError(err)
 			}
 
 			ret := ledger.Balances{}

@@ -51,6 +51,7 @@ require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.43.0
 	github.com/go-jose/go-jose/v4 v4.1.4
 	github.com/hanzo-fi/go-libs/v5 v5.6.2
+	github.com/hanzoai/sqlite v0.4.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/olivere/elastic/v7 v7.0.32
@@ -95,7 +96,6 @@ require (
 	github.com/google/go-tpm v0.9.8 // indirect
 	github.com/hanzoai/csqlite v0.1.0 // indirect
 	github.com/hanzoai/sqlcipher v0.1.1 // indirect
-	github.com/hanzoai/sqlite v0.4.0 // indirect
 	github.com/jackc/pgerrcode v0.0.0-20250907135507-afb5586c32a6 // indirect
 	github.com/jackc/pgxlisten v0.0.0-20250802141604-12b92425684c // indirect
 	github.com/josharian/intern v1.0.0 // indirect

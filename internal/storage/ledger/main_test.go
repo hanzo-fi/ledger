@@ -23,6 +23,7 @@ import (
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/storage/driver"
 	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
 	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
@@ -58,9 +59,10 @@ func TestMain(m *testing.M) {
 
 				defaultDriver.SetValue(driver.New(
 					bunDB,
-					ledgerstore.NewFactory(bunDB),
+					dialect.Postgres{},
+					ledgerstore.NewFactory(bunDB, dialect.Postgres{}),
 					bucket.NewDefaultFactory(),
-					systemstore.NewStoreFactory(),
+					systemstore.NewStoreFactory(dialect.Postgres{}),
 				))
 
 				return bunDB, nil

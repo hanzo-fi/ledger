@@ -7,7 +7,16 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/hanzo-fi/go-libs/v5/pkg/query"
+
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 )
+
+// filterAccountAddressOnTransactions states the address filter as the server
+// engine writes it, which is what these cases are written against.
+func filterAccountAddressOnTransactions(address string, source, destination bool) string {
+	store := &Store{dialect: dialect.SQL{}}
+	return store.filterAddressOnTransactions(address, source, destination).SQL
+}
 
 func TestCanPushAddressFilterToLateral(t *testing.T) {
 	t.Parallel()

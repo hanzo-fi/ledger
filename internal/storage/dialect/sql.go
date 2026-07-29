@@ -13,9 +13,8 @@ import (
 )
 
 // SQL is the server engine, hanzoai/sql: PostgreSQL with pgvector. It runs a
-// bucket as a schema, ids from a per-ledger sequence, ledger serialization on
-// transaction-scoped advisory locks, and derives log hashes and effective
-// volumes in PL/pgSQL triggers.
+// bucket as a schema, ids from a per-ledger sequence, and ledger serialization
+// on transaction-scoped advisory locks.
 type SQL struct{}
 
 func (SQL) Name() string { return Scheme }
@@ -28,10 +27,6 @@ func (SQL) OpenBucket(ctx context.Context, db bun.IDB, bucket string) error {
 func (SQL) DropBucket(ctx context.Context, db bun.IDB, bucket string) error {
 	_, err := db.ExecContext(ctx, `drop schema if exists ? cascade`, bun.Ident(bucket))
 	return err
-}
-
-func (SQL) Now(bucket string) string {
-	return fmt.Sprintf(`"%s".transaction_date()`, bucket)
 }
 
 func (SQL) NextID(bucket, relation, _ string, counter int) Fragment {
@@ -120,8 +115,6 @@ func (SQL) SegmentsMatch(column string, segments map[string]any) Fragment {
 	}
 	return frag(fmt.Sprintf("%s @> '%s'", column, string(data)))
 }
-
-func (SQL) Derives() bool { return true }
 
 func (SQL) Declares() bool { return false }
 

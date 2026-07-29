@@ -10,12 +10,35 @@ import (
 	"github.com/hanzo-fi/go-libs/v5/pkg/testing/testservice"
 
 	"github.com/hanzo-fi/ledger/cmd"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 )
+
+// StoreInstrumentation points the service at a server the test brought up,
+// stated in the scheme the ledger is configured with.
+func StoreInstrumentation(options *deferred.Deferred[connect.ConnectionOptions]) testservice.Instrumentation {
+	return testservice.InstrumentationFunc(func(ctx context.Context, cfg *testservice.RunConfiguration) error {
+		resolved, err := options.Wait(ctx)
+		if err != nil {
+			return err
+		}
+		cfg.AppendArgs("--"+dialect.DSNFlag, dialect.DSN(resolved.DatabaseSourceName))
+		if resolved.MaxIdleConns != 0 {
+			cfg.AppendArgs("--"+dialect.MaxIdleConnsFlag, fmt.Sprint(resolved.MaxIdleConns))
+		}
+		if resolved.MaxOpenConns != 0 {
+			cfg.AppendArgs("--"+dialect.MaxOpenConnsFlag, fmt.Sprint(resolved.MaxOpenConns))
+		}
+		if resolved.ConnMaxIdleTime != 0 {
+			cfg.AppendArgs("--"+dialect.ConnMaxIdleTimeFlag, fmt.Sprint(resolved.ConnMaxIdleTime))
+		}
+		return nil
+	})
+}
 
 func GetTestServerOptions(postgresConnectionOptions *deferred.Deferred[connect.ConnectionOptions]) testservice.Option {
 	return testservice.WithInstruments(
 		testservice.AppendArgsInstrumentation("serve", "--"+cmd.BindFlag, ":0", "--schema-enforcement-mode", "strict"),
-		testservice.PostgresInstrumentation(postgresConnectionOptions),
+		StoreInstrumentation(postgresConnectionOptions),
 		testservice.HTTPServerInstrumentation(),
 	)
 }
