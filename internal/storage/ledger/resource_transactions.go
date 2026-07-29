@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"context"
 	"fmt"
 	"slices"
 
@@ -74,7 +75,7 @@ func (h transactionsResourceHandler) BuildDataset(opts common.RepositoryHandlerB
 	return ret, nil
 }
 
-func (h transactionsResourceHandler) ResolveFilter(_ common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
+func (h transactionsResourceHandler) ResolveFilter(_ context.Context, _ common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
 	switch {
 	case property == "id":
 		return fmt.Sprintf("id %s ?", common.ConvertOperatorToSQL(operator)), []any{value}, nil
