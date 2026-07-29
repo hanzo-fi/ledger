@@ -15,19 +15,20 @@ import (
 
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/migrations"
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
 	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/tracing"
 )
 
 type Store struct {
-	db     bun.IDB
-	bucket bucket.Bucket
-	ledger ledger.Ledger
+	db      bun.IDB
+	dialect dialect.Dialect
+	bucket  bucket.Bucket
+	ledger  ledger.Ledger
 
 	// aloneInBucket is a shared optimization hint (per bucket) indicating whether
 	// this ledger is the only one in its bucket. The pointer is shared across all
@@ -81,9 +82,9 @@ func (store *Store) Volumes() common.PaginatedResource[
 }
 
 func (store *Store) AggregatedVolumes() common.Resource[ledger.AggregatedVolumes, ledger.GetAggregatedVolumesOptions] {
-	return common.NewResourceRepository[ledger.AggregatedVolumes, ledger.GetAggregatedVolumesOptions](&aggregatedBalancesResourceRepositoryHandler{
+	return common.NewFoldRepository[ledger.AggregatedVolumes, ledger.GetAggregatedVolumesOptions](&aggregatedBalancesResourceRepositoryHandler{
 		store: store,
-	})
+	}, totalVolumes)
 }
 
 func (store *Store) Transactions() common.PaginatedResource[
@@ -122,7 +123,7 @@ func (store *Store) BeginTX(ctx context.Context, options *sql.TxOptions) (*Store
 		return store.db.BeginTx(ctx, options)
 	})
 	if err != nil {
-		return nil, nil, postgres.ResolveError(err)
+		return nil, nil, store.dialect.ResolveError(err)
 	}
 	return store.WithDB(tx), &tx, nil
 }
@@ -192,41 +193,19 @@ func (store *Store) GetPrefixedRelationName(v string) string {
 }
 
 func (store *Store) LockLedger(ctx context.Context) (*Store, bun.IDB, func() error, error) {
-	storeCp := *store
-	switch db := store.db.(type) {
-	case *bun.DB:
-		conn, err := db.Conn(ctx)
-		if err != nil {
-			return nil, nil, nil, err
-		}
-
-		_, err = conn.ExecContext(ctx, `SELECT pg_advisory_lock(hashtext(?))`, fmt.Sprintf("ledger:%d", store.ledger.ID))
-		if err != nil {
-			_ = conn.Close()
-			return nil, nil, nil, err
-		}
-		storeCp.db = conn
-
-		return &storeCp, storeCp.db, func() error {
-			_, err := conn.ExecContext(ctx, `SELECT pg_advisory_unlock(hashtext(?))`, fmt.Sprintf("ledger:%d", store.ledger.ID))
-			if err != nil {
-				return err
-			}
-			return conn.Close()
-		}, nil
-	case bun.Tx:
-		_, err := db.ExecContext(ctx, `SELECT pg_advisory_xact_lock(hashtext(?))`, fmt.Sprintf("ledger:%d", store.ledger.ID))
-		if err != nil {
-			return nil, nil, nil, err
-		}
-
-		return store, db, func() error {
-			// xact-scoped advisory locks are released automatically – nothing to do
-			return nil
-		}, nil
-	default:
-		panic(fmt.Errorf("invalid db type: %T", store.db))
+	db, release, err := store.dialect.LockLedger(ctx, store.db, store.ledger.ID)
+	if err != nil {
+		return nil, nil, nil, err
 	}
+	cp := *store
+	cp.db = db
+
+	return &cp, db, release, nil
+}
+
+// Dialect is the engine this store speaks to.
+func (store *Store) Dialect() dialect.Dialect {
+	return store.dialect
 }
 
 // newScopedSelect creates a new select query scoped to the current ledger.
@@ -252,11 +231,12 @@ func (store *Store) SetAloneInBucket(alone bool) {
 	}
 }
 
-func New(db bun.IDB, bucket bucket.Bucket, l ledger.Ledger, opts ...Option) *Store {
+func New(db bun.IDB, d dialect.Dialect, bucket bucket.Bucket, l ledger.Ledger, opts ...Option) *Store {
 	ret := &Store{
-		db:     db,
-		ledger: l,
-		bucket: bucket,
+		db:      db,
+		dialect: d,
+		ledger:  l,
+		bucket:  bucket,
 	}
 	for _, opt := range append(defaultOptions, opts...) {
 		opt(ret)

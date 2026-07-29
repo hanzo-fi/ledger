@@ -14,12 +14,12 @@ import (
 
 	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
 	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
 	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 	"github.com/hanzo-fi/ledger/internal/tracing"
@@ -30,6 +30,7 @@ var ErrBucketOutdated = errors.New("bucket is outdated, you need to upgrade it b
 type Driver struct {
 	ledgerStoreFactory ledgerstore.Factory
 	db                 *bun.DB
+	dialect            dialect.Dialect
 	bucketFactory      bucket.Factory
 	systemStoreFactory systemstore.StoreFactory
 	tracer             trace.Tracer
@@ -66,10 +67,10 @@ func (d *Driver) CreateLedger(ctx context.Context, l *ledger.Ledger) (*ledgersto
 
 		systemStore := d.systemStoreFactory.Create(tx)
 		if err := systemStore.CreateLedger(ctx, l); err != nil {
-			if errors.Is(postgres.ResolveError(err), postgres.ErrConstraintsFailed{}) {
+			if errors.Is(d.dialect.ResolveError(err), dialect.ErrConstraint{}) {
 				return systemstore.ErrLedgerAlreadyExists
 			}
-			return postgres.ResolveError(err)
+			return d.dialect.ResolveError(err)
 		}
 
 		if err := b.AddLedger(ctx, tx, *l); err != nil {
@@ -87,10 +88,15 @@ func (d *Driver) CreateLedger(ctx context.Context, l *ledger.Ledger) (*ledgersto
 		return nil
 	})
 	if err != nil {
-		return nil, postgres.ResolveError(err)
+		return nil, d.dialect.ResolveError(err)
 	}
 
 	return ret, nil
+}
+
+// Dialect is the engine this driver speaks to.
+func (d *Driver) Dialect() dialect.Dialect {
+	return d.dialect
 }
 
 func (d *Driver) OpenLedger(ctx context.Context, name string) (*ledgerstore.Store, *ledger.Ledger, error) {
@@ -131,6 +137,9 @@ func (d *Driver) Initialize(ctx context.Context) error {
 }
 
 func (d *Driver) detectRollbacks(ctx context.Context) error {
+	if d.dialect.Declares() {
+		return nil
+	}
 
 	systemStore := d.systemStoreFactory.Create(d.db)
 	logging.FromContext(ctx).Debugf("Checking for downgrades on system schema")
@@ -141,7 +150,7 @@ func (d *Driver) detectRollbacks(ctx context.Context) error {
 
 	buckets, err := systemStore.GetDistinctBuckets(ctx)
 	if err != nil {
-		if !errors.Is(err, postgres.ErrMissingTable) {
+		if !errors.Is(err, dialect.ErrMissingTable) {
 			return fmt.Errorf("getting distinct buckets: %w", err)
 		}
 		return nil
@@ -304,6 +313,7 @@ func (d *Driver) HasReachMinimalVersion(ctx context.Context) (bool, error) {
 
 func New(
 	db *bun.DB,
+	d dialect.Dialect,
 	ledgerStoreFactory ledgerstore.Factory,
 	bucketFactory bucket.Factory,
 	systemStoreFactory systemstore.StoreFactory,
@@ -311,6 +321,7 @@ func New(
 ) *Driver {
 	ret := &Driver{
 		db:                 db,
+		dialect:            d,
 		ledgerStoreFactory: ledgerStoreFactory,
 		bucketFactory:      bucketFactory,
 		systemStoreFactory: systemStoreFactory,

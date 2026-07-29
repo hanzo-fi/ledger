@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -24,7 +25,7 @@ func (h logsResourceHandler) BuildDataset(_ common.RepositoryHandlerBuildContext
 		ColumnExpr("*"), nil
 }
 
-func (h logsResourceHandler) ResolveFilter(_ common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
+func (h logsResourceHandler) ResolveFilter(_ context.Context, _ common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
 	switch property {
 	case "date":
 		value, err := common.NormalizeDateFilterValue(value)

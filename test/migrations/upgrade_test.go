@@ -18,6 +18,7 @@ import (
 	"github.com/hanzo-fi/go-libs/v5/pkg/testing/platform/pgtesting"
 
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/storage/driver"
 	"github.com/hanzo-fi/ledger/internal/storage/ledger"
 	"github.com/hanzo-fi/ledger/internal/storage/system"
@@ -71,9 +72,10 @@ func TestMigrations(t *testing.T) {
 	// Migrate database
 	driver := driver.New(
 		db,
-		ledger.NewFactory(db),
+		dialect.SQL{},
+		ledger.NewFactory(db, dialect.SQL{}),
 		bucket.NewDefaultFactory(),
-		system.NewStoreFactory(),
+		system.NewStoreFactory(dialect.SQL{}),
 		driver.WithParallelBucketMigration(1),
 	)
 	require.NoError(t, driver.Initialize(ctx))

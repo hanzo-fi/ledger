@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/stoewer/go-strcase"
@@ -49,7 +50,7 @@ func (h accountsResourceHandler) BuildDataset(opts common.RepositoryHandlerBuild
 	return ret, nil
 }
 
-func (h accountsResourceHandler) ResolveFilter(opts common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
+func (h accountsResourceHandler) ResolveFilter(ctx context.Context, opts common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
 	switch {
 	case property == "address":
 		fallthrough
@@ -73,42 +74,37 @@ func (h accountsResourceHandler) ResolveFilter(opts common.ResourceQuery[any], o
 		}
 		return fmt.Sprintf("%s %s ?", property, common.ConvertOperatorToSQL(operator)), []any{value}, nil
 	case balanceRegex.MatchString(property) || property == "balance":
-
-		selectBalance := h.store.newScopedSelect().
-			Where("accounts_address = dataset.address")
-
-		if opts.PIT != nil && !opts.PIT.IsZero() {
-			if !h.store.ledger.HasFeature(features.FeatureMovesHistory, "ON") {
-				return "", nil, NewErrMissingFeature(features.FeatureMovesHistory)
-			}
-			selectBalance = selectBalance.
-				ModelTableExpr(h.store.GetPrefixedRelationName("moves")).
-				DistinctOn("asset").
-				ColumnExpr("first_value((post_commit_effective_volumes).inputs - (post_commit_effective_volumes).outputs) over (partition by (accounts_address, asset) order by effective_date desc, seq desc) as balance").
-				Where("effective_date <= ?", opts.PIT)
-		} else {
-			selectBalance = selectBalance.
-				ModelTableExpr(h.store.GetPrefixedRelationName("accounts_volumes")).
-				ColumnExpr("input - output as balance")
-		}
-
+		// The relation itself is not asked of the engine - see holders. What
+		// the statement carries is the addresses the fold selected, which every
+		// engine tests the same way.
+		asset := ""
 		if balanceRegex.MatchString(property) {
-			selectBalance = selectBalance.Where("asset = ?", balanceRegex.FindAllStringSubmatch(property, 2)[0][1])
+			asset = balanceRegex.FindAllStringSubmatch(property, 2)[0][1]
 		}
 
-		return h.store.db.NewSelect().
-			TableExpr("(?) balance", selectBalance).
-			ColumnExpr(fmt.Sprintf("balance %s ?", common.ConvertOperatorToSQL(operator)), value).
-			String(), nil, nil
+		value, err := number(value)
+		if err != nil {
+			return "", nil, err
+		}
+
+		addresses, err := h.store.holders(ctx, opts.PIT, asset, operator, value)
+		if err != nil {
+			return "", nil, err
+		}
+		if len(addresses) == 0 {
+			return "1 = 0", nil, nil
+		}
+
+		return "address in (?)", []any{bun.In(addresses)}, nil
 	case property == "metadata":
-		return "metadata -> ? is not null", []any{value}, nil
+		has := h.store.dialect.Has("metadata", value.(string))
+		return has.SQL, has.Args, nil
 
 	case common.MetadataRegex.Match([]byte(property)):
 		match := common.MetadataRegex.FindAllStringSubmatch(property, 3)
 
-		return "metadata @> ?", []any{map[string]any{
-			match[0][1]: value,
-		}}, nil
+		holds := h.store.dialect.Holds("metadata", map[string]any{match[0][1]: value})
+		return holds.SQL, holds.Args, nil
 	default:
 		return "", nil, common.NewErrInvalidQuery("invalid filter property %s", property)
 	}
@@ -119,6 +115,7 @@ func (h accountsResourceHandler) Project(_ common.ResourceQuery[any], selectQuer
 }
 
 func (h accountsResourceHandler) Expand(opts common.ResourceQuery[any], property string) (*bun.SelectQuery, *common.JoinCondition, error) {
+	d := h.store.dialect
 	switch property {
 	case "volumes":
 		if !h.store.ledger.HasFeature(features.FeatureMovesHistory, "ON") {
@@ -139,25 +136,25 @@ func (h accountsResourceHandler) Expand(opts common.ResourceQuery[any], property
 			Column("accounts_address", "asset")
 		if property == "volumes" {
 			selectRowsQuery = selectRowsQuery.
-				ColumnExpr("first_value(post_commit_volumes) over (partition by (accounts_address, asset) order by seq desc) as volumes").
+				ColumnExpr("first_value(post_commit_volumes) over (partition by accounts_address, asset order by seq desc) as volumes").
 				Where("insertion_date <= ?", opts.PIT)
 		} else {
 			selectRowsQuery = selectRowsQuery.
-				ColumnExpr("first_value(post_commit_effective_volumes) over (partition by (accounts_address, asset) order by effective_date desc, seq desc) as volumes").
+				ColumnExpr("first_value(post_commit_effective_volumes) over (partition by accounts_address, asset order by effective_date desc, seq desc) as volumes").
 				Where("effective_date <= ?", opts.PIT)
 		}
 	} else {
 		selectRowsQuery = selectRowsQuery.
 			ModelTableExpr(h.store.GetPrefixedRelationName("accounts_volumes")).
 			Column("asset", "accounts_address").
-			ColumnExpr("(input, output)::" + h.store.GetPrefixedRelationName("volumes") + " as volumes")
+			ColumnExpr(d.Pair(h.store.ledger.Bucket, "input", "output") + " as volumes")
 	}
 
 	return h.store.db.NewSelect().
 			With("rows", selectRowsQuery).
 			ModelTableExpr("rows").
 			Column("accounts_address").
-			ColumnExpr("public.aggregate_objects(json_build_object(asset, json_build_object('input', (volumes).inputs, 'output', (volumes).outputs))::jsonb) as " + strcase.SnakeCase(property)).
+			ColumnExpr(d.Gather("asset", d.Volumes("volumes")) + " as " + strcase.SnakeCase(property)).
 			Group("accounts_address"), &common.JoinCondition{
 			Left:  "address",
 			Right: "accounts_address",

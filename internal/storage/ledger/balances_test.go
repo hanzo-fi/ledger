@@ -158,6 +158,18 @@ func TestBalancesGet(t *testing.T) {
 	})
 }
 
+func TestBalancesAggregatesWiderThanTheEngine(t *testing.T) {
+	t.Parallel()
+
+	totalsExactly(t, newLedgerStore(t))
+}
+
+func TestBalancesFilterWiderThanTheEngine(t *testing.T) {
+	t.Parallel()
+
+	filtersExactly(t, newLedgerStore(t))
+}
+
 func TestBalancesAggregates(t *testing.T) {
 	t.Parallel()
 

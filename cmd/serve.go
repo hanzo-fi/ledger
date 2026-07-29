@@ -28,7 +28,6 @@ import (
 	"github.com/hanzo-fi/go-libs/v5/pkg/observe/traces"
 	"github.com/hanzo-fi/go-libs/v5/pkg/service"
 	"github.com/hanzo-fi/go-libs/v5/pkg/service/health"
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
 	apilib "github.com/hanzo-fi/go-libs/v5/pkg/transport/api"
 	"github.com/hanzo-fi/go-libs/v5/pkg/transport/httpserver"
 
@@ -40,8 +39,8 @@ import (
 	"github.com/hanzo-fi/ledger/internal/replication/drivers"
 	"github.com/hanzo-fi/ledger/internal/replication/drivers/alldrivers"
 	"github.com/hanzo-fi/ledger/internal/storage"
-	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
 	storagecommon "github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 	"github.com/hanzo-fi/ledger/internal/tracing"
 	"github.com/hanzo-fi/ledger/internal/worker"
@@ -105,23 +104,12 @@ func NewServeCommand() *cobra.Command {
 				return err
 			}
 
-			connectionOptions, err := connect.ConnectionOptionsFromFlags(cmd.Flags(), cmd.Context())
-			if err != nil {
-				return err
-			}
-
-			storageDriver, sqliteDSN, err := bunconnect.FromFlags(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			options := []fx.Option{
 				fx.NopLogger,
 				otlpModule(cmd, cfg.commonConfig),
 				messagingfx.PublishModuleFromFlags(cmd, service.IsDebug(cmd)),
 				authnfx.JWTModuleFromFlags(cmd),
-				fx.Supply(connectionOptions),
-				bunconnect.Module(storageDriver, *connectionOptions, sqliteDSN, service.IsDebug(cmd)),
+				dialect.NewFXModule(dialect.ConfigFromFlags(cmd.Flags()), service.IsDebug(cmd)),
 				storage.NewFXModule(storage.ModuleConfig{
 					AutoUpgrade:                     cfg.AutoUpgrade,
 					DisableScopedSelectOptimization: cfg.DisableLedgerScopeOptimization,
@@ -229,8 +217,7 @@ func NewServeCommand() *cobra.Command {
 	cmd.Flags().Bool(DisableLedgerScopeOptimizationFlag, false, "Always emit the `ledger = ?` predicate on read queries, disabling the alone-in-bucket optimization that skips it when a ledger is the only one in its bucket")
 
 	addWorkerFlags(cmd)
-	connect.AddFlags(cmd.Flags())
-	bunconnect.AddFlags(cmd.Flags())
+	dialect.AddFlags(cmd.Flags())
 	observe.AddFlags(cmd.Flags())
 	metrics.AddFlags(cmd.Flags())
 	traces.AddFlags(cmd.Flags())

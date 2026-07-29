@@ -13,12 +13,14 @@ import (
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	ledgercontroller "github.com/hanzo-fi/ledger/internal/controller/ledger"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 )
 
 type controllerFacade struct {
 	ledgercontroller.Controller
-	mu     sync.RWMutex
-	ledger ledger.Ledger
+	mu      sync.RWMutex
+	ledger  ledger.Ledger
+	dialect dialect.Dialect
 }
 
 func (c *controllerFacade) handleState(ctx context.Context, dryRun bool, fn func(ctrl ledgercontroller.Controller) error) error {
@@ -56,32 +58,10 @@ func (c *controllerFacade) handleState(ctx context.Context, dryRun bool, fn func
 		}
 
 		if rowsAffected > 0 {
-			_, err := tx.NewRaw(
-				fmt.Sprintf(`
-					select setval(
-						'"%s"."transaction_id_%d"', 
-						(
-							select max(id) from "%s".transactions where ledger = '%s'
-						)::bigint
-					)
-				`, l.Bucket, l.ID, l.Bucket, l.Name),
-			).Exec(ctx)
-			if err != nil {
-				return fmt.Errorf("failed to update transactions sequence value: %w", err)
-			}
-
-			_, err = tx.NewRaw(
-				fmt.Sprintf(`
-					select setval(
-						'"%s"."log_id_%d"', 
-						(
-							select max(id) from "%s".logs where ledger = '%s'
-						)::bigint
-					)
-				`, l.Bucket, l.ID, l.Bucket, l.Name),
-			).Exec(ctx)
-			if err != nil {
-				return fmt.Errorf("failed to update logs sequence value: %w", err)
+			for _, relation := range []string{"transactions", "logs"} {
+				if err := c.dialect.SyncID(ctx, tx, l.Bucket, relation, l.Name, l.ID); err != nil {
+					return fmt.Errorf("failed to update %s id counter: %w", relation, err)
+				}
 			}
 		}
 
@@ -229,10 +209,11 @@ func (c *controllerFacade) Import(ctx context.Context, stream chan ledger.Log) e
 
 var _ ledgercontroller.Controller = (*controllerFacade)(nil)
 
-func newLedgerStateTracker(ctrl ledgercontroller.Controller, ledger ledger.Ledger) ledgercontroller.Controller {
+func newLedgerStateTracker(ctrl ledgercontroller.Controller, ledger ledger.Ledger, d dialect.Dialect) ledgercontroller.Controller {
 	return &controllerFacade{
 		Controller: ctrl,
 		ledger:     ledger,
+		dialect:    d,
 	}
 }
 
