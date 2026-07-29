@@ -207,6 +207,12 @@ func (*SQLite) Pair(_, input, output string) string {
 }
 
 // Volumes reads one side of that pair back.
+//
+// The value read is an engine integer, which is 64 bits wide. A ledger's own
+// running volumes never pass through it - moves are chained and read at full
+// precision in Go - but an aggregate that sums this expression sums 64 bit
+// integers, so an aggregated read of a total wider than that saturates rather
+// than reporting it. Summing exactly here needs the sum itself in Go.
 func (*SQLite) Volumes(column, field string) string {
 	if field == "inputs" {
 		return fmt.Sprintf("cast(substr(%s, 2, instr(%s, ',') - 2) as integer)", column, column)
