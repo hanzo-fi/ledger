@@ -44,7 +44,7 @@ func TestBucketCleanupRunner(t *testing.T) {
 		runner := NewBucketCleanupRunner(
 			logging.Testing(),
 			db,
-			dialect.Postgres{},
+			dialect.SQL{},
 			BucketCleanupRunnerConfig{
 				RetentionPeriod: retentionPeriod,
 				Schedule:        schedule,
@@ -80,7 +80,7 @@ func TestBucketCleanupRunner(t *testing.T) {
 		runner := NewBucketCleanupRunner(
 			logging.Testing(),
 			db,
-			dialect.Postgres{},
+			dialect.SQL{},
 			BucketCleanupRunnerConfig{
 				RetentionPeriod: retentionPeriod,
 				Schedule:        schedule,
@@ -124,7 +124,7 @@ func TestBucketCleanupRunner(t *testing.T) {
 		runner := NewBucketCleanupRunner(
 			logging.Testing(),
 			db,
-			dialect.Postgres{},
+			dialect.SQL{},
 			BucketCleanupRunnerConfig{
 				RetentionPeriod: retentionPeriod,
 				Schedule:        schedule,
@@ -176,7 +176,7 @@ func TestBucketCleanupRunner(t *testing.T) {
 		runner := NewBucketCleanupRunner(
 			logging.Testing(),
 			db,
-			dialect.Postgres{},
+			dialect.SQL{},
 			BucketCleanupRunnerConfig{
 				RetentionPeriod: retentionPeriod,
 				Schedule:        schedule,
@@ -278,7 +278,7 @@ func newStoreAndDBForWorkerTest(t docker.T) (*systemstore.DefaultStore, *bun.DB)
 	db, err := connect.OpenSQLDB(ctx, pgDatabase.ConnectionOptions(), hooks...)
 	require.NoError(t, err)
 
-	store := systemstore.New(db, dialect.Postgres{})
+	store := systemstore.New(db, dialect.SQL{})
 	require.NoError(t, store.Migrate(ctx))
 
 	return store, db

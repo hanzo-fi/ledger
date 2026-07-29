@@ -208,6 +208,7 @@ func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.Accou
 			// The default metadata is what an account starts with; explicit
 			// metadata wins over it. Merging here keeps the statement one
 			// upsert on either engine.
+			at := store.transactionDate()
 			rows := Map(accounts, func(from ledger.AccountWithDefaultMetadata) row {
 				merged := metadata.Metadata{}
 				for k, v := range from.DefaultMetadata {
@@ -218,6 +219,18 @@ func (store *Store) UpsertAccounts(ctx context.Context, accounts ...ledger.Accou
 				}
 				account := *from.Account
 				account.Metadata = merged
+				// The three instants a row carries default to the shared
+				// per-transaction date, which the retired triggers took from
+				// transaction_date(); the columns are not null.
+				if account.FirstUsage.IsZero() {
+					account.FirstUsage = at
+				}
+				if account.InsertionDate.IsZero() {
+					account.InsertionDate = at
+				}
+				if account.UpdatedAt.IsZero() {
+					account.UpdatedAt = at
+				}
 				return row{
 					Account:      &account,
 					Ledger:       store.ledger.Name,

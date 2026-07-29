@@ -59,10 +59,10 @@ func TestMain(m *testing.M) {
 
 				defaultDriver.SetValue(driver.New(
 					bunDB,
-					dialect.Postgres{},
-					ledgerstore.NewFactory(bunDB, dialect.Postgres{}),
+					dialect.SQL{},
+					ledgerstore.NewFactory(bunDB, dialect.SQL{}),
 					bucket.NewDefaultFactory(),
-					systemstore.NewStoreFactory(dialect.Postgres{}),
+					systemstore.NewStoreFactory(dialect.SQL{}),
 				))
 
 				return bunDB, nil

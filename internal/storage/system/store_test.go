@@ -318,7 +318,7 @@ func newStore(t docker.T) *DefaultStore {
 	db, err := connect.OpenSQLDB(ctx, pgDatabase.ConnectionOptions(), hooks...)
 	require.NoError(t, err)
 
-	ret := New(db, dialect.Postgres{})
+	ret := New(db, dialect.SQL{})
 	require.NoError(t, ret.Migrate(ctx))
 
 	return ret
