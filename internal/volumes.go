@@ -19,10 +19,26 @@ func (v Volumes) Value() (driver.Value, error) {
 	return fmt.Sprintf("(%s, %s)", v.Input.String(), v.Output.String()), nil
 }
 
+// Scan reads a stored pair, "(input, output)". Both engines carry it as text,
+// so both reach here: a pair is read at full precision or not at all.
 func (v *Volumes) Scan(src interface{}) error {
-	// stored as (input, output)
-	raw := src.(string)
+	var raw string
+	switch value := src.(type) {
+	case string:
+		raw = value
+	case []byte:
+		raw = string(value)
+	default:
+		return fmt.Errorf("unable to read volumes from %T", src)
+	}
+	if len(raw) < 2 {
+		return fmt.Errorf("unable to read volumes from '%s'", raw)
+	}
+
 	parts := strings.Split(raw[1:len(raw)-1], ",")
+	if len(parts) != 2 {
+		return fmt.Errorf("unable to read volumes from '%s'", raw)
+	}
 	for i := range parts {
 		parts[i] = strings.TrimSpace(parts[i])
 	}
@@ -173,7 +189,7 @@ func (a PostCommitVolumes) Merge(volumes PostCommitVolumes) PostCommitVolumes {
 }
 
 type AggregatedVolumes struct {
-	Aggregated VolumesByAssets `bun:"aggregated,type:jsonb"`
+	Aggregated VolumesByAssets
 }
 
 type Balances = map[string]map[string]*big.Int

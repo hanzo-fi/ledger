@@ -82,9 +82,9 @@ func (store *Store) Volumes() common.PaginatedResource[
 }
 
 func (store *Store) AggregatedVolumes() common.Resource[ledger.AggregatedVolumes, ledger.GetAggregatedVolumesOptions] {
-	return common.NewResourceRepository[ledger.AggregatedVolumes, ledger.GetAggregatedVolumesOptions](&aggregatedBalancesResourceRepositoryHandler{
+	return common.NewFoldRepository[ledger.AggregatedVolumes, ledger.GetAggregatedVolumesOptions](&aggregatedBalancesResourceRepositoryHandler{
 		store: store,
-	})
+	}, totalVolumes)
 }
 
 func (store *Store) Transactions() common.PaginatedResource[

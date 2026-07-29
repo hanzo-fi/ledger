@@ -158,10 +158,7 @@ func (h accountsResourceHandler) Expand(opts common.ResourceQuery[any], property
 			With("rows", selectRowsQuery).
 			ModelTableExpr("rows").
 			Column("accounts_address").
-			ColumnExpr(d.Gather("asset", d.Object(
-				"'input'", d.Volumes("volumes", "inputs"),
-				"'output'", d.Volumes("volumes", "outputs"),
-			)) + " as " + strcase.SnakeCase(property)).
+			ColumnExpr(d.Gather("asset", d.Volumes("volumes")) + " as " + strcase.SnakeCase(property)).
 			Group("accounts_address"), &common.JoinCondition{
 			Left:  "address",
 			Right: "accounts_address",
