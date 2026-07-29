@@ -201,9 +201,11 @@ func totalsExactly(t *testing.T, store *ledgerstore.Store) {
 	ctx := context.Background()
 	now := time.Now()
 
-	// Wider than the engine's integers: 2^126.
+	// Two amounts, each already wider than 2^63-1, whose total is 2^127-1.
 	first := new(big.Int).Lsh(big.NewInt(1), 126)
-	require.Equal(t, "85070591730234615865843651857942052864", first.String())
+	second := new(big.Int).Sub(new(big.Int).Lsh(big.NewInt(1), 126), big.NewInt(1))
+	total := new(big.Int).Add(first, second)
+	require.Equal(t, "170141183460469231731687303715884105727", total.String())
 
 	one := ledger.NewTransaction().
 		WithPostings(ledger.NewPosting("world", "users:001", "USD/2", first)).
@@ -211,7 +213,8 @@ func totalsExactly(t *testing.T, store *ledgerstore.Store) {
 	require.NoError(t, store.CommitTransaction(ctx, &one))
 	require.NoError(t, store.UpsertAccounts(ctx, one.AccountsWithDefaultMetadata(nil, nil)...))
 
-	// Totalled: a total is what was written, not what an engine integer holds.
+	// One amount, standing alone: a total is what was written, not what an
+	// engine integer can hold.
 	aggregated, err := store.AggregatedVolumes().GetOne(ctx, common.ResourceQuery[ledger.GetAggregatedVolumesOptions]{})
 	require.NoError(t, err)
 	require.Equal(t, map[string]string{
@@ -231,6 +234,19 @@ func totalsExactly(t *testing.T, store *ledgerstore.Store) {
 		"world":     {"USD/2": fmt.Sprintf("(0, %s)", first)},
 		"users:001": {"USD/2": fmt.Sprintf("(%s, 0)", first)},
 	}, held)
+
+	other := ledger.NewTransaction().
+		WithPostings(ledger.NewPosting("world", "users:002", "USD/2", second)).
+		WithTimestamp(now)
+	require.NoError(t, store.CommitTransaction(ctx, &other))
+	require.NoError(t, store.UpsertAccounts(ctx, other.AccountsWithDefaultMetadata(nil, nil)...))
+
+	// Two of them added: world paid both out, the two accounts took them in.
+	aggregated, err = store.AggregatedVolumes().GetOne(ctx, common.ResourceQuery[ledger.GetAggregatedVolumesOptions]{})
+	require.NoError(t, err)
+	require.Equal(t, map[string]string{
+		"USD/2": fmt.Sprintf("(%s, %s)", total, total),
+	}, pairs(aggregated.Aggregated))
 }
 
 func TestSQLiteTotalsAmountsExact(t *testing.T) {
