@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -33,7 +34,7 @@ func (h schemasResourceHandler) Project(_ common.ResourceQuery[any], selectQuery
 	return selectQuery.ColumnExpr("*"), nil
 }
 
-func (h schemasResourceHandler) ResolveFilter(_ common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
+func (h schemasResourceHandler) ResolveFilter(_ context.Context, _ common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
 	switch property {
 	case "created_at":
 		value, err := common.NormalizeDateFilterValue(value)

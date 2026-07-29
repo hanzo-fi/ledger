@@ -9,6 +9,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
+	"github.com/hanzo-fi/go-libs/v5/pkg/query"
+
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
@@ -251,6 +253,91 @@ func totalsExactly(t *testing.T, store *ledgerstore.Store) {
 
 func TestSQLiteTotalsAmountsExact(t *testing.T) {
 	totalsExactly(t, newSQLiteLedger(t))
+}
+
+// filtersExactly holds a store to answering a balance filter with the accounts
+// that stand in the relation asked for - every relation, at any width.
+//
+// It is one body on either engine, because the relation is Go's on either
+// engine: the statement carries the addresses the fold selected, and no engine
+// is asked to compare a ledger's number at its own width.
+func filtersExactly(t *testing.T, store *ledgerstore.Store) {
+	t.Helper()
+
+	ctx := context.Background()
+	now := time.Now()
+
+	// Two amounts wider than the engine's integers, one apart. An engine that
+	// compares them as floats cannot tell them apart.
+	wide := new(big.Int).Sub(new(big.Int).Lsh(big.NewInt(1), 127), big.NewInt(1))
+	next := new(big.Int).Sub(wide, big.NewInt(1))
+
+	for account, amount := range map[string]*big.Int{
+		"users:001": big.NewInt(100),
+		"users:002": wide,
+		"users:003": next,
+	} {
+		tx := ledger.NewTransaction().
+			WithPostings(ledger.NewPosting("world", account, "USD", amount)).
+			WithTimestamp(now)
+		require.NoError(t, store.CommitTransaction(ctx, &tx))
+		require.NoError(t, store.UpsertAccounts(ctx, tx.AccountsWithDefaultMetadata(nil, nil)...))
+	}
+
+	held := func(t *testing.T, builder query.Builder) []string {
+		t.Helper()
+
+		accounts, err := store.Accounts().Paginate(ctx, common.InitialPaginatedQuery[any]{
+			Options: common.ResourceQuery[any]{Builder: builder},
+		})
+		require.NoError(t, err)
+
+		addresses := make([]string, 0, len(accounts.Data))
+		for _, account := range accounts.Data {
+			addresses = append(addresses, account.Address)
+		}
+		return addresses
+	}
+
+	// A balance filter states its value as the arbitrary precision integer the
+	// API reads out of a request body, whatever its width.
+	for _, expected := range []struct {
+		builder query.Builder
+		stands  []string
+	}{
+		// A balance an engine holds: the filter must find the account standing
+		// at it, and only that one.
+		{query.Match("balance[USD]", big.NewInt(100)), []string{"users:001"}},
+		{query.Match("balance[USD]", 100), []string{"users:001"}},
+		{query.Lt("balance[USD]", big.NewInt(100)), []string{"world"}},
+		{query.Lte("balance[USD]", big.NewInt(100)), []string{"users:001", "world"}},
+		{query.Gt("balance[USD]", big.NewInt(100)), []string{"users:002", "users:003"}},
+		{query.Gte("balance[USD]", big.NewInt(100)), []string{"users:001", "users:002", "users:003"}},
+		{query.Not(query.Match("balance[USD]", big.NewInt(100))), []string{"users:002", "users:003", "world"}},
+
+		// A balance wider than an engine's integers: the two accounts standing
+		// one apart are told apart.
+		{query.Match("balance[USD]", wide), []string{"users:002"}},
+		{query.Match("balance[USD]", next), []string{"users:003"}},
+		{query.Lt("balance[USD]", wide), []string{"users:001", "users:003", "world"}},
+		{query.Gte("balance[USD]", wide), []string{"users:002"}},
+
+		// The same relations asked of every asset the account holds.
+		{query.Match("balance", big.NewInt(100)), []string{"users:001"}},
+		{query.Match("balance", wide), []string{"users:002"}},
+
+		// A balance no account stands at answers with no account, and its
+		// negation with every account.
+		{query.Match("balance[USD]", big.NewInt(101)), []string{}},
+		{query.Match("balance[EUR]", big.NewInt(100)), []string{}},
+		{query.Not(query.Match("balance[USD]", big.NewInt(101))), []string{"users:001", "users:002", "users:003", "world"}},
+	} {
+		require.Equal(t, expected.stands, held(t, expected.builder), "filter %s", expected.builder)
+	}
+}
+
+func TestSQLiteFiltersBalancesExact(t *testing.T) {
+	filtersExactly(t, newSQLiteLedger(t))
 }
 
 func TestSQLiteRejectsDuplicateIdempotencyKey(t *testing.T) {

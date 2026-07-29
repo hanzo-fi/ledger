@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
@@ -124,6 +125,7 @@ func (h volumesResourceHandler) BuildDataset(query common.RepositoryHandlerBuild
 }
 
 func (h volumesResourceHandler) ResolveFilter(
+	_ context.Context,
 	_ common.ResourceQuery[ledger.GetVolumesOptions],
 	operator, property string,
 	value any,

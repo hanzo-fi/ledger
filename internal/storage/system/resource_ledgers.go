@@ -1,6 +1,7 @@
 package system
 
 import (
+	"context"
 	"errors"
 	"regexp"
 
@@ -44,7 +45,7 @@ func (h ledgersResourceHandler) BuildDataset(ctx common.RepositoryHandlerBuildCo
 	return query, nil
 }
 
-func (h ledgersResourceHandler) ResolveFilter(_ common.ResourceQuery[ListLedgersQueryPayload], operator, property string, value any) (string, []any, error) {
+func (h ledgersResourceHandler) ResolveFilter(_ context.Context, _ common.ResourceQuery[ListLedgersQueryPayload], operator, property string, value any) (string, []any, error) {
 	switch {
 	case property == "bucket":
 		return "bucket = ?", []any{value}, nil

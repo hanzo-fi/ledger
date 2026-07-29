@@ -109,7 +109,11 @@ func (ctx RepositoryHandlerBuildContext[Opts]) UseFilter(v string, matchers ...f
 type RepositoryHandler[Opts any] interface {
 	Schema() queries.EntitySchema
 	BuildDataset(query RepositoryHandlerBuildContext[Opts]) (*bun.SelectQuery, error)
-	ResolveFilter(query ResourceQuery[Opts], operator, property string, value any) (string, []any, error)
+	// ResolveFilter states one leaf of a filter as a predicate the statement
+	// carries. It takes a context because a filter the engine cannot state
+	// exactly is answered by a read and a fold in Go, and the predicate is then
+	// what that fold selected.
+	ResolveFilter(ctx context.Context, query ResourceQuery[Opts], operator, property string, value any) (string, []any, error)
 	Project(query ResourceQuery[Opts], selectQuery *bun.SelectQuery) (*bun.SelectQuery, error)
 	Expand(query ResourceQuery[Opts], property string) (*bun.SelectQuery, *JoinCondition, error)
 }
@@ -156,7 +160,7 @@ func (r *ResourceRepository[ResourceType, OptionsType]) validateFilters(builder 
 	return ret, nil
 }
 
-func (r *ResourceRepository[ResourceType, OptionsType]) buildFilteredDataset(q ResourceQuery[OptionsType]) (*bun.SelectQuery, error) {
+func (r *ResourceRepository[ResourceType, OptionsType]) buildFilteredDataset(ctx context.Context, q ResourceQuery[OptionsType]) (*bun.SelectQuery, error) {
 
 	filters, err := r.validateFilters(q.Builder)
 	if err != nil {
@@ -177,7 +181,7 @@ func (r *ResourceRepository[ResourceType, OptionsType]) buildFilteredDataset(q R
 	if q.Builder != nil {
 		// Convert filters to where clause
 		where, args, err := q.Builder.Build(query.ContextFn(func(key, operator string, value any) (string, []any, error) {
-			return r.resourceHandler.ResolveFilter(q, operator, key, value)
+			return r.resourceHandler.ResolveFilter(ctx, q, operator, key, value)
 		}))
 		if err != nil {
 			return nil, err
@@ -229,7 +233,7 @@ func (r *ResourceRepository[ResourceType, OptionsType]) expand(dataset *bun.Sele
 
 func (r *ResourceRepository[ResourceType, OptionsType]) GetOne(ctx context.Context, query ResourceQuery[OptionsType]) (*ResourceType, error) {
 
-	finalQuery, err := r.buildFilteredDataset(query)
+	finalQuery, err := r.buildFilteredDataset(ctx, query)
 	if err != nil {
 		return nil, err
 	}
@@ -255,7 +259,7 @@ func (r *ResourceRepository[ResourceType, OptionsType]) GetOne(ctx context.Conte
 
 func (r *ResourceRepository[ResourceType, OptionsType]) Count(ctx context.Context, query ResourceQuery[OptionsType]) (int, error) {
 
-	finalQuery, err := r.buildFilteredDataset(query)
+	finalQuery, err := r.buildFilteredDataset(ctx, query)
 	if err != nil {
 		return 0, err
 	}
@@ -288,7 +292,7 @@ func (r *FoldRepository[ResourceType, OptionsType]) GetOne(
 	query ResourceQuery[OptionsType],
 ) (*ResourceType, error) {
 
-	dataset, err := r.buildFilteredDataset(query)
+	dataset, err := r.buildFilteredDataset(ctx, query)
 	if err != nil {
 		return nil, err
 	}
@@ -404,7 +408,7 @@ func (r *PaginatedResourceRepository[ResourceType, OptionsType]) Paginate(
 		panic("should not happen")
 	}
 
-	finalQuery, err := r.buildFilteredDataset(resourceQuery)
+	finalQuery, err := r.buildFilteredDataset(ctx, resourceQuery)
 	if err != nil {
 		return nil, fmt.Errorf("building filtered dataset: %w", err)
 	}

@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/stoewer/go-strcase"
@@ -49,7 +50,7 @@ func (h accountsResourceHandler) BuildDataset(opts common.RepositoryHandlerBuild
 	return ret, nil
 }
 
-func (h accountsResourceHandler) ResolveFilter(opts common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
+func (h accountsResourceHandler) ResolveFilter(ctx context.Context, opts common.ResourceQuery[any], operator, property string, value any) (string, []any, error) {
 	switch {
 	case property == "address":
 		fallthrough
@@ -73,33 +74,28 @@ func (h accountsResourceHandler) ResolveFilter(opts common.ResourceQuery[any], o
 		}
 		return fmt.Sprintf("%s %s ?", property, common.ConvertOperatorToSQL(operator)), []any{value}, nil
 	case balanceRegex.MatchString(property) || property == "balance":
-
-		selectBalance := h.store.newScopedSelect().
-			Where("accounts_address = dataset.address")
-
-		if opts.PIT != nil && !opts.PIT.IsZero() {
-			if !h.store.ledger.HasFeature(features.FeatureMovesHistory, "ON") {
-				return "", nil, NewErrMissingFeature(features.FeatureMovesHistory)
-			}
-			selectBalance = selectBalance.
-				ModelTableExpr(h.store.GetPrefixedRelationName("moves")).
-				DistinctOn("asset").
-				ColumnExpr("first_value((post_commit_effective_volumes).inputs - (post_commit_effective_volumes).outputs) over (partition by (accounts_address, asset) order by effective_date desc, seq desc) as balance").
-				Where("effective_date <= ?", opts.PIT)
-		} else {
-			selectBalance = selectBalance.
-				ModelTableExpr(h.store.GetPrefixedRelationName("accounts_volumes")).
-				ColumnExpr("input - output as balance")
-		}
-
+		// The relation itself is not asked of the engine - see holders. What
+		// the statement carries is the addresses the fold selected, which every
+		// engine tests the same way.
+		asset := ""
 		if balanceRegex.MatchString(property) {
-			selectBalance = selectBalance.Where("asset = ?", balanceRegex.FindAllStringSubmatch(property, 2)[0][1])
+			asset = balanceRegex.FindAllStringSubmatch(property, 2)[0][1]
 		}
 
-		return h.store.db.NewSelect().
-			TableExpr("(?) balance", selectBalance).
-			ColumnExpr(fmt.Sprintf("balance %s ?", common.ConvertOperatorToSQL(operator)), value).
-			String(), nil, nil
+		value, err := number(value)
+		if err != nil {
+			return "", nil, err
+		}
+
+		addresses, err := h.store.holders(ctx, opts.PIT, asset, operator, value)
+		if err != nil {
+			return "", nil, err
+		}
+		if len(addresses) == 0 {
+			return "1 = 0", nil, nil
+		}
+
+		return "address in (?)", []any{bun.In(addresses)}, nil
 	case property == "metadata":
 		has := h.store.dialect.Has("metadata", value.(string))
 		return has.SQL, has.Args, nil
