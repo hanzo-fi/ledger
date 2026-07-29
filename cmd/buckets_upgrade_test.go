@@ -9,9 +9,10 @@ import (
 	"github.com/stretchr/testify/require"
 
 	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/connect"
 	"github.com/hanzo-fi/go-libs/v5/pkg/testing/docker"
 	"github.com/hanzo-fi/go-libs/v5/pkg/testing/platform/pgtesting"
+
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 )
 
 func TestBucketsUpgrade(t *testing.T) {
@@ -42,7 +43,7 @@ func TestBucketsUpgrade(t *testing.T) {
 			db := srv.NewDatabase(t)
 
 			args := []string{
-				"--" + connect.PostgresURIFlag, db.ConnString(),
+				"--" + dialect.DSNFlag, dialect.DSN(db.ConnString()),
 			}
 			args = append(args, tc.args...)
 
