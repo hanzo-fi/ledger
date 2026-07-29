@@ -7,10 +7,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/tracing"
 	"github.com/hanzo-fi/ledger/pkg/features"
 )
@@ -61,18 +61,22 @@ func (store *Store) InsertLog(ctx context.Context, log *ledger.Log) error {
 				log.Date = store.transactionDate()
 			}
 
-			// We lock logs table as we need than the last log does not change until the transaction commit
+			// The last log must not move until this transaction commits.
 			if store.ledger.HasFeature(features.FeatureHashLogs, "SYNC") {
-				_, err := store.db.NewRaw(`select pg_advisory_xact_lock(?)`, store.ledger.ID).Exec(ctx)
+				_, release, err := store.dialect.LockLedger(ctx, store.db, store.ledger.ID)
 				if err != nil {
-					return postgres.ResolveError(err)
+					return store.dialect.ResolveError(err)
 				}
+				defer func() {
+					_ = release()
+				}()
 
 				// Chain the log hash in Go via the canonical ledger.Log.ComputeHash —
 				// the same hashing ledgercore uses — instead of the retired set_log_hash
-				// plpgsql trigger. Under the advisory lock the head is stable, and the
+				// plpgsql trigger. Under the ledger lock the head is stable, and the
 				// result is byte-identical to the plpgsql hash by construction (the
-				// plpgsql was written to match ComputeHash).
+				// plpgsql was written to match ComputeHash). Neither engine derives it
+				// any more, so this is the only place a log hash is chained.
 				previous, err := store.readLogHead(ctx)
 				if err != nil {
 					return err
@@ -107,17 +111,19 @@ func (store *Store) InsertLog(ctx context.Context, log *ledger.Log) error {
 				Returning("*")
 
 			if log.ID == nil {
-				query = query.Value("id", "nextval(?)", store.GetPrefixedRelationName(fmt.Sprintf(`"log_id_%d"`, store.ledger.ID)))
+				next := store.dialect.NextID(store.ledger.Bucket, "logs", store.ledger.Name, store.ledger.ID)
+				query = query.Value("id", next.SQL, next.Args...)
 			}
 
 			_, err = query.Exec(ctx)
 			if err != nil {
-				err := postgres.ResolveError(err)
+				err := store.dialect.ResolveError(err)
 				switch {
-				case errors.Is(err, postgres.ErrConstraintsFailed{}):
-					if err.(postgres.ErrConstraintsFailed).GetConstraint() == "logs_idempotency_key" {
+				case errors.Is(err, dialect.ErrConstraint{}):
+					if dialect.Constraint(err) == "logs_idempotency_key" {
 						return NewErrIdempotencyKeyConflict(log.IdempotencyKey)
 					}
+					return fmt.Errorf("inserting log: %w", err)
 				default:
 					return fmt.Errorf("inserting log: %w", err)
 				}
@@ -144,8 +150,8 @@ func (store *Store) readLogHead(ctx context.Context) (*ledger.Log, error) {
 		Limit(1).
 		Scan(ctx, &hash)
 	if err != nil {
-		err = postgres.ResolveError(err)
-		if postgres.IsNotFoundError(err) {
+		err = store.dialect.ResolveError(err)
+		if errors.Is(err, dialect.ErrNotFound) {
 			return nil, nil
 		}
 		return nil, err
@@ -169,10 +175,14 @@ func (store *Store) ReadLogWithIdempotencyKey(ctx context.Context, key string) (
 				Where("ledger = ?", store.ledger.Name).
 				Limit(1).
 				Scan(ctx); err != nil {
-				return nil, postgres.ResolveError(err)
+				return nil, store.dialect.ResolveError(err)
 			}
 
 			return pointer.For(ret.ToCore()), nil
 		},
 	)
 }
+
+// chain reads the tip of the ledger's log chain and hashes this log onto it,
+// with the same code that verifies the chain. The ledger lock is already held,
+// so the tip cannot move underneath.

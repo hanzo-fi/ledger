@@ -34,9 +34,6 @@ type Dialect interface {
 	OpenBucket(ctx context.Context, db bun.IDB, bucket string) error
 	DropBucket(ctx context.Context, db bun.IDB, bucket string) error
 
-	// Now is the transaction clock: the timestamp a row defaults to.
-	Now(bucket string) string
-
 	// NextID yields the next value of a ledger's contiguous id counter for
 	// relation (transactions, logs). Ids are dense per ledger, not per table.
 	NextID(bucket, relation, ledger string, counter int) Fragment
@@ -68,11 +65,6 @@ type Dialect interface {
 	ArrayHolds(column, value string) Fragment
 	ArrayMeets(column string, values []string) Fragment
 	SegmentsMatch(column string, segments map[string]any) Fragment
-
-	// Derives reports whether the engine computes the columns its triggers
-	// would: the log chain hash and the post commit effective volumes. When
-	// it does not, the store computes both in Go before the insert.
-	Derives() bool
 
 	// Declares reports whether the schema is stated in one declaration rather
 	// than reached by replaying a recorded history.

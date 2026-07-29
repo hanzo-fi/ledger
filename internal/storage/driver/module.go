@@ -12,6 +12,7 @@ import (
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
 	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 )
@@ -24,7 +25,10 @@ type ModuleConfig struct {
 
 func NewFXModule(config ModuleConfig) fx.Option {
 	return fx.Options(
-		fx.Provide(fx.Annotate(func(tracerProvider trace.TracerProvider) bucket.Factory {
+		fx.Provide(fx.Annotate(func(d dialect.Dialect, tracerProvider trace.TracerProvider) bucket.Factory {
+			if sqlite, ok := d.(*dialect.SQLite); ok {
+				return bucket.NewSQLiteFactory(sqlite)
+			}
 			return bucket.NewDefaultFactory(bucket.WithTracer(tracerProvider.Tracer("store")))
 		})),
 		fx.Invoke(func(db *bun.DB) {
@@ -40,6 +44,7 @@ func NewFXModule(config ModuleConfig) fx.Option {
 			fx.In
 
 			DB             *bun.DB
+			Dialect        dialect.Dialect
 			TracerProvider trace.TracerProvider `optional:"true"`
 			MeterProvider  metric.MeterProvider `optional:"true"`
 		}) ledgerstore.Factory {
@@ -51,19 +56,21 @@ func NewFXModule(config ModuleConfig) fx.Option {
 				options = append(options, ledgerstore.WithMeter(params.MeterProvider.Meter("store")))
 			}
 			options = append(options, ledgerstore.WithDisableScopedSelectOptimization(config.DisableScopedSelectOptimization))
-			return ledgerstore.NewFactory(params.DB, options...)
+			return ledgerstore.NewFactory(params.DB, params.Dialect, options...)
 		}),
 		fx.Provide(func(
 			db *bun.DB,
+			d dialect.Dialect,
 			bucketFactory bucket.Factory,
 			ledgerStoreFactory ledgerstore.Factory,
 			tracerProvider trace.TracerProvider,
 		) (*Driver, error) {
 			return New(
 				db,
+				d,
 				ledgerStoreFactory,
 				bucketFactory,
-				systemstore.NewStoreFactory(systemstore.WithTracer(
+				systemstore.NewStoreFactory(d, systemstore.WithTracer(
 					tracerProvider.Tracer("SystemStore"),
 				)),
 				WithTracer(tracerProvider.Tracer("StorageDriver")),

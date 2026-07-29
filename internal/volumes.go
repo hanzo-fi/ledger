@@ -21,7 +21,11 @@ func (v Volumes) Value() (driver.Value, error) {
 
 func (v *Volumes) Scan(src interface{}) error {
 	// stored as (input, output)
-	parts := strings.Split(src.(string)[1:(len(src.(string))-1)], ",")
+	raw := src.(string)
+	parts := strings.Split(raw[1:len(raw)-1], ",")
+	for i := range parts {
+		parts[i] = strings.TrimSpace(parts[i])
+	}
 
 	v.Input = new(big.Int)
 	_, ok := v.Input.SetString(parts[0], 10)

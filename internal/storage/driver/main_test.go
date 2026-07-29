@@ -17,6 +17,7 @@ import (
 	. "github.com/hanzo-fi/go-libs/v5/pkg/testing/utils"
 
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/storage/driver"
 	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
 	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
@@ -50,8 +51,9 @@ func newTestDriver(t *testing.T) *driver.Driver {
 
 	return driver.New(
 		db,
-		ledgerstore.NewFactory(db),
+		dialect.SQL{},
+		ledgerstore.NewFactory(db, dialect.SQL{}),
 		bucket.NewDefaultFactory(),
-		systemstore.NewStoreFactory(),
+		systemstore.NewStoreFactory(dialect.SQL{}),
 	)
 }

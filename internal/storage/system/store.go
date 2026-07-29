@@ -13,11 +13,12 @@ import (
 
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/migrations"
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
+	libtime "github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/tracing"
 )
 
@@ -48,23 +49,27 @@ var (
 )
 
 type DefaultStore struct {
-	db     bun.IDB
-	tracer trace.Tracer
+	db      bun.IDB
+	dialect dialect.Dialect
+	tracer  trace.Tracer
 }
 
 func (d *DefaultStore) IsUpToDate(ctx context.Context) (bool, error) {
+	if d.dialect.Declares() {
+		return true, nil
+	}
 	return d.GetMigrator().IsUpToDate(ctx)
 }
 
 func (d *DefaultStore) GetDistinctBuckets(ctx context.Context) ([]string, error) {
 	var buckets []string
 	err := d.db.NewSelect().
-		DistinctOn("bucket").
+		Distinct().
 		Model(&ledger.Ledger{}).
 		Column("bucket").
 		Scan(ctx, &buckets)
 	if err != nil {
-		return nil, fmt.Errorf("getting buckets: %w", postgres.ResolveError(err))
+		return nil, fmt.Errorf("getting buckets: %w", d.dialect.ResolveError(err))
 	}
 
 	return buckets, nil
@@ -76,7 +81,7 @@ func (d *DefaultStore) CountLedgersInBucket(ctx context.Context, bucket string) 
 		Where("bucket = ?", bucket).
 		Count(ctx)
 	if err != nil {
-		return 0, postgres.ResolveError(err)
+		return 0, d.dialect.ResolveError(err)
 	}
 	return count, nil
 }
@@ -86,16 +91,21 @@ func (d *DefaultStore) CreateLedger(ctx context.Context, l *ledger.Ledger) error
 	if l.Metadata == nil {
 		l.Metadata = metadata.Metadata{}
 	}
+	if l.AddedAt.IsZero() {
+		// The creation instant belongs to the ledger, not to whichever engine
+		// happens to hold it.
+		l.AddedAt = libtime.Now()
+	}
 
 	_, err := d.db.NewInsert().
 		Model(l).
 		Returning("id, added_at").
 		Exec(ctx)
 	if err != nil {
-		if errors.Is(postgres.ResolveError(err), postgres.ErrConstraintsFailed{}) {
+		if errors.Is(d.dialect.ResolveError(err), dialect.ErrConstraint{}) {
 			return ErrLedgerAlreadyExists
 		}
-		return postgres.ResolveError(err)
+		return d.dialect.ResolveError(err)
 	}
 
 	return nil
@@ -104,16 +114,17 @@ func (d *DefaultStore) CreateLedger(ctx context.Context, l *ledger.Ledger) error
 func (d *DefaultStore) UpdateLedgerMetadata(ctx context.Context, name string, m metadata.Metadata) error {
 	_, err := d.db.NewUpdate().
 		Model(&ledger.Ledger{}).
-		Set("metadata = metadata || ?", m).
+		Set("metadata = "+d.dialect.Merge("metadata", "?"), m).
 		Where("name = ?", name).
 		Exec(ctx)
 	return err
 }
 
 func (d *DefaultStore) DeleteLedgerMetadata(ctx context.Context, name string, key string) error {
+	remove := d.dialect.Remove("metadata", key)
 	_, err := d.db.NewUpdate().
 		Model(&ledger.Ledger{}).
-		Set("metadata = metadata - ?", key).
+		Set("metadata = "+remove.SQL, remove.Args...).
 		Where("name = ?", name).
 		Exec(ctx)
 	return err
@@ -134,7 +145,7 @@ func (d *DefaultStore) DeleteBucket(ctx context.Context, bucket string) error {
 		Where("deleted_at IS NULL").
 		Exec(ctx)
 	if err != nil {
-		return fmt.Errorf("deleting bucket: %w", postgres.ResolveError(err))
+		return fmt.Errorf("deleting bucket: %w", d.dialect.ResolveError(err))
 	}
 	return nil
 }
@@ -147,7 +158,7 @@ func (d *DefaultStore) RestoreBucket(ctx context.Context, bucket string) error {
 		Where("deleted_at IS NOT NULL").
 		Exec(ctx)
 	if err != nil {
-		return fmt.Errorf("restoring bucket: %w", postgres.ResolveError(err))
+		return fmt.Errorf("restoring bucket: %w", d.dialect.ResolveError(err))
 	}
 	return nil
 }
@@ -155,34 +166,31 @@ func (d *DefaultStore) RestoreBucket(ctx context.Context, bucket string) error {
 func (d *DefaultStore) GetDeletedBucketsOlderThan(ctx context.Context, olderThan time.Time) ([]string, error) {
 	var buckets []string
 	err := d.db.NewSelect().
-		DistinctOn("bucket").
+		Distinct().
 		Model(&ledger.Ledger{}).
 		Column("bucket").
 		Where("deleted_at IS NOT NULL").
 		Where("deleted_at < ?", olderThan).
 		Scan(ctx, &buckets)
 	if err != nil {
-		return nil, fmt.Errorf("getting deleted buckets: %w", postgres.ResolveError(err))
+		return nil, fmt.Errorf("getting deleted buckets: %w", d.dialect.ResolveError(err))
 	}
 	return buckets, nil
 }
 
 func (d *DefaultStore) HardDeleteBucket(ctx context.Context, bucket string) error {
 	return d.db.RunInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		// Drop the schema (CASCADE will drop all objects in the schema)
-		// Use bun.Ident to safely escape the schema name - bun.Ident implements fmt.Stringer
-		_, err := tx.ExecContext(ctx, `DROP SCHEMA IF EXISTS ? CASCADE`, bun.Ident(bucket))
-		if err != nil {
-			return fmt.Errorf("dropping schema: %w", postgres.ResolveError(err))
+		if err := d.dialect.DropBucket(ctx, tx, bucket); err != nil {
+			return fmt.Errorf("dropping bucket: %w", d.dialect.ResolveError(err))
 		}
 
 		// Delete all ledgers from _system.ledgers for this bucket
-		_, err = tx.NewDelete().
+		_, err := tx.NewDelete().
 			Model(&ledger.Ledger{}).
 			Where("bucket = ?", bucket).
 			Exec(ctx)
 		if err != nil {
-			return fmt.Errorf("deleting ledgers: %w", postgres.ResolveError(err))
+			return fmt.Errorf("deleting ledgers: %w", d.dialect.ResolveError(err))
 		}
 
 		return nil
@@ -197,7 +205,7 @@ func (d *DefaultStore) GetLedger(ctx context.Context, name string) (*ledger.Ledg
 		Where("name = ?", name).
 		Where("deleted_at IS NULL").
 		Scan(ctx); err != nil {
-		return nil, postgres.ResolveError(err)
+		return nil, d.dialect.ResolveError(err)
 	}
 
 	return ret, nil
@@ -205,6 +213,9 @@ func (d *DefaultStore) GetLedger(ctx context.Context, name string) (*ledger.Ledg
 
 func (d *DefaultStore) Migrate(ctx context.Context, options ...migrations.Option) error {
 	_, err := tracing.Trace(ctx, d.tracer, "MigrateSystemStore", func(ctx context.Context) (any, error) {
+		if d.dialect.Declares() {
+			return nil, d.declare(ctx)
+		}
 		return nil, d.GetMigrator(options...).Up(ctx)
 	})
 	return err
@@ -215,9 +226,10 @@ func (d *DefaultStore) GetMigrator(options ...migrations.Option) *migrations.Mig
 	return GetMigrator(d.db, append(options, migrations.WithTracer(d.tracer))...)
 }
 
-func New(db bun.IDB, opts ...Option) *DefaultStore {
+func New(db bun.IDB, d dialect.Dialect, opts ...Option) *DefaultStore {
 	ret := &DefaultStore{
-		db: db,
+		db:      db,
+		dialect: d,
 	}
 
 	for _, opt := range append(defaultOptions, opts...) {
@@ -260,7 +272,7 @@ func (d *DefaultStore) DeleteExporter(ctx context.Context, id string) error {
 		Where("id = ?", id).
 		Exec(ctx)
 	if err != nil {
-		return postgres.ResolveError(err)
+		return d.dialect.ResolveError(err)
 	}
 
 	rowsAffected, err := ret.RowsAffected()
@@ -268,7 +280,7 @@ func (d *DefaultStore) DeleteExporter(ctx context.Context, id string) error {
 		panic(err)
 	}
 	if rowsAffected == 0 {
-		return postgres.ErrNotFound
+		return dialect.ErrNotFound
 	}
 
 	return err
@@ -281,7 +293,7 @@ func (d *DefaultStore) GetExporter(ctx context.Context, id string) (*ledger.Expo
 		Where("id = ?", id).
 		Scan(ctx)
 	if err != nil {
-		return nil, postgres.ResolveError(err)
+		return nil, d.dialect.ResolveError(err)
 	}
 
 	return ret, nil
@@ -300,8 +312,8 @@ func (d *DefaultStore) CreatePipeline(ctx context.Context, pipeline ledger.Pipel
 		Model(&pipeline).
 		Exec(ctx)
 	if err != nil {
-		err := postgres.ResolveError(err)
-		if errors.Is(err, postgres.ErrConstraintsFailed{}) {
+		err := d.dialect.ResolveError(err)
+		if errors.Is(err, dialect.ErrConstraint{}) {
 			return ledger.NewErrPipelineAlreadyExists(pipeline.PipelineConfiguration)
 		}
 
@@ -324,7 +336,7 @@ func (d *DefaultStore) UpdatePipeline(ctx context.Context, id string, o map[stri
 	ret := &ledger.Pipeline{}
 	_, err := updateQuery.Exec(ctx, ret)
 	if err != nil {
-		return nil, postgres.ResolveError(err)
+		return nil, d.dialect.ResolveError(err)
 	}
 	return ret, nil
 }
@@ -343,7 +355,7 @@ func (d *DefaultStore) DeletePipeline(ctx context.Context, id string) error {
 		panic(err)
 	}
 	if rowsAffected == 0 {
-		return postgres.ErrNotFound
+		return dialect.ErrNotFound
 	}
 
 	return err
@@ -387,7 +399,7 @@ func (d *DefaultStore) StorePipelineState(ctx context.Context, id string, lastLo
 		panic(err)
 	}
 	if rowsAffected == 0 {
-		return postgres.ErrNotFound
+		return dialect.ErrNotFound
 	}
 
 	return nil
@@ -399,7 +411,7 @@ func (d *DefaultStore) UpdateExporter(ctx context.Context, exporter ledger.Expor
 		Where("id = ?", exporter.ID).
 		Exec(ctx)
 	if err != nil {
-		return postgres.ResolveError(err)
+		return d.dialect.ResolveError(err)
 	}
 
 	rowsAffected, err := ret.RowsAffected()
@@ -408,7 +420,7 @@ func (d *DefaultStore) UpdateExporter(ctx context.Context, exporter ledger.Expor
 	}
 
 	if rowsAffected == 0 {
-		return postgres.ErrNotFound
+		return dialect.ErrNotFound
 	}
 
 	return nil

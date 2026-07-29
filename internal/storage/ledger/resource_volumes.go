@@ -163,13 +163,13 @@ func (h volumesResourceHandler) ResolveFilter(
 		return "(" + strings.Join(clauses, ") and (") + ")", args, nil
 	case common.MetadataRegex.Match([]byte(property)) || property == "metadata":
 		if property == "metadata" {
-			return "metadata -> ? is not null", []any{value}, nil
+			has := h.store.dialect.Has("metadata", value.(string))
+			return has.SQL, has.Args, nil
 		} else {
 			match := common.MetadataRegex.FindAllStringSubmatch(property, 3)
 
-			return "metadata @> ?", []any{map[string]any{
-				match[0][1]: value,
-			}}, nil
+			holds := h.store.dialect.Holds("metadata", map[string]any{match[0][1]: value})
+			return holds.SQL, holds.Args, nil
 		}
 	default:
 		return "", nil, fmt.Errorf("unsupported filter %s", property)

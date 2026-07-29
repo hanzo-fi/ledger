@@ -74,6 +74,17 @@ func Wire(dsn string) string {
 	return wire + "://" + strings.TrimPrefix(dsn, Scheme+"://")
 }
 
+// DSN restates a wire DSN in the scheme the ledger is configured with. It is
+// Wire read the other way, for a caller holding a server's own address.
+func DSN(dsn string) string {
+	for _, prefix := range []string{wire + "://", wire + "ql://"} {
+		if strings.HasPrefix(dsn, prefix) {
+			return Scheme + "://" + strings.TrimPrefix(dsn, prefix)
+		}
+	}
+	return dsn
+}
+
 // Dir reads the directory a SQLite DSN keeps its bucket files in. The DSN may
 // name a directory, a file inside one, or nothing.
 func Dir(dsn string) string {

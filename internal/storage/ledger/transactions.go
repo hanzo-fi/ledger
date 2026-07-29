@@ -2,7 +2,6 @@ package ledger
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"math/big"
@@ -14,13 +13,13 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/paginate"
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	. "github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/metadata"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/pointer"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/time"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/tracing"
 	"github.com/hanzo-fi/ledger/pkg/features"
 )
@@ -131,19 +130,33 @@ func (store *Store) InsertTransaction(ctx context.Context, tx *ledger.Transactio
 				Value("ledger", "?", store.ledger.Name).
 				Returning("id, timestamp, inserted_at, updated_at")
 
+			// A transaction carries three instants and the store stamps any
+			// the caller left open, all off the same per-transaction clock.
+			at := store.transactionDate()
+			if tx.Timestamp.IsZero() {
+				query = query.Value("timestamp", "?", at)
+			}
+			if tx.InsertedAt.IsZero() {
+				query = query.Value("inserted_at", "?", at)
+			}
+			if tx.UpdatedAt.IsZero() {
+				query = query.Value("updated_at", "?", at)
+			}
+
 			if tx.ID == nil {
-				query = query.Value("id", "nextval(?)", store.GetPrefixedRelationName(fmt.Sprintf(`"transaction_id_%d"`, store.ledger.ID)))
+				next := store.dialect.NextID(store.ledger.Bucket, "transactions", store.ledger.Name, store.ledger.ID)
+				query = query.Value("id", next.SQL, next.Args...)
 			}
 
 			_, err := query.Exec(ctx)
 			if err != nil {
-				err = postgres.ResolveError(err)
+				err = store.dialect.ResolveError(err)
 				switch {
-				case errors.Is(err, postgres.ErrConstraintsFailed{}):
-					if err.(postgres.ErrConstraintsFailed).GetConstraint() == "transactions_reference" {
+				case errors.Is(err, dialect.ErrConstraint{}):
+					switch dialect.Constraint(err) {
+					case "transactions_reference":
 						return nil, NewErrTransactionReferenceConflict(tx.Reference)
-					}
-					if err.(postgres.ErrConstraintsFailed).GetConstraint() == "transactions_ledger" {
+					case "transactions_ledger":
 						return nil, NewErrConcurrentTransaction(*tx.ID)
 					}
 
@@ -200,7 +213,7 @@ func (store *Store) updateTxWithRetrieve(ctx context.Context, id uint64, query *
 		Limit(1).
 		Scan(ctx)
 	if err != nil {
-		return &me.Transaction, me.Modified, postgres.ResolveError(err)
+		return &me.Transaction, me.Modified, store.dialect.ResolveError(err)
 	}
 
 	// Every update that actually modified the row would have fired the retired
@@ -229,10 +242,6 @@ func (store *Store) appendTransactionMetadataHistory(ctx context.Context, id uin
 	if m == nil {
 		m = metadata.Metadata{}
 	}
-	data, err := json.Marshal(m)
-	if err != nil {
-		return err
-	}
 	// A zero date maps to NULL, matching the `nullzero` date columns the triggers
 	// copied from (new.timestamp / new.updated_at) — the PIT reads filter on
 	// `date <= ?`, so NULL must stay NULL.
@@ -241,12 +250,12 @@ func (store *Store) appendTransactionMetadataHistory(ctx context.Context, id uin
 		date = at
 	}
 	table := store.GetPrefixedRelationName("transactions_metadata")
-	_, err = store.db.NewRaw(
+	_, err := store.db.NewRaw(
 		"insert into "+table+" (ledger, transactions_id, revision, date, metadata) "+
-			"values (?, ?, coalesce((select max(revision) + 1 from "+table+" where transactions_id = ? and ledger = ?), 1), ?, ?::jsonb)",
-		store.ledger.Name, id, id, store.ledger.Name, date, string(data),
+			"values (?, ?, coalesce((select max(revision) + 1 from "+table+" where transactions_id = ? and ledger = ?), 1), ?, ?)",
+		store.ledger.Name, id, id, store.ledger.Name, date, m,
 	).Exec(ctx)
-	return postgres.ResolveError(err)
+	return store.dialect.ResolveError(err)
 }
 
 func (store *Store) RevertTransaction(ctx context.Context, id uint64, at time.Time) (tx *ledger.Transaction, modified bool, err error) {
@@ -285,13 +294,14 @@ func (store *Store) UpdateTransactionMetadata(ctx context.Context, id uint64, m 
 		store.updateTransactionMetadataHistogram,
 		func(ctx context.Context) (*ledger.Transaction, error) {
 
+			holds := store.dialect.Holds("metadata", toEntries(m))
 			updateQuery := store.db.NewUpdate().
 				Model(&ledger.Transaction{}).
 				ModelTableExpr(store.GetPrefixedRelationName("transactions")).
 				Where("id = ?", id).
 				Where("ledger = ?", store.ledger.Name).
-				Set("metadata = metadata || ?", m).
-				Where("not (metadata @> ?)", m).
+				Set("metadata = "+store.dialect.Merge("metadata", "?"), m).
+				Where("not "+holds.SQL, holds.Args...).
 				Returning("*")
 			if at.IsZero() {
 				at = store.transactionDate()
@@ -300,7 +310,7 @@ func (store *Store) UpdateTransactionMetadata(ctx context.Context, id uint64, m 
 
 			tx, modified, err = store.updateTxWithRetrieve(ctx, id, updateQuery)
 
-			return nil, postgres.ResolveError(err)
+			return nil, store.dialect.ResolveError(err)
 		},
 	)
 	return tx, modified, err
@@ -313,13 +323,15 @@ func (store *Store) DeleteTransactionMetadata(ctx context.Context, id uint64, ke
 		store.tracer,
 		store.deleteTransactionMetadataHistogram,
 		func(ctx context.Context) (*ledger.Transaction, error) {
+			remove := store.dialect.Remove("metadata", key)
+			has := store.dialect.Has("metadata", key)
 			updateQuery := store.db.NewUpdate().
 				Model(&ledger.Transaction{}).
 				ModelTableExpr(store.GetPrefixedRelationName("transactions")).
-				Set("metadata = metadata - ?", key).
+				Set("metadata = "+remove.SQL, remove.Args...).
 				Where("id = ?", id).
 				Where("ledger = ?", store.ledger.Name).
-				Where("metadata -> ? is not null", key).
+				Where(has.SQL, has.Args...).
 				Returning("*")
 			if at.IsZero() {
 				at = store.transactionDate()
@@ -327,61 +339,74 @@ func (store *Store) DeleteTransactionMetadata(ctx context.Context, id uint64, ke
 			updateQuery = updateQuery.Set("updated_at = ?", at)
 
 			tx, modified, err = store.updateTxWithRetrieve(ctx, id, updateQuery)
-			return nil, postgres.ResolveError(err)
+			return nil, store.dialect.ResolveError(err)
 		},
 	)
 	return tx, modified, err
 }
 
-func filterAccountAddressOnTransactions(address string, source, destination bool) string {
-	src := strings.Split(address, ":")
-
+func (store *Store) filterAddressOnTransactions(address string, source, destination bool) dialect.Fragment {
+	columns := make([]string, 0, 2)
 	if isPartialAddress(address) {
-		m := map[string]any{}
-		parts := make([]string, 0)
-
-		for i, segment := range src {
-			if len(segment) == 0 {
-				continue
-			}
-			if i == len(src)-1 && segment == "..." {
-				break
-			}
-			m[fmt.Sprint(i)] = segment
-		}
-		if src[len(src)-1] != "..." {
-			m[fmt.Sprint(len(src))] = nil
-		}
-
-		data, err := json.Marshal([]any{m})
-		if err != nil {
-			panic(err)
-		}
-
-		escaped := escapeSQL(string(data))
 		if source {
-			parts = append(parts, fmt.Sprintf("sources_arrays @> '%s'", escaped))
+			columns = append(columns, "sources_arrays")
 		}
 		if destination {
-			parts = append(parts, fmt.Sprintf("destinations_arrays @> '%s'", escaped))
+			columns = append(columns, "destinations_arrays")
 		}
-		return strings.Join(parts, " or ")
+		return anyOf(columns, func(column string) dialect.Fragment {
+			return store.dialect.SegmentsMatch(column, addressSegments(address))
+		})
 	}
-
-	data, err := json.Marshal([]string{address})
-	if err != nil {
-		panic(err)
-	}
-
-	escaped := escapeSQL(string(data))
-	parts := make([]string, 0)
 	if source {
-		parts = append(parts, fmt.Sprintf("sources @> '%s'", escaped))
+		columns = append(columns, "sources")
 	}
 	if destination {
-		parts = append(parts, fmt.Sprintf("destinations @> '%s'", escaped))
+		columns = append(columns, "destinations")
 	}
-	return strings.Join(parts, " or ")
+	return anyOf(columns, func(column string) dialect.Fragment {
+		return store.dialect.ArrayHolds(column, address)
+	})
+}
+
+// addressSegments explodes a partial address into the segments an exploded
+// address array must carry. A nil segment asserts the address ends there.
+func addressSegments(address string) map[string]any {
+	src := strings.Split(address, ":")
+	segments := map[string]any{}
+	for i, segment := range src {
+		if len(segment) == 0 {
+			continue
+		}
+		if i == len(src)-1 && segment == "..." {
+			break
+		}
+		segments[fmt.Sprint(i)] = segment
+	}
+	if src[len(src)-1] != "..." {
+		segments[fmt.Sprint(len(src))] = nil
+	}
+	return segments
+}
+
+// anyOf disjoins one fragment per column.
+func anyOf(columns []string, build func(string) dialect.Fragment) dialect.Fragment {
+	parts := make([]string, 0, len(columns))
+	args := make([]any, 0, len(columns))
+	for _, column := range columns {
+		fragment := build(column)
+		parts = append(parts, fragment.SQL)
+		args = append(args, fragment.Args...)
+	}
+	return dialect.Fragment{SQL: strings.Join(parts, " or "), Args: args}
+}
+
+func toEntries(m metadata.Metadata) map[string]any {
+	entries := make(map[string]any, len(m))
+	for k, v := range m {
+		entries[k] = v
+	}
+	return entries
 }
 
 func assetAddressArray(v any) ([]string, error) {
@@ -396,10 +421,4 @@ func assetAddressArray(v any) ([]string, error) {
 	}
 
 	return addresses, nil
-}
-
-func stringArrayToPostgresArray(values []string) (string, []any) {
-	placeholder := strings.TrimRight(strings.Repeat("?,", len(values)), ",")
-
-	return "array[" + placeholder + "]", Map(values, ToAny)
 }

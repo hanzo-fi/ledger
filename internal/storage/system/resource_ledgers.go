@@ -51,18 +51,17 @@ func (h ledgersResourceHandler) ResolveFilter(_ common.ResourceQuery[ListLedgers
 	case featuresRegex.Match([]byte(property)):
 		match := featuresRegex.FindAllStringSubmatch(property, 3)
 
-		return "features @> ?", []any{map[string]any{
-			match[0][1]: value,
-		}}, nil
+		holds := h.store.dialect.Holds("features", map[string]any{match[0][1]: value})
+		return holds.SQL, holds.Args, nil
 	case common.MetadataRegex.Match([]byte(property)):
 		match := common.MetadataRegex.FindAllStringSubmatch(property, 3)
 
-		return "metadata @> ?", []any{map[string]any{
-			match[0][1]: value,
-		}}, nil
+		holds := h.store.dialect.Holds("metadata", map[string]any{match[0][1]: value})
+		return holds.SQL, holds.Args, nil
 
 	case property == "metadata":
-		return "metadata -> ? is not null", []any{value}, nil
+		has := h.store.dialect.Has("metadata", value.(string))
+		return has.SQL, has.Args, nil
 	case property == "name":
 		return "name " + common.ConvertOperatorToSQL(operator) + " ?", []any{value}, nil
 	default:

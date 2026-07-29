@@ -8,6 +8,7 @@ import (
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 )
 
 type Factory interface {
@@ -16,15 +17,17 @@ type Factory interface {
 
 type DefaultFactory struct {
 	db      *bun.DB
+	dialect dialect.Dialect
 	options []Option
 
 	mu          sync.Mutex
 	bucketFlags map[string]*atomic.Bool
 }
 
-func NewFactory(db *bun.DB, options ...Option) *DefaultFactory {
+func NewFactory(db *bun.DB, d dialect.Dialect, options ...Option) *DefaultFactory {
 	return &DefaultFactory{
 		db:          db,
+		dialect:     d,
 		options:     options,
 		bucketFlags: make(map[string]*atomic.Bool),
 	}
@@ -39,7 +42,7 @@ func (d *DefaultFactory) Create(b bucket.Bucket, l ledger.Ledger) *Store {
 	}
 	d.mu.Unlock()
 
-	store := New(d.db, b, l, d.options...)
+	store := New(d.db, d.dialect, b, l, d.options...)
 	store.aloneInBucket = flag
 
 	return store

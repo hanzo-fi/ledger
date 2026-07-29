@@ -9,7 +9,7 @@ import (
 	"github.com/hanzo-fi/go-libs/v5/pkg/service"
 	"github.com/hanzo-fi/go-libs/v5/pkg/storage/bun/migrate"
 
-	"github.com/hanzo-fi/ledger/internal/storage/bunconnect"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/storage/driver"
 )
 
@@ -65,7 +65,7 @@ func newMigrationCommand() *cobra.Command {
 	})
 	observe.AddFlags(ret.Flags())
 	traces.AddFlags(ret.Flags())
-	bunconnect.AddFlags(ret.Flags())
+	dialect.AddFlags(ret.Flags())
 
 	return ret
 }

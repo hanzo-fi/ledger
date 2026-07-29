@@ -204,7 +204,7 @@ func (ctrl *DefaultController) GetLedgerController(ctx context.Context, name str
 			ledgerController = ledgercontroller.NewControllerWithEvents(*l, ledgerController, ctrl.listener)
 		}
 
-		return newLedgerStateTracker(ledgerController, *l), nil
+		return newLedgerStateTracker(ledgerController, *l, ctrl.driver.Dialect()), nil
 	})
 }
 

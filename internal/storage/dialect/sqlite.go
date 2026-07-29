@@ -103,11 +103,6 @@ func (d *SQLite) DropBucket(ctx context.Context, db bun.IDB, bucket string) erro
 	return nil
 }
 
-// Now is the wall clock, in the RFC3339 layout the time model reads and writes.
-func (*SQLite) Now(string) string {
-	return `strftime('%Y-%m-%dT%H:%M:%fZ', 'now')`
-}
-
 // NextID reads the ledger's own maximum. The engine admits a single writer, so
 // the read and the insert that follows it cannot interleave, and ids stay dense
 // even across a rolled back transaction.
@@ -201,11 +196,8 @@ func (*SQLite) SegmentsMatch(column string, segments map[string]any) Fragment {
 	)
 }
 
-// Derives is false: the log chain is hashed by the same Go code that verifies
-// it, and effective volumes are summed in Go at full precision rather than in
-// the engine's 64 bit integers.
-func (*SQLite) Derives() bool { return false }
-
+// Declares is true: the schema is one declaration rather than a replayed
+// history of migrations.
 func (*SQLite) Declares() bool { return true }
 
 // Pair writes a volumes value the way the model already writes one, so a pair

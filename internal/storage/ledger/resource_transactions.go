@@ -8,6 +8,7 @@ import (
 
 	"github.com/hanzo-fi/ledger/internal/queries"
 	"github.com/hanzo-fi/ledger/internal/storage/common"
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/pkg/features"
 )
 
@@ -102,57 +103,36 @@ func (h transactionsResourceHandler) ResolveFilter(_ common.ResourceQuery[any], 
 			return "", nil, err
 		}
 		return fmt.Sprintf("dataset.reverted_at %s ?", common.ConvertOperatorToSQL(operator)), []any{value}, nil
-	case property == "account":
-		switch operator {
-		case queries.OperatorIn:
+	case property == "account", property == "source", property == "destination":
+		source := property != "destination"
+		destination := property != "source"
+		if operator == queries.OperatorIn {
 			addresses, err := assetAddressArray(value)
 			if err != nil {
 				return "", nil, err
 			}
-
-			placeholder, args := stringArrayToPostgresArray(addresses)
-			args = append(args, args...) // Duplicate args for sources and destinations
-
-			return "sources \\?| " + placeholder + " OR destinations \\?| " + placeholder, args, nil
-		default:
-			return filterAccountAddressOnTransactions(value.(string), true, true), nil, nil
-		}
-	case property == "source":
-		switch operator {
-		case queries.OperatorIn:
-			addresses, err := assetAddressArray(value)
-			if err != nil {
-				return "", nil, err
+			columns := make([]string, 0, 2)
+			if source {
+				columns = append(columns, "sources")
 			}
-
-			placeholder, args := stringArrayToPostgresArray(addresses)
-
-			return "sources \\?| " + placeholder, args, nil
-		default:
-			return filterAccountAddressOnTransactions(value.(string), true, false), nil, nil
-		}
-	case property == "destination":
-		switch operator {
-		case queries.OperatorIn:
-			addresses, err := assetAddressArray(value)
-			if err != nil {
-				return "", nil, err
+			if destination {
+				columns = append(columns, "destinations")
 			}
-
-			placeholder, args := stringArrayToPostgresArray(addresses)
-			return "destinations \\?| " + placeholder, args, nil
-		default:
-			return filterAccountAddressOnTransactions(value.(string), false, true), nil, nil
+			meets := anyOf(columns, func(column string) dialect.Fragment {
+				return h.store.dialect.ArrayMeets(column, addresses)
+			})
+			return meets.SQL, meets.Args, nil
 		}
+		filter := h.store.filterAddressOnTransactions(value.(string), source, destination)
+		return filter.SQL, filter.Args, nil
 	case common.MetadataRegex.Match([]byte(property)):
 		match := common.MetadataRegex.FindAllStringSubmatch(property, 3)
-
-		return "metadata @> ?", []any{map[string]any{
-			match[0][1]: value,
-		}}, nil
+		holds := h.store.dialect.Holds("metadata", map[string]any{match[0][1]: value})
+		return holds.SQL, holds.Args, nil
 
 	case property == "metadata":
-		return "metadata -> ? is not null", []any{value}, nil
+		has := h.store.dialect.Has("metadata", value.(string))
+		return has.SQL, has.Args, nil
 	default:
 		return "", nil, fmt.Errorf("unsupported filter: %s", property)
 	}
@@ -167,6 +147,7 @@ func (h transactionsResourceHandler) Expand(_ common.ResourceQuery[any], propert
 		return nil, nil, nil
 	}
 
+	d := h.store.dialect
 	ret := h.store.db.NewSelect().
 		TableExpr(
 			"(?) data",
@@ -177,15 +158,18 @@ func (h transactionsResourceHandler) Expand(_ common.ResourceQuery[any], propert
 						DistinctOn("transactions_id, accounts_address, asset").
 						ModelTableExpr(h.store.GetPrefixedRelationName("moves")).
 						Column("transactions_id", "accounts_address", "asset").
-						ColumnExpr(`first_value(moves.post_commit_effective_volumes) over (partition by (transactions_id, accounts_address, asset) order by seq desc) as post_commit_effective_volumes`).
+						ColumnExpr(`first_value(moves.post_commit_effective_volumes) over (partition by transactions_id, accounts_address, asset order by seq desc) as post_commit_effective_volumes`).
 						Where("transactions_id in (select id from dataset)"),
 				).
 				Column("transactions_id", "accounts_address").
-				ColumnExpr(`public.aggregate_objects(json_build_object(moves.asset, json_build_object('input', (moves.post_commit_effective_volumes).inputs, 'output', (moves.post_commit_effective_volumes).outputs))::jsonb) AS post_commit_effective_volumes`).
+				ColumnExpr(d.Gather("moves.asset", d.Object(
+					"'input'", d.Volumes("moves.post_commit_effective_volumes", "inputs"),
+					"'output'", d.Volumes("moves.post_commit_effective_volumes", "outputs"),
+				))+" as post_commit_effective_volumes").
 				Group("transactions_id", "accounts_address"),
 		).
 		Column("transactions_id").
-		ColumnExpr("public.aggregate_objects(json_build_object(accounts_address, post_commit_effective_volumes)::jsonb) AS post_commit_effective_volumes").
+		ColumnExpr(d.Gather("accounts_address", "post_commit_effective_volumes") + " as post_commit_effective_volumes").
 		Group("transactions_id")
 
 	return ret, &common.JoinCondition{

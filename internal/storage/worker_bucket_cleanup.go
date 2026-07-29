@@ -14,6 +14,7 @@ import (
 
 	logging "github.com/hanzo-fi/go-libs/v5/pkg/observe/log"
 
+	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	systemstore "github.com/hanzo-fi/ledger/internal/storage/system"
 )
 
@@ -26,6 +27,7 @@ type BucketCleanupRunner struct {
 	stopChannel chan chan struct{}
 	logger      logging.Logger
 	db          *bun.DB
+	dialect     dialect.Dialect
 	cfg         BucketCleanupRunnerConfig
 	tracer      trace.Tracer
 }
@@ -77,7 +79,7 @@ func (r *BucketCleanupRunner) run(ctx context.Context) error {
 	cutoffTime := time.Now().Add(-r.cfg.RetentionPeriod)
 	span.SetAttributes(attribute.String("cutoff_time", cutoffTime.Format(time.RFC3339)))
 
-	systemStore := systemstore.New(r.db)
+	systemStore := systemstore.New(r.db, r.dialect)
 	buckets, err := systemStore.GetDeletedBucketsOlderThan(ctx, cutoffTime)
 	if err != nil {
 		return fmt.Errorf("getting deleted buckets: %w", err)
@@ -115,7 +117,7 @@ func (r *BucketCleanupRunner) processBucket(ctx context.Context, bucket string) 
 
 	span.SetAttributes(attribute.String("bucket", bucket))
 
-	systemStore := systemstore.New(r.db)
+	systemStore := systemstore.New(r.db, r.dialect)
 	if err := systemStore.HardDeleteBucket(ctx, bucket); err != nil {
 		return fmt.Errorf("hard deleting bucket %s: %w", bucket, err)
 	}
@@ -128,11 +130,12 @@ func (r *BucketCleanupRunner) processBucket(ctx context.Context, bucket string) 
 // database handle, and configuration, applying any functional options.
 //
 // The returned runner is ready to be started; provided options override default behavior.
-func NewBucketCleanupRunner(logger logging.Logger, db *bun.DB, cfg BucketCleanupRunnerConfig, opts ...BucketCleanupRunnerOption) *BucketCleanupRunner {
+func NewBucketCleanupRunner(logger logging.Logger, db *bun.DB, d dialect.Dialect, cfg BucketCleanupRunnerConfig, opts ...BucketCleanupRunnerOption) *BucketCleanupRunner {
 	ret := &BucketCleanupRunner{
 		stopChannel: make(chan chan struct{}),
 		logger:      logger,
 		db:          db,
+		dialect:     d,
 		cfg:         cfg,
 	}
 
@@ -162,8 +165,8 @@ var defaultBucketCleanupRunnerOptions = []BucketCleanupRunnerOption{
 // returns an error.
 func NewBucketCleanupRunnerModule(cfg BucketCleanupRunnerConfig) fx.Option {
 	return fx.Options(
-		fx.Provide(func(logger logging.Logger, db *bun.DB) (*BucketCleanupRunner, error) {
-			return NewBucketCleanupRunner(logger, db, cfg), nil
+		fx.Provide(func(logger logging.Logger, db *bun.DB, d dialect.Dialect) (*BucketCleanupRunner, error) {
+			return NewBucketCleanupRunner(logger, db, d, cfg), nil
 		}),
 		fx.Invoke(func(lc fx.Lifecycle, bucketCleanupRunner *BucketCleanupRunner) {
 			lc.Append(fx.Hook{

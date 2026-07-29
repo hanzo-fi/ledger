@@ -3,7 +3,6 @@ package ledger
 import (
 	"context"
 
-	"github.com/hanzo-fi/go-libs/v5/pkg/storage/postgres"
 	"github.com/hanzo-fi/go-libs/v5/pkg/types/collections"
 
 	ledger "github.com/hanzo-fi/ledger/internal"
@@ -39,7 +38,7 @@ func (store *Store) UpdateVolumes(ctx context.Context, accountVolumes ...ledger.
 				Returning("input, output").
 				Exec(ctx)
 			if err != nil {
-				return nil, postgres.ResolveError(err)
+				return nil, store.dialect.ResolveError(err)
 			}
 
 			ret := ledger.PostCommitVolumes{}
