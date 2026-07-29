@@ -2,6 +2,7 @@ package ledger_test
 
 import (
 	"context"
+	"fmt"
 	"math/big"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 
 	ledger "github.com/hanzo-fi/ledger/internal"
 	"github.com/hanzo-fi/ledger/internal/storage/bucket"
+	"github.com/hanzo-fi/ledger/internal/storage/common"
 	"github.com/hanzo-fi/ledger/internal/storage/dialect"
 	"github.com/hanzo-fi/ledger/internal/storage/driver"
 	ledgerstore "github.com/hanzo-fi/ledger/internal/storage/ledger"
@@ -175,6 +177,64 @@ func TestSQLiteKeepsAmountsExact(t *testing.T) {
 	balances, err := store.GetBalances(ctx, ledgerstore.BalanceQuery{"users:001": []string{"USD/2"}})
 	require.NoError(t, err)
 	require.Equal(t, amount, balances["users:001"]["USD/2"])
+}
+
+// pairs states volumes the way a pair is written, so an assertion compares the
+// digits carried rather than the shape a big.Int happens to hold them in.
+func pairs(volumes ledger.VolumesByAssets) map[string]string {
+	ret := map[string]string{}
+	for asset, v := range volumes {
+		ret[asset] = fmt.Sprintf("(%s, %s)", v.Input, v.Output)
+	}
+	return ret
+}
+
+// totalsExactly holds a store to reporting volumes wider than an engine's
+// integers as they were written: read one at a time, and read totalled.
+//
+// It is one body on either engine, because the reads are the same on either
+// engine: a pair travels as the digits it was written with, and the total is
+// Go's.
+func totalsExactly(t *testing.T, store *ledgerstore.Store) {
+	t.Helper()
+
+	ctx := context.Background()
+	now := time.Now()
+
+	// Wider than the engine's integers: 2^126.
+	first := new(big.Int).Lsh(big.NewInt(1), 126)
+	require.Equal(t, "85070591730234615865843651857942052864", first.String())
+
+	one := ledger.NewTransaction().
+		WithPostings(ledger.NewPosting("world", "users:001", "USD/2", first)).
+		WithTimestamp(now)
+	require.NoError(t, store.CommitTransaction(ctx, &one))
+	require.NoError(t, store.UpsertAccounts(ctx, one.AccountsWithDefaultMetadata(nil, nil)...))
+
+	// Totalled: a total is what was written, not what an engine integer holds.
+	aggregated, err := store.AggregatedVolumes().GetOne(ctx, common.ResourceQuery[ledger.GetAggregatedVolumesOptions]{})
+	require.NoError(t, err)
+	require.Equal(t, map[string]string{
+		"USD/2": fmt.Sprintf("(%s, %s)", first, first),
+	}, pairs(aggregated.Aggregated))
+
+	// The same amount read one account at a time.
+	accounts, err := store.Accounts().Paginate(ctx, common.InitialPaginatedQuery[any]{
+		Options: common.ResourceQuery[any]{Expand: []string{"volumes"}},
+	})
+	require.NoError(t, err)
+	held := map[string]map[string]string{}
+	for _, account := range accounts.Data {
+		held[account.Address] = pairs(account.Volumes)
+	}
+	require.Equal(t, map[string]map[string]string{
+		"world":     {"USD/2": fmt.Sprintf("(0, %s)", first)},
+		"users:001": {"USD/2": fmt.Sprintf("(%s, 0)", first)},
+	}, held)
+}
+
+func TestSQLiteTotalsAmountsExact(t *testing.T) {
+	totalsExactly(t, newSQLiteLedger(t))
 }
 
 func TestSQLiteRejectsDuplicateIdempotencyKey(t *testing.T) {

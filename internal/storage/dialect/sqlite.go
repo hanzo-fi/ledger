@@ -206,25 +206,18 @@ func (*SQLite) Pair(_, input, output string) string {
 	return fmt.Sprintf("('(' || %s || ', ' || %s || ')')", input, output)
 }
 
-// Volumes reads one side of that pair back.
+// Volumes reads that pair back as the JSON object a reader scans.
 //
-// The value read is an engine integer, which is 64 bits wide. A ledger's own
-// running volumes never pass through it - moves are chained and read at full
-// precision in Go - but an aggregate that sums this expression sums 64 bit
-// integers, so an aggregated read of a total wider than that saturates rather
-// than reporting it. Summing exactly here needs the sum itself in Go.
-func (*SQLite) Volumes(column, field string) string {
-	if field == "inputs" {
-		return fmt.Sprintf("cast(substr(%s, 2, instr(%s, ',') - 2) as integer)", column, column)
-	}
+// Each side is read as JSON rather than cast to an engine integer. The engine's
+// integers are 64 bits wide and a ledger's are not, so a cast saturates at
+// 2^63-1; JSON carries a number as the digits that were written, so what comes
+// back is what went in.
+func (*SQLite) Volumes(column string) string {
 	return fmt.Sprintf(
-		"cast(substr(%s, instr(%s, ',') + 1, length(%s) - instr(%s, ',') - 1) as integer)",
-		column, column, column, column,
+		"json_object('input', json(%s), 'output', json(%s))",
+		fmt.Sprintf("substr(%s, 2, instr(%s, ',') - 2)", column, column),
+		fmt.Sprintf("substr(%s, instr(%s, ',') + 1, length(%s) - instr(%s, ',') - 1)", column, column, column, column),
 	)
-}
-
-func (*SQLite) Object(pairs ...string) string {
-	return "json_object(" + strings.Join(pairs, ", ") + ")"
 }
 
 func (*SQLite) Gather(key, value string) string {

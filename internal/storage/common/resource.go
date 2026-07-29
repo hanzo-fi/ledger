@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"slices"
@@ -268,6 +269,65 @@ func NewResourceRepository[ResourceType, OptionsType any](
 ) *ResourceRepository[ResourceType, OptionsType] {
 	return &ResourceRepository[ResourceType, OptionsType]{
 		resourceHandler: handler,
+	}
+}
+
+// FoldRepository answers with a reduction of the rows a read matched rather
+// than with one of them.
+//
+// The reduction runs in Go. That is what a read does when no engine can state
+// its answer: a statement carries the filtering, which every engine does the
+// same, and the fold carries the arithmetic, which they do not.
+type FoldRepository[ResourceType, OptionsType any] struct {
+	*ResourceRepository[ResourceType, OptionsType]
+	fold func(*sql.Rows) (ResourceType, error)
+}
+
+func (r *FoldRepository[ResourceType, OptionsType]) GetOne(
+	ctx context.Context,
+	query ResourceQuery[OptionsType],
+) (*ResourceType, error) {
+
+	dataset, err := r.buildFilteredDataset(query)
+	if err != nil {
+		return nil, err
+	}
+
+	// A folded read answers with one value rather than with rows, so there is
+	// nothing to expand onto. The handler says which properties it would have
+	// expanded, and says so for none of them.
+	for _, expand := range query.Expand {
+		if _, _, err := r.resourceHandler.Expand(query, expand); err != nil {
+			return nil, err
+		}
+	}
+
+	rows, err := dataset.Rows(ctx)
+	if err != nil {
+		return nil, postgres.ResolveError(err)
+	}
+	defer func() {
+		_ = rows.Close()
+	}()
+
+	folded, err := r.fold(rows)
+	if err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, postgres.ResolveError(err)
+	}
+
+	return &folded, nil
+}
+
+func NewFoldRepository[ResourceType, OptionsType any](
+	handler RepositoryHandler[OptionsType],
+	fold func(*sql.Rows) (ResourceType, error),
+) *FoldRepository[ResourceType, OptionsType] {
+	return &FoldRepository[ResourceType, OptionsType]{
+		ResourceRepository: NewResourceRepository[ResourceType, OptionsType](handler),
+		fold:               fold,
 	}
 }
 

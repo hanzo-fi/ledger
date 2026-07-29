@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"database/sql"
 	"errors"
 
 	"github.com/uptrace/bun"
@@ -148,23 +149,46 @@ func (h aggregatedBalancesResourceRepositoryHandler) Expand(_ common.ResourceQue
 	return nil, nil, errors.New("no expand available for aggregated balances")
 }
 
+// Project yields the rows to be totalled: an asset and the pair standing
+// against it. The total is not asked of the engine - see totalVolumes.
 func (h aggregatedBalancesResourceRepositoryHandler) Project(
 	_ common.ResourceQuery[ledger.GetAggregatedVolumesOptions],
 	selectQuery *bun.SelectQuery,
 ) (*bun.SelectQuery, error) {
-	d := h.store.dialect
-	sumVolumesForAsset := h.store.db.NewSelect().
-		TableExpr("(?) rows", selectQuery).
-		Group("asset").
-		Column("asset").
-		ColumnExpr(d.Object(
-			"'input'", "sum("+d.Volumes("volumes", "inputs")+")",
-			"'output'", "sum("+d.Volumes("volumes", "outputs")+")",
-		) + " as volumes")
+	return selectQuery.Column("asset", "volumes"), nil
+}
 
-	return h.store.db.NewSelect().
-		TableExpr("(?) sums", sumVolumesForAsset).
-		ColumnExpr(d.Gather("asset", "volumes") + " as aggregated"), nil
+// totalVolumes adds the rows up, one pair per asset.
+//
+// A ledger's volumes are arbitrary precision integers and no engine adds those:
+// one holds 64 bit integers and saturates, the other holds a numeric. So the
+// addition is Go's, over big.Int, and a total reads back the same whichever
+// engine the ledger is stored on. A row with no pair adds nothing, as an
+// aggregate over a null does.
+func totalVolumes(rows *sql.Rows) (ledger.AggregatedVolumes, error) {
+	total := ledger.VolumesByAssets{}
+	for rows.Next() {
+		var (
+			asset   string
+			volumes sql.Null[ledger.Volumes]
+		)
+		if err := rows.Scan(&asset, &volumes); err != nil {
+			return ledger.AggregatedVolumes{}, err
+		}
+		if !volumes.Valid {
+			continue
+		}
+
+		sum, held := total[asset]
+		if !held {
+			sum = ledger.NewEmptyVolumes()
+		}
+		sum.Input.Add(sum.Input, volumes.V.Input)
+		sum.Output.Add(sum.Output, volumes.V.Output)
+		total[asset] = sum
+	}
+
+	return ledger.AggregatedVolumes{Aggregated: total}, nil
 }
 
 var _ common.RepositoryHandler[ledger.GetAggregatedVolumesOptions] = aggregatedBalancesResourceRepositoryHandler{}

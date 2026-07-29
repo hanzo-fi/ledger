@@ -122,12 +122,8 @@ func (SQL) Pair(bucket, input, output string) string {
 	return fmt.Sprintf(`(%s, %s)::"%s".volumes`, input, output, bucket)
 }
 
-func (SQL) Volumes(column, field string) string {
-	return fmt.Sprintf("(%s).%s", column, field)
-}
-
-func (SQL) Object(pairs ...string) string {
-	return "json_build_object(" + strings.Join(pairs, ", ") + ")"
+func (SQL) Volumes(column string) string {
+	return fmt.Sprintf(`json_build_object('input', (%s).inputs, 'output', (%s).outputs)`, column, column)
 }
 
 func (SQL) Gather(key, value string) string {

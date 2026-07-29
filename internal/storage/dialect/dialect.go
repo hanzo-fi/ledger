@@ -71,13 +71,13 @@ type Dialect interface {
 	Declares() bool
 
 	// Pair builds a volumes value out of an input and an output expression,
-	// and Volumes reads one side of one back.
+	// and Volumes reads one back as the JSON object a reader scans, at the
+	// precision it was written.
 	Pair(bucket, input, output string) string
-	Volumes(column, field string) string
+	Volumes(column string) string
 
-	// Object builds a JSON object out of alternating key and value
-	// expressions. Gather is its aggregate: one object merging them all.
-	Object(pairs ...string) string
+	// Gather is the aggregate of a JSON object: one object holding every key
+	// with the value standing against it.
 	Gather(key, value string) string
 
 	// ResolveError maps an engine error onto the storage error vocabulary.

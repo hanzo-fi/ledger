@@ -162,10 +162,7 @@ func (h transactionsResourceHandler) Expand(_ common.ResourceQuery[any], propert
 						Where("transactions_id in (select id from dataset)"),
 				).
 				Column("transactions_id", "accounts_address").
-				ColumnExpr(d.Gather("moves.asset", d.Object(
-					"'input'", d.Volumes("moves.post_commit_effective_volumes", "inputs"),
-					"'output'", d.Volumes("moves.post_commit_effective_volumes", "outputs"),
-				))+" as post_commit_effective_volumes").
+				ColumnExpr(d.Gather("moves.asset", d.Volumes("moves.post_commit_effective_volumes"))+" as post_commit_effective_volumes").
 				Group("transactions_id", "accounts_address"),
 		).
 		Column("transactions_id").
