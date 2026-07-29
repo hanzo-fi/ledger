@@ -96,7 +96,7 @@ func (SQL) ArrayHolds(column, value string) Fragment {
 	if err != nil {
 		panic(err)
 	}
-	return frag(fmt.Sprintf("%s @> '%s'", column, string(data)))
+	return frag(column+" @> ?", string(data))
 }
 
 func (SQL) ArrayMeets(column string, values []string) Fragment {
@@ -113,7 +113,7 @@ func (SQL) SegmentsMatch(column string, segments map[string]any) Fragment {
 	if err != nil {
 		panic(err)
 	}
-	return frag(fmt.Sprintf("%s @> '%s'", column, string(data)))
+	return frag(column+" @> ?", string(data))
 }
 
 func (SQL) Declares() bool { return false }

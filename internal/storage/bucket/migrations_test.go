@@ -50,7 +50,7 @@ func TestMigrations(t *testing.T) {
 			Bucket: bucketName,
 		})
 		require.NoError(t, err)
-		require.NoError(t, system.New(db, dialect.Postgres{}).CreateLedger(ctx, l))
+		require.NoError(t, system.New(db, dialect.SQL{}).CreateLedger(ctx, l))
 
 		ledgers = append(ledgers, *l)
 	}
@@ -92,7 +92,7 @@ func TestMigrations(t *testing.T) {
 	require.NoError(t, err)
 
 	for i := 0; i < 5; i++ {
-		store := ledgerstore.New(db, dialect.Postgres{}, bucket.NewDefault(noop.Tracer{}, bucketName), ledgers[i])
+		store := ledgerstore.New(db, dialect.SQL{}, bucket.NewDefault(noop.Tracer{}, bucketName), ledgers[i])
 
 		require.NoError(t, common.Iterate(
 			ctx,

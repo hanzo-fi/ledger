@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,6 +17,14 @@ import (
 func filterAccountAddressOnTransactions(address string, source, destination bool) string {
 	store := &Store{dialect: dialect.SQL{}}
 	return store.filterAddressOnTransactions(address, source, destination).SQL
+}
+
+// filterAddressCarries reports whether an address reaches the query as a bound
+// argument rather than as text written into the statement.
+func filterAddressCarries(address string, source, destination bool) (string, []any) {
+	store := &Store{dialect: dialect.SQL{}}
+	fragment := store.filterAddressOnTransactions(address, source, destination)
+	return fragment.SQL, fragment.Args
 }
 
 func TestCanPushAddressFilterToLateral(t *testing.T) {
@@ -286,27 +295,30 @@ func TestFilterAccountAddressOnTransactions_NormalCases(t *testing.T) {
 
 	t.Run("exact address source only", func(t *testing.T) {
 		t.Parallel()
-		result := filterAccountAddressOnTransactions("world", true, false)
-		assert.Equal(t, `sources @> '["world"]'`, result)
+		sql, args := filterAddressCarries("world", true, false)
+		assert.Equal(t, "sources @> ?", sql)
+		assert.Equal(t, []any{`["world"]`}, args)
 	})
 
 	t.Run("exact address destination only", func(t *testing.T) {
 		t.Parallel()
-		result := filterAccountAddressOnTransactions("world", false, true)
-		assert.Equal(t, `destinations @> '["world"]'`, result)
+		sql, args := filterAddressCarries("world", false, true)
+		assert.Equal(t, "destinations @> ?", sql)
+		assert.Equal(t, []any{`["world"]`}, args)
 	})
 
 	t.Run("exact address source and destination joined with or", func(t *testing.T) {
 		t.Parallel()
-		result := filterAccountAddressOnTransactions("world", true, true)
-		assert.Equal(t, `sources @> '["world"]' or destinations @> '["world"]'`, result)
+		sql, args := filterAddressCarries("world", true, true)
+		assert.Equal(t, "sources @> ? or destinations @> ?", sql)
+		assert.Equal(t, []any{`["world"]`, `["world"]`}, args)
 	})
 
-	t.Run("partial address uses array containment", func(t *testing.T) {
+	t.Run("partial address matches the exploded array", func(t *testing.T) {
 		t.Parallel()
-		result := filterAccountAddressOnTransactions("users:", true, false)
-		assert.Contains(t, result, "sources_arrays @> '")
-		assert.NotContains(t, result, "sources @> '")
+		sql, args := filterAddressCarries("users:", true, false)
+		assert.Equal(t, "sources_arrays @> ?", sql)
+		assert.Equal(t, []any{`[{"0":"users","2":null}]`}, args)
 	})
 }
 
@@ -350,39 +362,27 @@ func TestFilterAccountAddress_SQLInjection(t *testing.T) {
 func TestFilterAccountAddressOnTransactions_SQLInjection(t *testing.T) {
 	t.Parallel()
 
-	t.Run("exact address with single quote is escaped", func(t *testing.T) {
-		t.Parallel()
-		result := filterAccountAddressOnTransactions("it's", true, true)
-		assert.NotContains(t, result, `'it's'`)
-		assert.Contains(t, result, `it''s`)
-	})
+	// An address never becomes SQL text. It is bound, so a quote in it is data
+	// on the wire and closes nothing - which is stronger than escaping it.
+	for _, address := range []string{
+		"it's",
+		"world' OR '1'='1",
+		"users:it's:",
+		"users:x' OR '1'='1:",
+	} {
+		t.Run(address, func(t *testing.T) {
+			t.Parallel()
 
-	t.Run("injection payload in exact address is neutralised", func(t *testing.T) {
-		t.Parallel()
-		payload := "world' OR '1'='1"
-		result := filterAccountAddressOnTransactions(payload, true, false)
-		assert.NotContains(t, result, "OR '1'='1")
-		assert.Contains(t, result, `''`)
-	})
-
-	t.Run("partial address segment with single quote is escaped", func(t *testing.T) {
-		t.Parallel()
-		result := filterAccountAddressOnTransactions("users:it's:", true, false)
-		assert.NotContains(t, result, `'it's'`)
-		assert.Contains(t, result, `it''s`)
-	})
-
-	t.Run("injection payload in partial address segment is neutralised", func(t *testing.T) {
-		t.Parallel()
-		// The single quote that would close the SQL string literal must be doubled.
-		// The text may still appear inside the (now-safe) JSON string value.
-		payload := "users:x' OR '1'='1:"
-		result := filterAccountAddressOnTransactions(payload, true, false)
-		// Unescaped closing-quote pattern must not appear
-		assert.NotContains(t, result, "' OR '1'='1")
-		// But the escaped form must be present
-		assert.Contains(t, result, `'' OR ''1''=''1`)
-	})
+			sql, args := filterAddressCarries(address, true, true)
+			assert.NotContains(t, sql, "'", "the statement quotes nothing")
+			for _, segment := range strings.Split(address, ":") {
+				if segment != "" {
+					assert.NotContains(t, sql, segment, "no part of the address is written into the statement")
+				}
+			}
+			require.NotEmpty(t, args, "the address must ride as an argument")
+		})
+	}
 }
 
 // mockUseFilter implements the interface expected by collectAddressFilters.
