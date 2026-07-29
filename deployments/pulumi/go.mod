@@ -7,6 +7,7 @@ toolchain go1.25.4
 require (
 	github.com/formancehq/go-libs/v5 v5.6.1
 	github.com/google/uuid v1.6.0
+	github.com/hanzo-fi/go-libs/v5 v5.6.2
 	github.com/invopop/jsonschema v0.13.0
 	github.com/kos-v/dsnparser v1.1.0
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.81.0

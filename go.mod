@@ -1,6 +1,6 @@
 module github.com/hanzo-fi/ledger
 
-go 1.26.4
+go 1.26.5
 
 replace github.com/hanzo-fi/ledger/pkg/client => ./pkg/client
 
