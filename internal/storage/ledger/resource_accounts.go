@@ -125,6 +125,10 @@ func (h accountsResourceHandler) Expand(opts common.ResourceQuery[any], property
 		if !h.store.ledger.HasFeature(features.FeatureMovesHistoryPostCommitEffectiveVolumes, "SYNC") {
 			return nil, nil, common.NewErrInvalidQuery("feature %s must be 'SYNC' to use effectiveVolumes", features.FeatureMovesHistoryPostCommitEffectiveVolumes)
 		}
+	default:
+		// The property becomes the column alias below, which bun renders as raw
+		// SQL, so only the expansions named here may reach it.
+		return nil, nil, common.NewErrInvalidQuery("invalid expand property %s", property)
 	}
 
 	selectRowsQuery := h.store.newScopedSelect().
