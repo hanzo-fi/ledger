@@ -1,7 +1,18 @@
 # Canonical Hanzo CI/CD manifest — read by hanzoai/ci and platform.hanzo.ai.
-# One file, one way. Builds push to registry.hanzo.ai/hanzo-fi/<app>.
+# One file, one way.
+#
+# The builder reads `repo:` off each images[] entry. This entry had no repo:
+# and no image:, so it resolved to null and every tag it built was
+# `null:sha-<sha>-amd64` — the lane ran and published to no name.
+#
+# Host stays ghcr.io for now: that is where the fleet publishes and where
+# universe's deploys read from. registry.hanzo.ai is the stated destination
+# but hanzoai/ci still logs in as oci.hanzo.ai, so a push to the
+# registry.hanzo.ai hostname is unauthenticated today. This flips with the
+# other 25 refs when that lane is fixed.
 images:
   - name: ledger
+    repo: ghcr.io/hanzo-fi/ledger
     dockerfile: build.Dockerfile
     context: .
 
