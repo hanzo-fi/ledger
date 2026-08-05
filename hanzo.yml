@@ -1,7 +1,24 @@
 # Canonical Hanzo CI/CD manifest — read by hanzoai/ci and platform.hanzo.ai.
-# One file, one way. Builds push to registry.hanzo.ai/hanzo-fi/<app>.
+# One file, one way.
+#
+# The builder reads `repo:` off each images[] entry. This entry had no repo:
+# and no image:, so it resolved to null and every tag it built was
+# `null:sha-<sha>-amd64` — the lane ran and published to no name.
+#
+# Host stays ghcr.io, and it STAYS. `repo:` is the primary push target, and
+# hanzoai/ci already dual-publishes: buildx --push sends every tag here, then
+# `crane copy` mirrors that exact tag set to registry.hanzo.ai/<org>/<app>
+# (hanzoai->hanzo, zooai->zoo, everything else itself). So this entry already
+# reaches the native registry without naming it.
+#
+# Flipping `repo:` to registry.hanzo.ai would therefore NOT be a migration, it
+# would be a cutover: ghcr would stop receiving the image while 296 pins in
+# universe still read ghcr. Mirror first, move pins per-app against a digest
+# re-resolved at the new host, and only consider this line once the last pin
+# has moved.
 images:
   - name: ledger
+    repo: ghcr.io/hanzo-fi/ledger
     dockerfile: build.Dockerfile
     context: .
 
