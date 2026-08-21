@@ -25,7 +25,7 @@ services:
       - ${POSTGRES_DATA:-postgres}:/data/postgres
 
   worker:
-    image: registry.hanzo.ai/hanzo-fi/ledger:latest
+    image: oci.hanzo.ai/hanzo-fi/ledger:${LEDGER_VERSION:-3.0.0-alpha.14}
     # entrypoint:
     depends_on:
       postgres:
@@ -38,7 +38,7 @@ services:
       POSTGRES_CONN_MAX_IDLE_TIME: '5m'
 
   ledger:
-    image: registry.hanzo.ai/hanzo-fi/ledger:latest
+    image: oci.hanzo.ai/hanzo-fi/ledger:${LEDGER_VERSION:-3.0.0-alpha.14}
     ports:
       - 3068:3068
     depends_on:

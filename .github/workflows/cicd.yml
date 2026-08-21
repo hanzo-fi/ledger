@@ -6,7 +6,7 @@ on:
 
 jobs:
   cicd:
-    # Canonical Hanzo pipeline (build -> registry.hanzo.ai -> deploy) via hanzoai/ci.
+    # Canonical Hanzo pipeline (build -> oci.hanzo.ai -> deploy) via hanzoai/ci.
     # Gated on an org/repo variable so it stays inert until KMS creds are provisioned
     # in hanzo-fi (KMS_CLIENT_ID / KMS_CLIENT_SECRET); no fail-spam before then.
     if: ${{ vars.HANZO_CI_ENABLED == 'true' }}
